@@ -86,6 +86,11 @@ nav .nav-links a:hover{color:var(--text)}
 /* Tech */
 .tech-list{display:flex;flex-wrap:wrap;gap:8px}
 .tech-chip{padding:6px 14px;background:var(--accent-light);border-radius:8px;font-size:13px;font-weight:500}
+.architecture-desc{font-size:15px;color:#374151;line-height:1.7;margin-bottom:20px;padding:16px;background:var(--accent-light);border-radius:var(--radius)}
+
+/* My Role */
+.role-section{margin-top:32px;padding:24px;background:var(--accent-light);border-radius:var(--radius)}
+.role-section .section-title{border-bottom:none;padding-bottom:0;margin-bottom:12px}
 
 /* Footer */
 footer{padding:40px 0;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:13px}

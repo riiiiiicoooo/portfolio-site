@@ -13,11 +13,14 @@ const PRODUCTS = [
     id: "agentgate",
     name: "AgentGate",
     domain: "Developer Security",
+    category: "AI & Security",
     stage: "Production",
     tagline: "AI Agent Authentication & Secrets Management",
     description: "Zero-trust authentication layer for AI agents accessing enterprise APIs. Replaced static credential sharing with ephemeral, scoped tokens — eliminating credential exposure in agent workflows.",
     problem: "AI agents were sharing long-lived API keys, stored in plaintext configs and environment variables. 23 credential exposures in 6 months, each requiring emergency rotation across dependent services.",
     solution: "OAuth 2.0 agent identity layer with ephemeral token issuance, policy-based access control, and secrets brokering. Agents authenticate per-request with scoped, time-limited credentials. Full audit trail of every credential access.",
+    role: "Started by running a security posture audit across the client's agent ecosystem, cataloging every credential exposure incident from the prior 6 months to build the cost-of-inaction case. Facilitated a design sprint with the security and DevOps teams to map the ideal token lifecycle, then wireframed the policy engine interface and agent onboarding flow in Figma. Built a working prototype that demonstrated ephemeral token issuance against a sandbox API, which became the core of our stakeholder demo to the CISO. Wrote the PRD and scoped the MVP to a single high-risk agent workflow, managed the lead developer and two contract engineers through a 10-week build, and ran biweekly demos tracking credential exposure reduction as the primary ROI metric.",
+    architecture: "FastAPI service layer handling OAuth 2.0 flows, backed by PostgreSQL for policy storage, Redis for token caching, and HashiCorp Vault for secrets brokering. TypeScript SDK provides client-side integration.",
     metrics: [
       {value: "0", label: "Credential Exposures", prev: "from 23 in 6 months"},
       {value: "<200ms", label: "Auth Latency p95", prev: "from 1.2s"},
@@ -31,11 +34,14 @@ const PRODUCTS = [
     id: "ai-data-ops",
     name: "AI Data Operations Platform",
     domain: "ML Infrastructure",
+    category: "AI & ML",
     stage: "Multi-client",
     tagline: "Training Data Quality at Scale",
     description: "End-to-end platform for managing ML training data pipelines — from annotation to quality measurement to model evaluation. Built for teams producing thousands of labeled examples daily.",
     problem: "Annotation teams were producing ~200 examples per team-day with a 12% error rate. No systematic quality measurement, no feedback loops to annotators, no visibility into how data quality affected model performance.",
     solution: "Unified platform with real-time quality scoring, automated consensus workflows, annotator feedback loops, and model performance correlation. Quality gates prevent bad data from reaching training pipelines.",
+    role: "Ran a competitive analysis of 8 annotation platforms (Labelbox, Scale AI, Prodigy, etc.) and identified quality measurement as the key gap nobody was solving well. Spent two weeks embedded with annotation team leads at three client organizations, mapping their review workflows and error patterns into journey maps that became the foundation of the product spec. Wireframed the quality scoring dashboard and real-time feedback loop UI, then built a clickable prototype that we used to validate the interaction model with annotators before writing a single line of production code. Developed the ROI model showing how quality improvements reduced model retraining cycles from weekly to monthly, presented it to each client's ML leadership to secure budget, and managed the lead developer through an MVP scoped to one annotation type before expanding.",
+    architecture: "Temporal orchestrates multi-step annotation and quality pipelines. FastAPI serves the API layer, PostgreSQL and Supabase handle data persistence, and scikit-learn powers quality scoring models.",
     metrics: [
       {value: "2,340", label: "Examples/Team-Day", prev: "from 200 baseline"},
       {value: "2.8%", label: "Annotation Error Rate", prev: "from 12%"},
@@ -49,11 +55,14 @@ const PRODUCTS = [
     id: "contract-intelligence",
     name: "Contract Intelligence Platform",
     domain: "Legal AI",
+    category: "AI & Legal",
     stage: "Production",
     tagline: "M&A Due Diligence Automation",
     description: "AI-powered contract analysis for M&A deal rooms. Extracts clauses, scores risk, and surfaces material issues across hundreds of contracts in hours instead of weeks.",
     problem: "M&A attorneys manually reviewed 3-5 contracts per hour, reading linearly through every page. Due diligence on a 200-contract deal took 2-3 weeks and $150K+ in associate billing.",
     solution: "Automated extraction pipeline with clause-level risk scoring, cross-contract pattern detection, and a deal dashboard that surfaces material issues by risk tier. Attorneys review AI-flagged items instead of reading everything.",
+    role: "Spent two weeks shadowing M&A attorneys during active due diligence to document every manual step in their review process, then distilled findings into a workflow analysis deck that became the pitch to firm leadership. Evaluated LLM providers (Claude, GPT-4, Cohere) through structured accuracy benchmarks I designed against attorney-reviewed ground truth. Wireframed the risk scoring dashboard and deal room interface, built a prototype extracting clauses from a sample purchase agreement, and demoed it to the M&A partners to get buy-in for the full build. Wrote detailed user stories for the extraction pipeline, managed the lead developer on architecture decisions, ran a 4-week pilot on a live deal to prove $600K in annual savings per engagement, and used that data to justify scaling across the practice group.",
+    architecture: "Next.js frontend with FastAPI backend. Supabase with pgvector for document storage and semantic search. Claude and GPT-4 handle extraction, with LangSmith for LLM observability.",
     metrics: [
       {value: "50-80", label: "Contracts/Hour", prev: "from 3-5 manual"},
       {value: "94.2%", label: "Extraction Accuracy", prev: ""},
@@ -67,11 +76,14 @@ const PRODUCTS = [
     id: "engagement-engine",
     name: "Engagement & Personalization Engine",
     domain: "Consumer Platform",
+    category: "Consumer & Growth",
     stage: "Approved",
     tagline: "Behavioral Personalization at Scale",
     description: "Real-time personalization engine that adapts content, notifications, and product surfaces to individual user behavior patterns — driving measurable lifts in engagement and retention.",
     problem: "One-size-fits-all content and notification strategy. 28-day retention was declining, engagement per session was flat, and the product team had no ability to test personalization hypotheses.",
     solution: "Event-driven personalization pipeline with real-time behavioral segmentation, A/B testing framework, and adaptive content ranking. Every surface can be personalized independently with full experimentation support.",
+    role: "Kicked off with a competitive teardown of personalization engines (Optimizely, Dynamic Yield, Amplitude) to map where the client's experimentation maturity sat and what gaps to prioritize. Ran user interviews with the client's growth and data teams to understand their current segmentation approach, then designed wireframes for the segment builder, A/B test configurator, and results dashboard. Built an interactive prototype demonstrating how different cohorts would see personalized content, which we walked through with the VP of Growth to align on the experimentation governance model. Modeled the ROI by projecting engagement lift impact on customer lifetime value, managed the lead developer through the event pipeline build, and established the measurement framework that ultimately proved 28% engagement lift and 59% retention improvement.",
+    architecture: "Event-driven architecture with FastAPI processing behavioral events in real-time. Snowflake for analytics warehouse, Segment for event collection, and PostHog for experimentation.",
     metrics: [
       {value: "+28%", label: "Engagement Lift", prev: ""},
       {value: "+59%", label: "Retention Improvement", prev: ""},
@@ -85,11 +97,14 @@ const PRODUCTS = [
     id: "field-sales",
     name: "Field Sales Command",
     domain: "Sales Enablement",
+    category: "Enterprise & Operations",
     stage: "Pilot",
     tagline: "Mobile-First Field Sales Operations",
     description: "Mobile platform for field sales reps that replaced paper route sheets with intelligent visit planning, real-time order capture, and performance leaderboards.",
     problem: "68 field reps used paper route sheets and called in orders by phone. No visit verification, no real-time inventory visibility, no performance data. Management had zero insight into daily field operations.",
     solution: "React Native app with GPS visit verification, offline-capable order entry, intelligent route optimization, and gamified leaderboards. Manager dashboard shows real-time field activity with automated coaching triggers.",
+    role: "Did three days of ride-alongs with field reps before writing a single requirement, documenting their actual daily workflows, route planning habits, and the manual spreadsheet tracking they were using. Used those findings to build a journey map and pitch deck for sales leadership showing the revenue opportunity from optimized routes and visit accountability. Wireframed the mobile experience in Figma (route optimizer, check-in flow, leaderboard) and built a clickable prototype that reps could tap through on their phones during user testing sessions. Made the React Native decision for cross-platform support, managed two contract mobile developers, ran a pilot with 68 reps tracking daily visit increases as the core ROI metric, and presented weekly adoption dashboards to the SVP of Sales throughout rollout.",
+    architecture: "React Native mobile app with Expo for cross-platform deployment. FastAPI backend with Supabase for data, Redux for offline state management, and Salesforce integration for CRM sync.",
     metrics: [
       {value: "+43%", label: "Daily Visits", prev: ""},
       {value: "$5.3M", label: "Revenue Lift (Annual)", prev: ""},
@@ -103,11 +118,14 @@ const PRODUCTS = [
     id: "fintech-ops",
     name: "Fintech Operations Platform",
     domain: "Financial Infrastructure",
+    category: "Finance & Compliance",
     stage: "Production",
     tagline: "Double-Entry Ledger & Payment Settlement",
     description: "Core financial infrastructure with double-entry ledger, real-time payment processing, and automated reconciliation. Built for a lending startup processing millions in monthly transactions.",
     problem: "91.2% transaction success rate with manual reconciliation taking 3+ days. No real-time visibility into payment status, ledger imbalances discovered weeks after the fact.",
     solution: "Double-entry ledger with atomic transaction guarantees, real-time Stripe integration, automated daily reconciliation, and a monitoring dashboard that catches anomalies within minutes.",
+    role: "Mapped the client's existing payment flow end-to-end with their finance and operations teams, identifying reconciliation bottlenecks and the manual exception handling process that was eating 20+ hours per week. Evaluated build vs. buy options for the ledger system, ran vendor demos of three off-the-shelf reconciliation tools, and ultimately recommended a custom build after none met the client's multi-currency requirements. Wireframed the reconciliation dashboard, exception queue, and audit trail interfaces, then built a prototype processing sample transactions through the double-entry pipeline to demo for the CFO and compliance team. Wrote the technical PRD with the lead developer, defined SLA targets, managed the build through a phased rollout starting with one payment channel, and measured ROI through transaction success rates and hours saved on manual reconciliation.",
+    architecture: "FastAPI service layer with PostgreSQL for double-entry ledger. Stripe Connect handles payment processing, dbt manages data transformations, and Grafana/Prometheus provide real-time monitoring.",
     metrics: [
       {value: "97.8%", label: "Transaction Success", prev: "from 91.2%"},
       {value: "<15min", label: "Reconciliation Time", prev: "from 3+ days"},
@@ -121,11 +139,14 @@ const PRODUCTS = [
     id: "genai-governance",
     name: "Enterprise GenAI Governance",
     domain: "AI Compliance",
+    category: "AI & Security",
     stage: "Production",
     tagline: "Regulated AI Deployment for Financial Services",
     description: "Governance layer for deploying generative AI in a regulated credit union. Full audit trail, content filtering, bias monitoring, and examiner-ready compliance reporting.",
     problem: "Credit union wanted to deploy AI chatbot and internal tools but faced NCUA regulatory requirements with zero precedent for GenAI compliance. Board and examiners needed assurance of safety and auditability.",
     solution: "Middleware governance layer that intercepts all AI interactions, applies content policies, logs for audit, monitors for bias and hallucination, and generates compliance reports. Designed for examiner review.",
+    role: "Led the regulatory research phase, spending three weeks studying NCUA examination guidelines and mapping every compliance requirement that applied to AI systems in credit unions. Built a competitive landscape analysis of governance tools in the market and identified the gap: nobody was solving real-time content policy enforcement for generative AI in financial services. Wireframed the governance dashboard, bias monitoring interface, and examiner-ready reporting views, then developed an MVP that ran content policy checks against sample member interactions to demo for the credit union's board of directors. Managed the lead developer on the middleware architecture, coordinated with NCUA examiners on the audit format, and measured ROI through examination readiness scores and the zero-finding result across 43K+ AI interactions.",
+    architecture: "Middleware layer built on FastAPI that intercepts all AI interactions. Supabase for audit logging, AWS Bedrock for model access, and LangSmith for LLM evaluation and monitoring.",
     metrics: [
       {value: "0", label: "NCUA Exam Findings", prev: ""},
       {value: "43K+", label: "AI Interactions Governed", prev: ""},
@@ -139,11 +160,14 @@ const PRODUCTS = [
     id: "infra-automation",
     name: "Infrastructure Automation Platform",
     domain: "DevOps",
+    category: "Enterprise & Operations",
     stage: "Production",
     tagline: "Self-Service Enterprise Infrastructure",
     description: "Platform that transformed a 3-week infrastructure provisioning process into self-service deployment with policy guardrails, reducing deployment time by 85% while maintaining compliance.",
     problem: "Infrastructure requests took 3 weeks with 6 approval steps. Platform team was a bottleneck — 40% of their time spent on routine provisioning. Engineers worked around the process, creating shadow IT risk.",
     solution: "Self-service portal with Terraform-based provisioning, OPA policy enforcement, and automated compliance validation. Engineers deploy within guardrails; platform team focuses on platform evolution instead of ticket processing.",
+    role: "Interviewed 15 engineering teams to document the existing 6-step infrastructure approval process, calculating that each request took an average of 4 days and $2,400 in platform engineer time. Ran a vendor evaluation of Backstage, Env0, and Spacelift before recommending a custom self-service portal with OPA for policy enforcement. Wireframed the provisioning request flow, approval dashboard, and policy guardrail configuration screens, then built a working prototype that let two pilot teams provision staging environments without platform team involvement. Developed the cost-avoidance business case showing $12M annual value, managed three contract developers through the build, and ran the phased rollout presenting adoption dashboards to engineering leadership while tracking provisioning time and compliance violation rates as core ROI metrics.",
+    architecture: "Temporal orchestrates provisioning workflows across Terraform and Ansible. FastAPI portal with PostgreSQL and TimescaleDB for metrics. OPA enforces policy guardrails at deployment time.",
     metrics: [
       {value: "85%", label: "Deployment Time Reduction", prev: ""},
       {value: "$12M", label: "Annual Value", prev: ""},
@@ -157,11 +181,14 @@ const PRODUCTS = [
     id: "integration-health",
     name: "Integration Health Monitor",
     domain: "API Monitoring",
+    category: "Enterprise & Operations",
     stage: "Multi-client",
     tagline: "Third-Party Integration Observability",
     description: "Single-pane-of-glass monitoring for all third-party API integrations. Replaced the 'check each provider status page manually' workflow with automated health scoring and incident detection.",
     problem: "Mean time to identify integration issues was 30+ minutes. Engineers checked 6+ provider status pages, grepped logs, and asked around. Support tickets spiked before anyone realized an API was degraded.",
     solution: "Unified monitoring dashboard with per-provider health scores, circuit breaker status, latency tracking, and automated alerting. Webhook-based ingestion means issues are detected in under 2 minutes.",
+    role: "Identified the product opportunity by analyzing incident postmortems at the first client, finding that 60% of outages were caused by third-party API failures that took hours to detect. Mapped the competitive landscape of API monitoring tools (Datadog, Runscope, Moesif) and found that none focused on provider-side health scoring or circuit breaker detection. Wireframed the unified health dashboard and alerting configuration interface, built a prototype integrating live status data from three of the client's critical providers, and presented the detection speed improvement to their VP of Engineering. Wrote the integration framework spec with the lead developer, scoped the MVP to one client's top 5 providers, measured ROI through mean-time-to-identify reduction, and used those results to pitch expansion to two additional clients with different integration landscapes.",
+    architecture: "FastAPI ingestion layer processing webhook events from third-party providers. PostgreSQL for health metrics, Supabase for real-time status, and Grafana dashboards for visualization.",
     metrics: [
       {value: "<2 min", label: "Mean Time to Identify", prev: "from 30+ min"},
       {value: "15x", label: "Detection Speed", prev: ""},
@@ -175,11 +202,14 @@ const PRODUCTS = [
     id: "portfolio-intelligence",
     name: "Portfolio Intelligence Hub",
     domain: "Real Estate Analytics",
+    category: "AI & ML",
     stage: "Active",
     tagline: "Natural Language Querying for Real Estate Data",
     description: "RAG-powered analytics platform that lets real estate portfolio managers query complex property and financial data in natural language — getting answers in seconds instead of days.",
     problem: "Portfolio managers waited 24-48 hours for analysts to run custom SQL queries against the data warehouse. Simple questions like 'which properties have lease expirations in Q3' required filing a data request.",
     solution: "Text-to-SQL engine with semantic search over property documents, validated against known-good queries. Natural language interface returns results in under 30 seconds with confidence scores and source attribution.",
+    role: "Ran discovery sessions with 8 portfolio managers to catalog their 20 most common data requests, and found they were waiting 24 to 48 hours for analysts to pull queries that should take seconds. Benchmarked LLM providers (Claude API, Cohere, OpenAI) on SQL generation accuracy using a test suite of 50 real property queries I built with the analysts. Wireframed the natural language search interface, confidence scoring display, and property comparison views, then built a prototype that let PMs type questions and see live SQL results during user testing. Managed the lead developer on the RAG pipeline architecture, scoped the MVP to the top 10 query types, ran demos with portfolio managers showing accuracy against their known answers, and tracked ROI through analyst hours recovered and query turnaround time.",
+    architecture: "FastAPI backend with text-to-SQL engine. Snowflake as the data warehouse, Supabase with pgvector for document search, and Claude API plus Cohere for natural language understanding.",
     metrics: [
       {value: "<30s", label: "Query Turnaround", prev: "from 24-48 hours"},
       {value: "91.3%", label: "SQL Accuracy", prev: ""},
@@ -193,11 +223,14 @@ const PRODUCTS = [
     id: "review-prep",
     name: "Review Prep Engine",
     domain: "Wealth Management",
+    category: "Finance & Compliance",
     stage: "Approved",
     tagline: "Automated Client Review Assembly",
     description: "Automates the assembly of client review packages for wealth advisors — pulling from CRM, portfolio systems, and market data to produce ready-to-present briefing documents.",
     problem: "Advisors spent 45 minutes per client assembling review materials from 4+ systems. With 200+ clients each, quarterly reviews meant weeks of prep work — or poorly prepared meetings.",
     solution: "Automated pipeline that pulls client data from all source systems, generates performance summaries, flags discussion topics, and produces a presentation-ready briefing document. Advisor reviews and customizes in 12 minutes.",
+    role: "Interviewed advisors across three firm tiers to map the manual client review prep process, timing each step and finding that advisors spent 45+ minutes per client pulling data from four disconnected systems before every review meeting. Designed the briefing document template with advisors, wireframing the layout so they could give feedback on information hierarchy before any development started. Built an MVP that pulled from the CRM and one portfolio system to generate sample briefings, then walked advisors through the output to validate format and content. Ran a pilot with a group of advisors, collected structured feedback after each cycle, and iterated the template through three revisions. Managed the backend integration team, calculated ROI through prep time savings per advisor per quarter, and used pilot results showing 12-minute prep times to justify expanding to 200+ client portfolios.",
+    architecture: "Next.js frontend for advisor review and customization. FastAPI backend orchestrating data pulls across source systems, Supabase for storage, and n8n/Trigger.dev for pipeline automation.",
     metrics: [
       {value: "12 min", label: "Prep Time/Client", prev: "from 45 min"},
       {value: "73%", label: "Time Savings", prev: ""},
@@ -211,11 +244,14 @@ const PRODUCTS = [
     id: "scope-tracker",
     name: "Scope Tracker",
     domain: "Legal Operations",
+    category: "AI & Legal",
     stage: "Production",
     tagline: "Engagement Scope Drift Detection",
     description: "Real-time monitoring of legal engagement budgets with automated scope drift detection and change order generation. Built for law firms running fixed-fee engagements.",
     problem: "28% of engagements ran over budget, discovered only at final billing. Partners had no visibility into budget burn rates, and scope creep went undetected until it was too late to negotiate change orders.",
     solution: "Real-time budget tracking with automated drift detection that triggers alerts when engagements diverge from plan. Generates change order proposals with supporting data, enabling recovery before overruns compound.",
+    role: "Analyzed two years of the firm's historical billing data to identify scope drift patterns, quantifying that undetected overruns were costing $400K+ annually across active engagements. Researched legal ops tools in the market (BigHand, Brightflag, CounselLink) and found that none offered proactive drift detection with automated change order generation. Wireframed the engagement health dashboard and the change order proposal workflow, then built a prototype that flagged drift on three historical engagements so partners could see exactly what the alerts would look like. Presented the prototype to firm partners with a cost-recovery projection, managed the backend team through the algorithm tuning and integration with the billing system, and ran a pilot across 5 engagements before scaling to 17. Tracked ROI through recovered revenue, hitting $127K in Q1 with a 4.2-day average detection lead time.",
+    architecture: "Next.js dashboard with FastAPI backend. Supabase for engagement and billing data, n8n and Trigger.dev for automated drift detection workflows, and Stripe for billing integration.",
     metrics: [
       {value: "11%", label: "Overrun Rate", prev: "from 28%"},
       {value: "$127K", label: "Recovered Q1", prev: ""},
@@ -229,11 +265,14 @@ const PRODUCTS = [
     id: "verified-marketplace",
     name: "Verified Services Marketplace",
     domain: "Marketplace",
+    category: "Consumer & Growth",
     stage: "Approved",
     tagline: "Trust-First Two-Sided Marketplace",
     description: "Two-sided marketplace with verification-first onboarding. Suppliers go through credential verification before listing, building buyer trust and enabling premium pricing.",
     problem: "Existing marketplace had 15% supplier verification rate, leading to low buyer trust, high dispute rates, and a race-to-the-bottom pricing dynamic that drove quality suppliers away.",
     solution: "Verification-first supplier onboarding with credential checks, background verification, and performance monitoring. Verified badge creates trust signal that enables premium pricing and attracts quality suppliers.",
+    role: "Defined the marketplace model after researching 12 competitor platforms and interviewing 30+ suppliers to understand what made them abandon other marketplaces (verification friction was the #1 complaint). Mapped the supplier onboarding journey end-to-end, wireframed the verification flow and trust badge display, and built a clickable prototype of the full onboarding experience that we tested with 10 suppliers before development. Created the marketplace economics model projecting GMV, take rate, and supplier acquisition costs to build the business case for the initial investment. Managed the lead developer and three contract engineers through a phased launch (supplier side first, then buyer side), ran early demos with anchor buyers to validate the trust framework, and measured ROI through verification completion rates, supplier activation time, and the premium pricing that verified suppliers could command.",
+    architecture: "Next.js marketplace frontend with FastAPI backend. Supabase for data, Stripe Connect for payments, Clerk for authentication, and n8n/Trigger.dev for verification workflow automation.",
     metrics: [
       {value: "4x", label: "Throughput Increase", prev: ""},
       {value: "$15M+", label: "Year 1 GMV Projection", prev: ""},
@@ -245,7 +284,7 @@ const PRODUCTS = [
   }
 ];
 
-const DOMAINS = [...new Set(PRODUCTS.map(p => p.domain))];
+const CATEGORIES = ["AI & Security", "AI & ML", "AI & Legal", "Consumer & Growth", "Enterprise & Operations", "Finance & Compliance"];
 const CHART_COLORS = {blue:"#3b82f6",green:"#22c55e",amber:"#f59e0b",red:"#ef4444",purple:"#8b5cf6",cyan:"#06b6d4",gray:"#9ca3af"};
 const COLORS = ["#111","#3b82f6","#8b5cf6","#22c55e","#f59e0b","#ef4444","#06b6d4","#ec4899"];
 
@@ -1170,7 +1209,7 @@ function AboutPage() {
 
 function HomePage({onSelectProduct}) {
   const [filter, setFilter] = useState("All");
-  const filtered = filter === "All" ? PRODUCTS : PRODUCTS.filter(p => p.domain === filter || p.stage === filter);
+  const filtered = filter === "All" ? PRODUCTS : PRODUCTS.filter(p => p.category === filter);
 
   return (
     <>
@@ -1188,7 +1227,7 @@ function HomePage({onSelectProduct}) {
       </div>
       <div className="container">
         <div className="filter-bar">
-          {["All",...DOMAINS].map(d=>(
+          {["All",...CATEGORIES].map(d=>(
             <button key={d} className={`filter-btn ${filter===d?"active":""}`} onClick={()=>setFilter(d)}>{d}</button>
           ))}
         </div>
@@ -1249,6 +1288,10 @@ function ProductDetail({productId, onBack}) {
               <div className="section-title">The Solution</div>
               <div className="section-body"><p>{product.solution}</p></div>
             </div>
+            <div className="section">
+              <div className="section-title">My Role</div>
+              <div className="section-body"><p>{product.role}</p></div>
+            </div>
           </>
         )}
 
@@ -1262,11 +1305,12 @@ function ProductDetail({productId, onBack}) {
         {tab === "tech" && (
           <div className="section">
             <div className="section-title">Technology Stack</div>
+            {product.architecture && <p className="architecture-desc">{product.architecture}</p>}
             <div className="tech-list">
               {product.tech.map(t=><span key={t} className="tech-chip">{t}</span>)}
             </div>
             <div style={{marginTop:24}}>
-              <a href={product.github} target="_blank" rel="noopener noreferrer" style={{fontSize:14,color:"var(--muted)",borderBottom:"1px solid var(--border)",paddingBottom:2}}>View on GitHub &rarr;</a>
+              <a href={product.github} target="_blank" rel="noopener noreferrer" style={{fontSize:14,color:"var(--muted)",borderBottom:"1px solid var(--border)",paddingBottom:2}}>View on GitHub →</a>
             </div>
           </div>
         )}
