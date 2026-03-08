@@ -365,10 +365,18 @@ function AgentGateDashboard({data}) {
         <div className="chart-title">Token Lifecycle</div>
         <div className="chart-value">312 active tokens</div>
         <ResponsiveContainer width="100%" height={200}>
-          <PieChart><Pie data={data.tokenLifecycle} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} label={({name,value})=>`${name}: ${value}`}>
+          <PieChart><Pie data={data.tokenLifecycle} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={35} outerRadius={65} paddingAngle={2} label={false}>
             {data.tokenLifecycle.map((_,i)=><Cell key={i} fill={[CHART_COLORS.blue,CHART_COLORS.green,CHART_COLORS.gray,CHART_COLORS.red][i]}/>)}
           </Pie><Tooltip/></PieChart>
         </ResponsiveContainer>
+        <div className="pie-legend">
+          {data.tokenLifecycle.map((d,i)=>(
+            <div key={d.name} className="pie-legend-item">
+              <span className="pie-legend-dot" style={{background:[CHART_COLORS.blue,CHART_COLORS.green,CHART_COLORS.gray,CHART_COLORS.red][i]}}/>
+              {d.name}: {d.value.toLocaleString()}
+            </div>
+          ))}
+        </div>
       </div>
       <div className="chart-card">
         <div className="chart-title">Policy Enforcement</div>
@@ -983,17 +991,66 @@ const DASHBOARD_COMPONENTS = {
 };
 
 // ============================================================================
+// PRODUCT ICONS (SVG inline for each domain)
+// ============================================================================
+const DOMAIN_ICONS = {
+  "Developer Security": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#f0fdf4"/><path d="M24 14l-10 5v8c0 5.55 4.27 10.74 10 12 5.73-1.26 10-6.45 10-12v-8l-10-5z" stroke="#166534" strokeWidth="2" fill="none"/><path d="M20 25l3 3 5-6" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+  ),
+  "ML Infrastructure": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#ede9fe"/><circle cx="24" cy="18" r="3" stroke="#6b21a8" strokeWidth="2"/><circle cx="16" cy="30" r="3" stroke="#6b21a8" strokeWidth="2"/><circle cx="32" cy="30" r="3" stroke="#6b21a8" strokeWidth="2"/><path d="M22 20.5l-4 7M26 20.5l4 7M19 30h10" stroke="#8b5cf6" strokeWidth="1.5"/></svg>
+  ),
+  "Legal AI": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#dbeafe"/><path d="M16 14h16M16 20h16M16 26h10" stroke="#1e40af" strokeWidth="2" strokeLinecap="round"/><path d="M32 24l-4 4-2-2" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/><rect x="13" y="11" width="22" height="22" rx="3" stroke="#1e40af" strokeWidth="2" fill="none"/></svg>
+  ),
+  "Consumer Platform": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#fef3c7"/><path d="M15 33V20l9-7 9 7v13H15z" stroke="#92400e" strokeWidth="2" fill="none"/><rect x="21" y="25" width="6" height="8" rx="1" stroke="#f59e0b" strokeWidth="2" fill="none"/></svg>
+  ),
+  "Sales Enablement": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#dbeafe"/><path d="M14 34l6-8 5 4 9-14" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="34" cy="16" r="2" fill="#1e40af"/></svg>
+  ),
+  "Financial Infrastructure": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#f0fdf4"/><path d="M24 14v20M18 18h12M16 24h16M18 30h12" stroke="#166534" strokeWidth="2" strokeLinecap="round"/><circle cx="24" cy="24" r="11" stroke="#22c55e" strokeWidth="2" fill="none"/></svg>
+  ),
+  "AI Compliance": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#fef3c7"/><path d="M24 14l-10 5v8c0 5.55 4.27 10.74 10 12 5.73-1.26 10-6.45 10-12v-8l-10-5z" stroke="#92400e" strokeWidth="2" fill="none"/><path d="M21 24h6M24 21v6" stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round"/></svg>
+  ),
+  "DevOps": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#ede9fe"/><path d="M16 16h16v16H16z" stroke="#6b21a8" strokeWidth="2" rx="2" fill="none"/><path d="M20 22l3 3 5-5" stroke="#8b5cf6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M24 12v4M24 32v4M12 24h4M32 24h4" stroke="#6b21a8" strokeWidth="2" strokeLinecap="round"/></svg>
+  ),
+  "API Monitoring": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#dbeafe"/><path d="M14 28l5-8 4 4 6-10 5 6" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="34" cy="20" r="3" stroke="#1e40af" strokeWidth="2" fill="none"/></svg>
+  ),
+  "Real Estate Analytics": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#f0fdf4"/><rect x="14" y="20" width="8" height="14" rx="1" stroke="#166534" strokeWidth="2" fill="none"/><rect x="26" y="14" width="8" height="20" rx="1" stroke="#166534" strokeWidth="2" fill="none"/><path d="M17 24h2M17 28h2M29 18h2M29 22h2M29 26h2" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round"/></svg>
+  ),
+  "Wealth Management": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#ede9fe"/><circle cx="24" cy="24" r="10" stroke="#6b21a8" strokeWidth="2" fill="none"/><path d="M24 18v12M20 22h8M20 26h8" stroke="#8b5cf6" strokeWidth="2" strokeLinecap="round"/></svg>
+  ),
+  "Legal Operations": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#fef3c7"/><path d="M24 14v4M16 22h16M14 34h20" stroke="#92400e" strokeWidth="2" strokeLinecap="round"/><path d="M18 22l-4 8h8zM30 22l-4 8h8z" stroke="#f59e0b" strokeWidth="2" fill="none" strokeLinejoin="round"/></svg>
+  ),
+  "Marketplace": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#dbeafe"/><path d="M14 20l2-6h16l2 6" stroke="#1e40af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M14 20v14h20V20" stroke="#1e40af" strokeWidth="2" fill="none"/><rect x="20" y="26" width="8" height="8" rx="1" stroke="#3b82f6" strokeWidth="2" fill="none"/></svg>
+  ),
+};
+
+// ============================================================================
 // APP COMPONENTS
 // ============================================================================
-function Nav({onHome}) {
+function Nav({onHome, onAbout}) {
   return (
     <nav>
       <div className="container">
         <a className="logo" href="#" onClick={e=>{e.preventDefault();onHome()}}>Jacob George</a>
         <div className="nav-links">
           <a href="#" onClick={e=>{e.preventDefault();onHome()}}>Products</a>
+          <a href="#about" onClick={e=>{e.preventDefault();onAbout()}}>About</a>
           <a href="https://github.com/riiiiiicoooo" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
+        <button className="mobile-menu-btn" onClick={e=>{e.currentTarget.parentElement.querySelector('.nav-links').classList.toggle('open')}}>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+        </button>
       </div>
     </nav>
   );
@@ -1004,6 +1061,7 @@ function ProductCard({product, onClick}) {
   return (
     <div className="product-card" onClick={onClick}>
       <span className={`card-stage stage-${stageClass}`}>{product.stage}</span>
+      <div className="card-icon">{DOMAIN_ICONS[product.domain]}</div>
       <div className="card-domain">{product.domain}</div>
       <div className="card-title">{product.name}</div>
       <div className="card-desc">{product.tagline}</div>
@@ -1016,6 +1074,88 @@ function ProductCard({product, onClick}) {
         {product.tech.slice(0,4).map(t=><span key={t} className="card-tag">{t}</span>)}
       </div>
       <span className="card-arrow">&rarr;</span>
+    </div>
+  );
+}
+
+function AboutPage() {
+  return (
+    <div className="about-page">
+      <div className="container">
+        <div className="about-content">
+          <div className="about-main">
+            <h1 className="about-title">About Me</h1>
+            <p className="about-lead">
+              I'm Jacob George — a Senior Product Manager and strategic advisor with 10+ years of experience leading product management across AI, SaaS, enterprise technology, and consulting organizations. Based in New York, I currently run Ampersand Consulting where I help companies define and ship products from zero to production.
+            </p>
+            <p className="about-body">
+              My background spans financial services, healthcare, defense, real estate, and enterprise SaaS. I've worked at Deloitte, Avanade (the Accenture &amp; Microsoft joint venture), and led product strategy for AI-powered platforms serving the Defense Health Agency and Navy Medicine — before going independent to focus on building.
+            </p>
+            <p className="about-body">
+              What I do differently is bridge the gap between strategy and execution. I define product management frameworks and coach teams on best practices, but I also get hands-on — building with LLMs, RAG pipelines, and ML systems, shipping AI-native product experiences, and measuring outcomes with real data. Every product in this portfolio includes quantified results and interactive dashboards showing the impact.
+            </p>
+            <p className="about-body">
+              I'm most effective in ambiguous, high-complexity environments where the path forward isn't clear. I use design thinking and systems thinking to diagnose root causes, create clarity through structured problem-solving, and drive cross-functional alignment across engineering, design, data, and business teams.
+            </p>
+            <div className="about-highlights">
+              <div className="highlight-item">
+                <div className="highlight-num">10+</div>
+                <div className="highlight-label">Years in product management</div>
+              </div>
+              <div className="highlight-item">
+                <div className="highlight-num">13</div>
+                <div className="highlight-label">Products shipped across 8 industries</div>
+              </div>
+              <div className="highlight-item">
+                <div className="highlight-num">$35M+</div>
+                <div className="highlight-label">Combined value delivered</div>
+              </div>
+            </div>
+            <div className="about-experience">
+              <h2 className="about-subtitle">Background</h2>
+              <div className="experience-list">
+                <div className="experience-item">
+                  <div className="exp-role">Product Manager Consultant, Principal</div>
+                  <div className="exp-company">Ampersand Consulting &middot; 2023 – Present</div>
+                </div>
+                <div className="experience-item">
+                  <div className="exp-role">Product Manager / Change Consultant, Senior</div>
+                  <div className="exp-company">Avanade (Accenture &amp; Microsoft JV) &middot; 2022</div>
+                </div>
+                <div className="experience-item">
+                  <div className="exp-role">Product Strategy Consultant, Senior</div>
+                  <div className="exp-company">JPI &middot; 2019 – 2022</div>
+                </div>
+                <div className="experience-item">
+                  <div className="exp-role">Strategy Consultant</div>
+                  <div className="exp-company">Deloitte &middot; 2017 – 2019</div>
+                </div>
+              </div>
+              <div className="about-education">B.S. Neuroscience, Temple University &middot; CSPO &middot; CSM &middot; SAFe</div>
+            </div>
+            <div className="about-cta-section">
+              <h2 className="about-subtitle">Let's Talk</h2>
+              <p className="about-body">
+                I'm open to new product engagements, consulting opportunities, and connecting with other builders. Reach out and let's see what we can create together.
+              </p>
+              <div className="about-links">
+                <a href="mailto:jacob.georgenyc@gmail.com" className="cta-button primary">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
+                  jacob.georgenyc@gmail.com
+                </a>
+                <a href="https://linkedin.com/in/jacob-g17630a127" target="_blank" rel="noopener noreferrer" className="cta-button secondary">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                  LinkedIn
+                </a>
+                <a href="https://github.com/riiiiiicoooo" target="_blank" rel="noopener noreferrer" className="cta-button secondary">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1065,8 +1205,13 @@ function ProductDetail({productId, onBack}) {
       <div className="container">
         <div className="back-btn" onClick={onBack}>&larr; All Products</div>
         <div className="detail-header">
-          <div className="detail-domain">{product.domain} &middot; {product.stage}</div>
-          <h1 className="detail-title">{product.name}</h1>
+          <div className="detail-icon-row">
+            <div className="detail-icon">{DOMAIN_ICONS[product.domain]}</div>
+            <div>
+              <div className="detail-domain">{product.domain} &middot; {product.stage}</div>
+              <h1 className="detail-title">{product.name}</h1>
+            </div>
+          </div>
           <div className="detail-subtitle">{product.description}</div>
         </div>
 
@@ -1124,26 +1269,42 @@ function ProductDetail({productId, onBack}) {
 
 export default function App() {
   const [currentProduct, setCurrentProduct] = useState(null);
+  const [page, setPage] = useState("home");
 
   useEffect(()=>{
     const handleHash = ()=>{
       const hash = window.location.hash.slice(1);
-      if (hash && PRODUCTS.find(p=>p.id===hash)) setCurrentProduct(hash);
-      else setCurrentProduct(null);
+      if (hash === "about") { setPage("about"); setCurrentProduct(null); }
+      else if (hash && PRODUCTS.find(p=>p.id===hash)) { setPage("product"); setCurrentProduct(hash); }
+      else { setPage("home"); setCurrentProduct(null); }
     };
     window.addEventListener("hashchange", handleHash);
     handleHash();
     return ()=>window.removeEventListener("hashchange", handleHash);
   },[]);
 
-  const goHome = ()=>{window.location.hash="";setCurrentProduct(null)};
-  const goProduct = (id)=>{window.location.hash=id;setCurrentProduct(id);window.scrollTo(0,0)};
+  const goHome = ()=>{window.location.hash="";setPage("home");setCurrentProduct(null)};
+  const goAbout = ()=>{window.location.hash="about";setPage("about");setCurrentProduct(null);window.scrollTo(0,0)};
+  const goProduct = (id)=>{window.location.hash=id;setPage("product");setCurrentProduct(id);window.scrollTo(0,0)};
 
   return (
     <>
-      <Nav onHome={goHome}/>
-      {currentProduct ? <ProductDetail productId={currentProduct} onBack={goHome}/> : <HomePage onSelectProduct={goProduct}/>}
-      <footer><div className="container">Jacob George &middot; Consulting PM &middot; <a href="https://github.com/riiiiiicoooo" target="_blank" rel="noopener noreferrer" style={{borderBottom:"1px solid var(--border)"}}>GitHub</a></div></footer>
+      <Nav onHome={goHome} onAbout={goAbout}/>
+      {page === "about" && <AboutPage/>}
+      {page === "product" && currentProduct && <ProductDetail productId={currentProduct} onBack={goHome}/>}
+      {page === "home" && <HomePage onSelectProduct={goProduct}/>}
+      <footer>
+        <div className="container">
+          <div className="footer-content">
+            <div className="footer-left">Jacob George &middot; Consulting PM</div>
+            <div className="footer-links">
+              <a href="mailto:jacob.georgenyc@gmail.com">Email</a>
+              <span>&middot;</span>
+              <a href="https://github.com/riiiiiicoooo" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }
