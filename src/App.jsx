@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   LineChart, Line, BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell,
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -21,6 +21,12 @@ const PRODUCTS = [
     solution: "OAuth 2.0 agent identity layer with ephemeral token issuance, policy-based access control, and secrets brokering. Agents authenticate per-request with scoped, time-limited credentials. Full audit trail of every credential access.",
     role: "Started by running a security posture audit across the client's agent ecosystem, cataloging every credential exposure incident from the prior 6 months to build the cost-of-inaction case. Facilitated a design sprint with the security and DevOps teams to map the ideal token lifecycle, then wireframed the policy engine interface and agent onboarding flow in Figma. Built a working prototype that demonstrated ephemeral token issuance against a sandbox API, which became the core of our stakeholder demo to the CISO. Wrote the PRD and scoped the MVP to a single high-risk agent workflow, managed the lead developer and two contract engineers through a 10-week build, and ran biweekly demos tracking credential exposure reduction as the primary ROI metric.",
     architecture: "FastAPI service layer handling OAuth 2.0 flows, backed by PostgreSQL for policy storage, Redis for token caching, and HashiCorp Vault for secrets brokering. TypeScript SDK provides client-side integration.",
+    pipeline: [
+      {label:"Ingest",detail:"OAuth requests + Vault API logs"},
+      {label:"Process",detail:"FastAPI auth validation engine"},
+      {label:"Store",detail:"PostgreSQL audit_log + Redis token cache"},
+      {label:"Serve",detail:"Real-time metrics API"}
+    ],
     metrics: [
       {value: "0", label: "Credential Exposures", prev: "from 23 in 6 months"},
       {value: "<200ms", label: "Auth Latency p95", prev: "from 1.2s"},
@@ -42,6 +48,12 @@ const PRODUCTS = [
     solution: "Unified platform with real-time quality scoring, automated consensus workflows, annotator feedback loops, and model performance correlation. Quality gates prevent bad data from reaching training pipelines.",
     role: "Ran a competitive analysis of 8 annotation platforms (Labelbox, Scale AI, Prodigy, etc.) and identified quality measurement as the key gap nobody was solving well. Spent two weeks embedded with annotation team leads at three client organizations, mapping their review workflows and error patterns into journey maps that became the foundation of the product spec. Wireframed the quality scoring dashboard and real-time feedback loop UI, then built a clickable prototype that we used to validate the interaction model with annotators before writing a single line of production code. Developed the ROI model showing how quality improvements reduced model retraining cycles from weekly to monthly, presented it to each client's ML leadership to secure budget, and managed the lead developer through an MVP scoped to one annotation type before expanding.",
     architecture: "Temporal orchestrates multi-step annotation and quality pipelines. FastAPI serves the API layer, PostgreSQL and Supabase handle data persistence, and scikit-learn powers quality scoring models.",
+    pipeline: [
+      {label:"Ingest",detail:"Raw annotation batches via S3 upload"},
+      {label:"Process",detail:"Temporal quality scoring pipeline"},
+      {label:"Store",detail:"PostgreSQL quality_scores + model registry"},
+      {label:"Serve",detail:"Team performance API + model training feed"}
+    ],
     metrics: [
       {value: "2,340", label: "Examples/Team-Day", prev: "from 200 baseline"},
       {value: "2.8%", label: "Annotation Error Rate", prev: "from 12%"},
@@ -63,6 +75,12 @@ const PRODUCTS = [
     solution: "Automated extraction pipeline with clause-level risk scoring, cross-contract pattern detection, and a deal dashboard that surfaces material issues by risk tier. Attorneys review AI-flagged items instead of reading everything.",
     role: "Spent two weeks shadowing M&A attorneys during active due diligence to document every manual step in their review process, then distilled findings into a workflow analysis deck that became the pitch to firm leadership. Evaluated LLM providers (Claude, GPT-4, Cohere) through structured accuracy benchmarks I designed against attorney-reviewed ground truth. Wireframed the risk scoring dashboard and deal room interface, built a prototype extracting clauses from a sample purchase agreement, and demoed it to the M&A partners to get buy-in for the full build. Wrote detailed user stories for the extraction pipeline, managed the lead developer on architecture decisions, ran a 4-week pilot on a live deal to prove $600K in annual savings per engagement, and used that data to justify scaling across the practice group.",
     architecture: "Next.js frontend with FastAPI backend. Supabase with pgvector for document storage and semantic search. Claude and GPT-4 handle extraction, with LangSmith for LLM observability.",
+    pipeline: [
+      {label:"Ingest",detail:"PDF/DOCX uploads via deal room integration"},
+      {label:"Process",detail:"Claude + GPT-4 extraction pipeline"},
+      {label:"Store",detail:"Supabase clause_extractions + pgvector"},
+      {label:"Serve",detail:"Risk dashboard API + deal room sync"}
+    ],
     metrics: [
       {value: "50-80", label: "Contracts/Hour", prev: "from 3-5 manual"},
       {value: "94.2%", label: "Extraction Accuracy", prev: ""},
@@ -84,6 +102,12 @@ const PRODUCTS = [
     solution: "Event-driven personalization pipeline with real-time behavioral segmentation, A/B testing framework, and adaptive content ranking. Every surface can be personalized independently with full experimentation support.",
     role: "Kicked off with a competitive teardown of personalization engines (Optimizely, Dynamic Yield, Amplitude) to map where the client's experimentation maturity sat and what gaps to prioritize. Ran user interviews with the client's growth and data teams to understand their current segmentation approach, then designed wireframes for the segment builder, A/B test configurator, and results dashboard. Built an interactive prototype demonstrating how different cohorts would see personalized content, which we walked through with the VP of Growth to align on the experimentation governance model. Modeled the ROI by projecting engagement lift impact on customer lifetime value, managed the lead developer through the event pipeline build, and established the measurement framework that ultimately proved 28% engagement lift and 59% retention improvement.",
     architecture: "Event-driven architecture with FastAPI processing behavioral events in real-time. Snowflake for analytics warehouse, Segment for event collection, and PostHog for experimentation.",
+    pipeline: [
+      {label:"Ingest",detail:"Segment event stream + Snowflake user profiles"},
+      {label:"Process",detail:"Real-time segmentation + PostHog experiments"},
+      {label:"Store",detail:"Snowflake behavioral_segments + Redis cache"},
+      {label:"Serve",detail:"Personalization API + experiment results feed"}
+    ],
     metrics: [
       {value: "+28%", label: "Engagement Lift", prev: ""},
       {value: "+59%", label: "Retention Improvement", prev: ""},
@@ -105,6 +129,12 @@ const PRODUCTS = [
     solution: "React Native app with GPS visit verification, offline-capable order entry, intelligent route optimization, and gamified leaderboards. Manager dashboard shows real-time field activity with automated coaching triggers.",
     role: "Did three days of ride-alongs with field reps before writing a single requirement, documenting their actual daily workflows, route planning habits, and the manual spreadsheet tracking they were using. Used those findings to build a journey map and pitch deck for sales leadership showing the revenue opportunity from optimized routes and visit accountability. Wireframed the mobile experience in Figma (route optimizer, check-in flow, leaderboard) and built a clickable prototype that reps could tap through on their phones during user testing sessions. Made the React Native decision for cross-platform support, managed two contract mobile developers, ran a pilot with 68 reps tracking daily visit increases as the core ROI metric, and presented weekly adoption dashboards to the SVP of Sales throughout rollout.",
     architecture: "React Native mobile app with Expo for cross-platform deployment. FastAPI backend with Supabase for data, Redux for offline state management, and Salesforce integration for CRM sync.",
+    pipeline: [
+      {label:"Ingest",detail:"GPS check-ins + Salesforce opportunity data"},
+      {label:"Process",detail:"Route optimization engine + visit verification"},
+      {label:"Store",detail:"Supabase visits + Salesforce sync queue"},
+      {label:"Serve",detail:"Mobile API + leaderboard WebSocket feed"}
+    ],
     metrics: [
       {value: "+43%", label: "Daily Visits", prev: ""},
       {value: "$5.3M", label: "Revenue Lift (Annual)", prev: ""},
@@ -126,6 +156,12 @@ const PRODUCTS = [
     solution: "Double-entry ledger with atomic transaction guarantees, real-time Stripe integration, automated daily reconciliation, and a monitoring dashboard that catches anomalies within minutes.",
     role: "Mapped the client's existing payment flow end-to-end with their finance and operations teams, identifying reconciliation bottlenecks and the manual exception handling process that was eating 20+ hours per week. Evaluated build vs. buy options for the ledger system, ran vendor demos of three off-the-shelf reconciliation tools, and ultimately recommended a custom build after none met the client's multi-currency requirements. Wireframed the reconciliation dashboard, exception queue, and audit trail interfaces, then built a prototype processing sample transactions through the double-entry pipeline to demo for the CFO and compliance team. Wrote the technical PRD with the lead developer, defined SLA targets, managed the build through a phased rollout starting with one payment channel, and measured ROI through transaction success rates and hours saved on manual reconciliation.",
     architecture: "FastAPI service layer with PostgreSQL for double-entry ledger. Stripe Connect handles payment processing, dbt manages data transformations, and Grafana/Prometheus provide real-time monitoring.",
+    pipeline: [
+      {label:"Ingest",detail:"Stripe webhooks + ACH/wire bank feeds"},
+      {label:"Process",detail:"Double-entry reconciliation engine"},
+      {label:"Store",detail:"PostgreSQL ledger_entries + audit trail"},
+      {label:"Serve",detail:"Settlement API + compliance reporting feed"}
+    ],
     metrics: [
       {value: "97.8%", label: "Transaction Success", prev: "from 91.2%"},
       {value: "<15min", label: "Reconciliation Time", prev: "from 3+ days"},
@@ -147,6 +183,12 @@ const PRODUCTS = [
     solution: "Middleware governance layer that intercepts all AI interactions, applies content policies, logs for audit, monitors for bias and hallucination, and generates compliance reports. Designed for examiner review.",
     role: "Led the regulatory research phase, spending three weeks studying NCUA examination guidelines and mapping every compliance requirement that applied to AI systems in credit unions. Built a competitive landscape analysis of governance tools in the market and identified the gap: nobody was solving real-time content policy enforcement for generative AI in financial services. Wireframed the governance dashboard, bias monitoring interface, and examiner-ready reporting views, then developed an MVP that ran content policy checks against sample member interactions to demo for the credit union's board of directors. Managed the lead developer on the middleware architecture, coordinated with NCUA examiners on the audit format, and measured ROI through examination readiness scores and the zero-finding result across 43K+ AI interactions.",
     architecture: "Middleware layer built on FastAPI that intercepts all AI interactions. Supabase for audit logging, AWS Bedrock for model access, and LangSmith for LLM evaluation and monitoring.",
+    pipeline: [
+      {label:"Ingest",detail:"LLM request/response interceptor middleware"},
+      {label:"Process",detail:"Content policy engine + bias detection model"},
+      {label:"Store",detail:"Supabase interaction_logs + LangSmith traces"},
+      {label:"Serve",detail:"Governance dashboard API + examiner export"}
+    ],
     metrics: [
       {value: "0", label: "NCUA Exam Findings", prev: ""},
       {value: "43K+", label: "AI Interactions Governed", prev: ""},
@@ -168,6 +210,12 @@ const PRODUCTS = [
     solution: "Self-service portal with Terraform-based provisioning, OPA policy enforcement, and automated compliance validation. Engineers deploy within guardrails; platform team focuses on platform evolution instead of ticket processing.",
     role: "Interviewed 15 engineering teams to document the existing 6-step infrastructure approval process, calculating that each request took an average of 4 days and $2,400 in platform engineer time. Ran a vendor evaluation of Backstage, Env0, and Spacelift before recommending a custom self-service portal with OPA for policy enforcement. Wireframed the provisioning request flow, approval dashboard, and policy guardrail configuration screens, then built a working prototype that let two pilot teams provision staging environments without platform team involvement. Developed the cost-avoidance business case showing $12M annual value, managed three contract developers through the build, and ran the phased rollout presenting adoption dashboards to engineering leadership while tracking provisioning time and compliance violation rates as core ROI metrics.",
     architecture: "Temporal orchestrates provisioning workflows across Terraform and Ansible. FastAPI portal with PostgreSQL and TimescaleDB for metrics. OPA enforces policy guardrails at deployment time.",
+    pipeline: [
+      {label:"Ingest",detail:"Terraform plan requests via self-service portal"},
+      {label:"Process",detail:"OPA policy evaluation + approval workflow"},
+      {label:"Store",detail:"PostgreSQL deployments + Terraform state backend"},
+      {label:"Serve",detail:"Provisioning API + Ansible execution logs"}
+    ],
     metrics: [
       {value: "85%", label: "Deployment Time Reduction", prev: ""},
       {value: "$12M", label: "Annual Value", prev: ""},
@@ -189,6 +237,12 @@ const PRODUCTS = [
     solution: "Unified monitoring dashboard with per-provider health scores, circuit breaker status, latency tracking, and automated alerting. Webhook-based ingestion means issues are detected in under 2 minutes.",
     role: "Identified the product opportunity by analyzing incident postmortems at the first client, finding that 60% of outages were caused by third-party API failures that took hours to detect. Mapped the competitive landscape of API monitoring tools (Datadog, Runscope, Moesif) and found that none focused on provider-side health scoring or circuit breaker detection. Wireframed the unified health dashboard and alerting configuration interface, built a prototype integrating live status data from three of the client's critical providers, and presented the detection speed improvement to their VP of Engineering. Wrote the integration framework spec with the lead developer, scoped the MVP to one client's top 5 providers, measured ROI through mean-time-to-identify reduction, and used those results to pitch expansion to two additional clients with different integration landscapes.",
     architecture: "FastAPI ingestion layer processing webhook events from third-party providers. PostgreSQL for health metrics, Supabase for real-time status, and Grafana dashboards for visualization.",
+    pipeline: [
+      {label:"Ingest",detail:"Provider webhook events + synthetic health probes"},
+      {label:"Process",detail:"Health scoring algorithm + anomaly detection"},
+      {label:"Store",detail:"PostgreSQL provider_health + Grafana metrics"},
+      {label:"Serve",detail:"Alert API + circuit breaker status feed"}
+    ],
     metrics: [
       {value: "<2 min", label: "Mean Time to Identify", prev: "from 30+ min"},
       {value: "15x", label: "Detection Speed", prev: ""},
@@ -210,6 +264,12 @@ const PRODUCTS = [
     solution: "Text-to-SQL engine with semantic search over property documents, validated against known-good queries. Natural language interface returns results in under 30 seconds with confidence scores and source attribution.",
     role: "Ran discovery sessions with 8 portfolio managers to catalog their 20 most common data requests, and found they were waiting 24 to 48 hours for analysts to pull queries that should take seconds. Benchmarked LLM providers (Claude API, Cohere, OpenAI) on SQL generation accuracy using a test suite of 50 real property queries I built with the analysts. Wireframed the natural language search interface, confidence scoring display, and property comparison views, then built a prototype that let PMs type questions and see live SQL results during user testing. Managed the lead developer on the RAG pipeline architecture, scoped the MVP to the top 10 query types, ran demos with portfolio managers showing accuracy against their known answers, and tracked ROI through analyst hours recovered and query turnaround time.",
     architecture: "FastAPI backend with text-to-SQL engine. Snowflake as the data warehouse, Supabase with pgvector for document search, and Claude API plus Cohere for natural language understanding.",
+    pipeline: [
+      {label:"Ingest",detail:"Snowflake property data + document uploads"},
+      {label:"Process",detail:"Claude text-to-SQL + Cohere RAG pipeline"},
+      {label:"Store",detail:"Snowflake query_results + pgvector embeddings"},
+      {label:"Serve",detail:"Natural language query API + confidence scores"}
+    ],
     metrics: [
       {value: "<30s", label: "Query Turnaround", prev: "from 24-48 hours"},
       {value: "91.3%", label: "SQL Accuracy", prev: ""},
@@ -231,6 +291,12 @@ const PRODUCTS = [
     solution: "Automated pipeline that pulls client data from all source systems, generates performance summaries, flags discussion topics, and produces a presentation-ready briefing document. Advisor reviews and customizes in 12 minutes.",
     role: "Interviewed advisors across three firm tiers to map the manual client review prep process, timing each step and finding that advisors spent 45+ minutes per client pulling data from four disconnected systems before every review meeting. Designed the briefing document template with advisors, wireframing the layout so they could give feedback on information hierarchy before any development started. Built an MVP that pulled from the CRM and one portfolio system to generate sample briefings, then walked advisors through the output to validate format and content. Ran a pilot with a group of advisors, collected structured feedback after each cycle, and iterated the template through three revisions. Managed the backend integration team, calculated ROI through prep time savings per advisor per quarter, and used pilot results showing 12-minute prep times to justify expanding to 200+ client portfolios.",
     architecture: "Next.js frontend for advisor review and customization. FastAPI backend orchestrating data pulls across source systems, Supabase for storage, and n8n/Trigger.dev for pipeline automation.",
+    pipeline: [
+      {label:"Ingest",detail:"CRM client records + portfolio system feeds"},
+      {label:"Process",detail:"n8n orchestration + briefing doc assembly"},
+      {label:"Store",detail:"Supabase briefing_packages + Next.js cache"},
+      {label:"Serve",detail:"Advisor portal API + PDF export service"}
+    ],
     metrics: [
       {value: "12 min", label: "Prep Time/Client", prev: "from 45 min"},
       {value: "73%", label: "Time Savings", prev: ""},
@@ -252,6 +318,12 @@ const PRODUCTS = [
     solution: "Real-time budget tracking with automated drift detection that triggers alerts when engagements diverge from plan. Generates change order proposals with supporting data, enabling recovery before overruns compound.",
     role: "Analyzed two years of the firm's historical billing data to identify scope drift patterns, quantifying that undetected overruns were costing $400K+ annually across active engagements. Researched legal ops tools in the market (BigHand, Brightflag, CounselLink) and found that none offered proactive drift detection with automated change order generation. Wireframed the engagement health dashboard and the change order proposal workflow, then built a prototype that flagged drift on three historical engagements so partners could see exactly what the alerts would look like. Presented the prototype to firm partners with a cost-recovery projection, managed the backend team through the algorithm tuning and integration with the billing system, and ran a pilot across 5 engagements before scaling to 17. Tracked ROI through recovered revenue, hitting $127K in Q1 with a 4.2-day average detection lead time.",
     architecture: "Next.js dashboard with FastAPI backend. Supabase for engagement and billing data, n8n and Trigger.dev for automated drift detection workflows, and Stripe for billing integration.",
+    pipeline: [
+      {label:"Ingest",detail:"Billing system time entries + budget data"},
+      {label:"Process",detail:"Drift detection algorithm + change order generator"},
+      {label:"Store",detail:"Supabase engagement_health + alert queue"},
+      {label:"Serve",detail:"Partner dashboard API + email alert service"}
+    ],
     metrics: [
       {value: "11%", label: "Overrun Rate", prev: "from 28%"},
       {value: "$127K", label: "Recovered Q1", prev: ""},
@@ -273,6 +345,12 @@ const PRODUCTS = [
     solution: "Verification-first supplier onboarding with credential checks, background verification, and performance monitoring. Verified badge creates trust signal that enables premium pricing and attracts quality suppliers.",
     role: "Defined the marketplace model after researching 12 competitor platforms and interviewing 30+ suppliers to understand what made them abandon other marketplaces (verification friction was the #1 complaint). Mapped the supplier onboarding journey end-to-end, wireframed the verification flow and trust badge display, and built a clickable prototype of the full onboarding experience that we tested with 10 suppliers before development. Created the marketplace economics model projecting GMV, take rate, and supplier acquisition costs to build the business case for the initial investment. Managed the lead developer and three contract engineers through a phased launch (supplier side first, then buyer side), ran early demos with anchor buyers to validate the trust framework, and measured ROI through verification completion rates, supplier activation time, and the premium pricing that verified suppliers could command.",
     architecture: "Next.js marketplace frontend with FastAPI backend. Supabase for data, Stripe Connect for payments, Clerk for authentication, and n8n/Trigger.dev for verification workflow automation.",
+    pipeline: [
+      {label:"Ingest",detail:"Supplier applications + verification documents"},
+      {label:"Process",detail:"Background check pipeline + credential validator"},
+      {label:"Store",detail:"Supabase supplier_profiles + Stripe Connect"},
+      {label:"Serve",detail:"Marketplace API + trust score feed"}
+    ],
     metrics: [
       {value: "4x", label: "Throughput Increase", prev: ""},
       {value: "$15M+", label: "Year 1 GMV Projection", prev: ""},
@@ -386,12 +464,15 @@ const DASHBOARDS = {
 // ============================================================================
 // DASHBOARD COMPONENTS
 // ============================================================================
-function AgentGateDashboard({data}) {
+function AgentGateDashboard({data, pipeline}) {
   return (
-    <div className="dashboard-grid">
-      <div className="chart-card">
-        <div className="chart-title">Auth Requests (14-Day)</div>
-        <div className="chart-value">6,840 requests</div>
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card">
+          <div className="chart-title">Auth Requests (14-Day)</div>
+          <div className="chart-value">6,840 requests</div>
+          <div className="chart-source">Source: PostgreSQL audit_log table</div>
         <ResponsiveContainer width="100%" height={200}>
           <AreaChart data={data.authRequests}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="day" tick={{fontSize:10}} interval={2}/><YAxis tick={{fontSize:10}}/>
@@ -403,6 +484,7 @@ function AgentGateDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Token Lifecycle</div>
         <div className="chart-value">312 active tokens</div>
+        <div className="chart-source">Source: Redis token cache snapshot</div>
         <ResponsiveContainer width="100%" height={200}>
           <PieChart><Pie data={data.tokenLifecycle} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={35} outerRadius={65} paddingAngle={2} label={false}>
             {data.tokenLifecycle.map((_,i)=><Cell key={i} fill={[CHART_COLORS.blue,CHART_COLORS.green,CHART_COLORS.gray,CHART_COLORS.red][i]}/>)}
@@ -420,6 +502,7 @@ function AgentGateDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Policy Enforcement</div>
         <div className="chart-value">292 enforcements</div>
+        <div className="chart-source">Source: PostgreSQL policy_events table</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.policyHits} layout="vertical"><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis type="number" tick={{fontSize:10}}/><YAxis type="category" dataKey="policy" tick={{fontSize:10}} width={100}/>
@@ -430,6 +513,7 @@ function AgentGateDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Auth Latency (24hr)</div>
         <div className="chart-value">p95: 168ms</div>
+        <div className="chart-source">Source: FastAPI request metrics</div>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={data.latency}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="hour" tick={{fontSize:10}} interval={5}/><YAxis tick={{fontSize:10}}/>
@@ -439,15 +523,19 @@ function AgentGateDashboard({data}) {
         </ResponsiveContainer>
       </div>
     </div>
+    </>
   );
 }
 
-function AIDataOpsDashboard({data}) {
+function AIDataOpsDashboard({data, pipeline}) {
   return (
-    <div className="dashboard-grid">
-      <div className="chart-card">
-        <div className="chart-title">Weekly Throughput & Error Rate</div>
-        <div className="chart-value">2,340 examples/day</div>
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card">
+          <div className="chart-title">Weekly Throughput & Error Rate</div>
+          <div className="chart-value">2,340 examples/day</div>
+          <div className="chart-source">Source: Temporal workflow metrics</div>
         <ResponsiveContainer width="100%" height={200}>
           <ComposedChart data={data.throughput}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="week" tick={{fontSize:10}}/><YAxis yAxisId="left" tick={{fontSize:10}}/><YAxis yAxisId="right" orientation="right" tick={{fontSize:10}}/>
@@ -459,6 +547,7 @@ function AIDataOpsDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Quality Score Distribution</div>
         <div className="chart-value">Median: 91.2%</div>
+        <div className="chart-source">Source: PostgreSQL quality_scores table</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.qualityDist}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="range" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -469,6 +558,7 @@ function AIDataOpsDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Team Performance</div>
         <div className="chart-value">4 annotation teams</div>
+        <div className="chart-source">Source: Annotator session logs</div>
         <ResponsiveContainer width="100%" height={200}>
           <ScatterChart><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="speed" name="Speed" tick={{fontSize:10}}/><YAxis dataKey="accuracy" name="Accuracy" domain={[90,98]} tick={{fontSize:10}}/>
@@ -481,6 +571,7 @@ function AIDataOpsDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Model F1 Score by Version</div>
         <div className="chart-value">Current: 0.912</div>
+        <div className="chart-source">Source: Model registry + eval pipeline</div>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={data.modelImpact}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="version" tick={{fontSize:10}}/><YAxis domain={[0.7,0.95]} tick={{fontSize:10}}/>
@@ -489,15 +580,19 @@ function AIDataOpsDashboard({data}) {
         </ResponsiveContainer>
       </div>
     </div>
+    </>
   );
 }
 
-function ContractIntelDashboard({data}) {
+function ContractIntelDashboard({data, pipeline}) {
   return (
-    <div className="dashboard-grid">
-      <div className="chart-card">
-        <div className="chart-title">Contract Pipeline</div>
-        <div className="chart-value">847 contracts ingested</div>
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card">
+          <div className="chart-title">Contract Pipeline</div>
+          <div className="chart-value">847 contracts ingested</div>
+          <div className="chart-source">Source: Supabase deal_pipeline table</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.dealPipeline}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="status" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -508,6 +603,7 @@ function ContractIntelDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Risk Distribution</div>
         <div className="chart-value">12 critical findings</div>
+        <div className="chart-source">Source: Extraction engine risk_flags</div>
         <ResponsiveContainer width="100%" height={200}>
           <PieChart><Pie data={data.riskDist} dataKey="count" nameKey="risk" cx="50%" cy="50%" outerRadius={70} label={({risk,count})=>`${risk}: ${count}`}>
             {data.riskDist.map((d,i)=><Cell key={i} fill={d.color}/>)}
@@ -517,6 +613,7 @@ function ContractIntelDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Extraction Accuracy Trend</div>
         <div className="chart-value">94.2% current</div>
+        <div className="chart-source">Source: Ground truth comparison logs</div>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={data.extractionAccuracy}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="week" tick={{fontSize:10}}/><YAxis domain={[85,100]} tick={{fontSize:10}}/>
@@ -527,6 +624,7 @@ function ContractIntelDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Clause Types Extracted</div>
         <div className="chart-value">1,045 clauses</div>
+        <div className="chart-source">Source: pgvector clause_extractions</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.clauseTypes} layout="vertical"><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis type="number" tick={{fontSize:10}}/><YAxis type="category" dataKey="type" tick={{fontSize:10}} width={120}/>
@@ -535,15 +633,19 @@ function ContractIntelDashboard({data}) {
         </ResponsiveContainer>
       </div>
     </div>
+    </>
   );
 }
 
-function EngagementEngineDashboard({data}) {
+function EngagementEngineDashboard({data, pipeline}) {
   return (
-    <div className="dashboard-grid">
-      <div className="chart-card">
-        <div className="chart-title">Engagement: Personalized vs Control</div>
-        <div className="chart-value">+28% lift</div>
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card">
+          <div className="chart-title">Engagement: Personalized vs Control</div>
+          <div className="chart-value">+28% lift</div>
+          <div className="chart-source">Source: PostHog experiment results</div>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={data.engagementLift}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="week" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -555,6 +657,7 @@ function EngagementEngineDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Retention Curve (Before/After)</div>
         <div className="chart-value">+59% at D56</div>
+        <div className="chart-source">Source: Snowflake retention_cohorts</div>
         <ResponsiveContainer width="100%" height={200}>
           <AreaChart data={data.retentionCurve}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="day" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}} domain={[0,100]}/>
@@ -566,6 +669,7 @@ function EngagementEngineDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Segment Performance</div>
         <div className="chart-value">4 segments</div>
+        <div className="chart-source">Source: Segment user profiles</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.segmentPerf}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="segment" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -577,6 +681,7 @@ function EngagementEngineDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Notification CTR by Type</div>
         <div className="chart-value">12.4% personalized</div>
+        <div className="chart-source">Source: PostHog event stream</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.notifCTR}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="type" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -587,15 +692,19 @@ function EngagementEngineDashboard({data}) {
         </ResponsiveContainer>
       </div>
     </div>
+    </>
   );
 }
 
-function FieldSalesDashboard({data}) {
+function FieldSalesDashboard({data, pipeline}) {
   return (
-    <div className="dashboard-grid">
-      <div className="chart-card">
-        <div className="chart-title">Weekly Visit Trend vs Target</div>
-        <div className="chart-value">+43% daily visits</div>
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card">
+          <div className="chart-title">Weekly Visit Trend vs Target</div>
+          <div className="chart-value">+43% daily visits</div>
+          <div className="chart-source">Source: Supabase visit_logs table</div>
         <ResponsiveContainer width="100%" height={200}>
           <ComposedChart data={data.visitTrend}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="week" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -607,6 +716,7 @@ function FieldSalesDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Rep Performance (Top 10)</div>
         <div className="chart-value">68 active reps</div>
+        <div className="chart-source">Source: Salesforce opportunity sync</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.repPerformance}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="rep" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -618,6 +728,7 @@ function FieldSalesDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Before/After Metrics</div>
         <div className="chart-value">$5.3M revenue lift</div>
+        <div className="chart-source">Source: Aggregated route analytics</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.routeEfficiency}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="metric" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -629,6 +740,7 @@ function FieldSalesDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Performance Quartiles</div>
         <div className="chart-value">Rising tide</div>
+        <div className="chart-source">Source: Leaderboard scoring engine</div>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={data.leaderboard}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="week" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -639,15 +751,19 @@ function FieldSalesDashboard({data}) {
         </ResponsiveContainer>
       </div>
     </div>
+    </>
   );
 }
 
-function FintechOpsDashboard({data}) {
+function FintechOpsDashboard({data, pipeline}) {
   return (
-    <div className="dashboard-grid">
-      <div className="chart-card">
-        <div className="chart-title">Transaction Success Rate (14-Day)</div>
-        <div className="chart-value">97.8% avg</div>
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card">
+          <div className="chart-title">Transaction Success Rate (14-Day)</div>
+          <div className="chart-value">97.8% avg</div>
+          <div className="chart-source">Source: Stripe webhook events</div>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={data.txnSuccess}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="day" tick={{fontSize:10}}/><YAxis domain={[94,100]} tick={{fontSize:10}}/>
@@ -658,6 +774,7 @@ function FintechOpsDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Reconciliation Status</div>
         <div className="chart-value">98.7% matched</div>
+        <div className="chart-source">Source: Reconciliation engine output</div>
         <ResponsiveContainer width="100%" height={200}>
           <PieChart><Pie data={data.reconciliation} dataKey="value" nameKey="status" cx="50%" cy="50%" outerRadius={70} label={({status,value})=>`${status}: ${value}%`}>
             {data.reconciliation.map((_,i)=><Cell key={i} fill={[CHART_COLORS.green,CHART_COLORS.amber,CHART_COLORS.red][i]}/>)}
@@ -667,6 +784,7 @@ function FintechOpsDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Payment Method Volume</div>
         <div className="chart-value">$9.0M processed</div>
+        <div className="chart-source">Source: PostgreSQL ledger_entries</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.paymentMethods}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="method" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -677,6 +795,7 @@ function FintechOpsDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Ledger Imbalance (30-Day)</div>
         <div className="chart-value">$0 current</div>
+        <div className="chart-source">Source: Double-entry balance checker</div>
         <ResponsiveContainer width="100%" height={200}>
           <AreaChart data={data.ledgerHealth}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="day" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -685,15 +804,19 @@ function FintechOpsDashboard({data}) {
         </ResponsiveContainer>
       </div>
     </div>
+      </>
   );
 }
 
-function GenAIGovDashboard({data}) {
+function GenAIGovDashboard({data, pipeline}) {
   return (
-    <div className="dashboard-grid">
-      <div className="chart-card">
-        <div className="chart-title">AI Interactions (Weekly)</div>
-        <div className="chart-value">43K+ governed</div>
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card">
+          <div className="chart-title">AI Interactions (Weekly)</div>
+          <div className="chart-value">43K+ governed</div>
+          <div className="chart-source">Source: Middleware interceptor logs</div>
         <ResponsiveContainer width="100%" height={200}>
           <AreaChart data={data.interactions}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="week" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -705,6 +828,7 @@ function GenAIGovDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Content Policy Triggers</div>
         <div className="chart-value">0 violations passed</div>
+        <div className="chart-source">Source: Policy engine evaluation logs</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.contentPolicy} layout="vertical"><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis type="number" tick={{fontSize:10}}/><YAxis type="category" dataKey="category" tick={{fontSize:10}} width={110}/>
@@ -716,6 +840,7 @@ function GenAIGovDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Compliance Scorecard</div>
         <div className="chart-value">100% examiner-ready</div>
+        <div className="chart-source">Source: Examiner readiness audit</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.compliance}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="metric" tick={{fontSize:9}} interval={0} angle={-15}/><YAxis domain={[90,100]} tick={{fontSize:10}}/>
@@ -726,6 +851,7 @@ function GenAIGovDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Model Usage Share</div>
         <div className="chart-value">3 models active</div>
+        <div className="chart-source">Source: LangSmith trace aggregation</div>
         <ResponsiveContainer width="100%" height={200}>
           <PieChart><Pie data={data.modelUsage} dataKey="pct" nameKey="model" cx="50%" cy="50%" outerRadius={70} label={({model,pct})=>`${model}: ${pct}%`}>
             {data.modelUsage.map((_,i)=><Cell key={i} fill={[CHART_COLORS.blue,CHART_COLORS.purple,CHART_COLORS.amber][i]}/>)}
@@ -733,15 +859,19 @@ function GenAIGovDashboard({data}) {
         </ResponsiveContainer>
       </div>
     </div>
+    </>
   );
 }
 
-function InfraAutoDashboard({data}) {
+function InfraAutoDashboard({data, pipeline}) {
   return (
-    <div className="dashboard-grid">
-      <div className="chart-card">
-        <div className="chart-title">Automated vs Manual Deployments</div>
-        <div className="chart-value">85% automated</div>
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card">
+          <div className="chart-title">Automated vs Manual Deployments</div>
+          <div className="chart-value">85% automated</div>
+          <div className="chart-source">Source: Terraform execution logs</div>
         <ResponsiveContainer width="100%" height={200}>
           <AreaChart data={data.deployments}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="week" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -753,6 +883,7 @@ function InfraAutoDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Provisioning Time</div>
         <div className="chart-value">3 weeks to 4 hours</div>
+        <div className="chart-source">Source: Workflow duration metrics</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.provisionTime}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="phase" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -765,6 +896,7 @@ function InfraAutoDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Resources by Type</div>
         <div className="chart-value">658 resources</div>
+        <div className="chart-source">Source: Terraform state backend</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.resourceTypes} layout="vertical"><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis type="number" tick={{fontSize:10}}/><YAxis type="category" dataKey="type" tick={{fontSize:10}} width={70}/>
@@ -775,6 +907,7 @@ function InfraAutoDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Policy Evaluation Results</div>
         <div className="chart-value">0 violations</div>
+        <div className="chart-source">Source: OPA decision logs</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.policyResults}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="week" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -785,14 +918,18 @@ function InfraAutoDashboard({data}) {
         </ResponsiveContainer>
       </div>
     </div>
+    </>
   );
 }
 
-function IntegrationHealthDashboard({data}) {
+function IntegrationHealthDashboard({data, pipeline}) {
   return (
-    <div className="dashboard-grid">
-      <div className="chart-card" style={{gridColumn:"1/-1"}}>
-        <div className="chart-title">Provider Health Overview</div>
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card" style={{gridColumn:"1/-1"}}>
+          <div className="chart-title">Provider Health Overview</div>
+          <div className="chart-source">Source: Synthetic health probes + webhook events</div>
         <table className="data-table">
           <thead><tr><th>Provider</th><th>Status</th><th>Health Score</th><th>Latency (ms)</th><th>Error Rate</th></tr></thead>
           <tbody>{data.providerHealth.map(p=>(
@@ -805,6 +942,7 @@ function IntegrationHealthDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Latency by Provider (24hr)</div>
         <div className="chart-value">P95 tracked</div>
+        <div className="chart-source">Source: Grafana metrics store</div>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={data.latencyTrend}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="hour" tick={{fontSize:10}} interval={5}/><YAxis tick={{fontSize:10}}/>
@@ -817,6 +955,7 @@ function IntegrationHealthDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">MTTI Trend (Weekly)</div>
         <div className="chart-value">Current: 1.8 min</div>
+        <div className="chart-source">Source: Incident timeline aggregation</div>
         <ResponsiveContainer width="100%" height={200}>
           <AreaChart data={data.mttiTrend}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="week" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -825,15 +964,19 @@ function IntegrationHealthDashboard({data}) {
         </ResponsiveContainer>
       </div>
     </div>
+    </>
   );
 }
 
-function PortfolioIntelDashboard({data}) {
+function PortfolioIntelDashboard({data, pipeline}) {
   return (
-    <div className="dashboard-grid">
-      <div className="chart-card">
-        <div className="chart-title">Query Volume (Weekly)</div>
-        <div className="chart-value">2,800+ served</div>
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card">
+          <div className="chart-title">Query Volume (Weekly)</div>
+          <div className="chart-value">2,800+ served</div>
+          <div className="chart-source">Source: Query API access logs</div>
         <ResponsiveContainer width="100%" height={200}>
           <AreaChart data={data.queryVolume}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="week" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -845,6 +988,7 @@ function PortfolioIntelDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Query Types</div>
         <div className="chart-value">6 categories</div>
+        <div className="chart-source">Source: SQL classifier output</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.queryTypes} layout="vertical"><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis type="number" tick={{fontSize:10}}/><YAxis type="category" dataKey="type" tick={{fontSize:10}} width={90}/>
@@ -855,6 +999,7 @@ function PortfolioIntelDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">SQL Accuracy by Version</div>
         <div className="chart-value">91.3% current</div>
+        <div className="chart-source">Source: Ground truth validation set</div>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={data.accuracy}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="version" tick={{fontSize:10}}/><YAxis domain={[80,100]} tick={{fontSize:10}}/>
@@ -865,6 +1010,7 @@ function PortfolioIntelDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Response Time Distribution</div>
         <div className="chart-value">76% under 15s</div>
+        <div className="chart-source">Source: API latency histogram</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.responseTime}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="bucket" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -873,15 +1019,19 @@ function PortfolioIntelDashboard({data}) {
         </ResponsiveContainer>
       </div>
     </div>
+    </>
   );
 }
 
-function ReviewPrepDashboard({data}) {
+function ReviewPrepDashboard({data, pipeline}) {
   return (
-    <div className="dashboard-grid">
-      <div className="chart-card">
-        <div className="chart-title">Prep Time: Manual vs Automated</div>
-        <div className="chart-value">73% time savings</div>
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card">
+          <div className="chart-title">Prep Time: Manual vs Automated</div>
+          <div className="chart-value">73% time savings</div>
+          <div className="chart-source">Source: n8n workflow duration logs</div>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={data.prepTime}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="week" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -893,6 +1043,7 @@ function ReviewPrepDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Package Assembly Breakdown</div>
         <div className="chart-value">12 min total</div>
+        <div className="chart-source">Source: Pipeline stage timing data</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.packageComponents} layout="vertical"><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis type="number" tick={{fontSize:10}}/><YAxis type="category" dataKey="component" tick={{fontSize:9}} width={120}/>
@@ -903,6 +1054,7 @@ function ReviewPrepDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Advisor Satisfaction</div>
         <div className="chart-value">4.6/5 current</div>
+        <div className="chart-source">Source: Post-review survey responses</div>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={data.advisorSatisfaction}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="month" tick={{fontSize:10}}/><YAxis domain={[2,5]} tick={{fontSize:10}}/>
@@ -913,6 +1065,7 @@ function ReviewPrepDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Clients Covered</div>
         <div className="chart-value">200+ clients</div>
+        <div className="chart-source">Source: Supabase briefing_packages table</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.clientsCovered}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="month" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -922,14 +1075,18 @@ function ReviewPrepDashboard({data}) {
         </ResponsiveContainer>
       </div>
     </div>
+    </>
   );
 }
 
-function ScopeTrackerDashboard({data}) {
+function ScopeTrackerDashboard({data, pipeline}) {
   return (
-    <div className="dashboard-grid">
-      <div className="chart-card" style={{gridColumn:"1/-1"}}>
-        <div className="chart-title">Engagement Budget Health</div>
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card" style={{gridColumn:"1/-1"}}>
+          <div className="chart-title">Engagement Budget Health</div>
+          <div className="chart-source">Source: Billing system + budget tracker</div>
         <table className="data-table">
           <thead><tr><th>Engagement</th><th>Budget Used</th><th>Time Elapsed</th><th>Status</th></tr></thead>
           <tbody>{data.budgetHealth.map(e=>(
@@ -943,6 +1100,7 @@ function ScopeTrackerDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Overrun Rate Trend</div>
         <div className="chart-value">28% to 11%</div>
+        <div className="chart-source">Source: Engagement health scoring engine</div>
         <ResponsiveContainer width="100%" height={200}>
           <AreaChart data={data.overrunTrend}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="quarter" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -953,6 +1111,7 @@ function ScopeTrackerDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Revenue Recovered</div>
         <div className="chart-value">$127K Q1</div>
+        <div className="chart-source">Source: Change order tracking system</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.recovery}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="month" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -961,15 +1120,19 @@ function ScopeTrackerDashboard({data}) {
         </ResponsiveContainer>
       </div>
     </div>
+    </>
   );
 }
 
-function MarketplaceDashboard({data}) {
+function MarketplaceDashboard({data, pipeline}) {
   return (
-    <div className="dashboard-grid">
-      <div className="chart-card">
-        <div className="chart-title">GMV Growth (Monthly)</div>
-        <div className="chart-value">$15M+ Year 1</div>
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card">
+          <div className="chart-title">GMV Growth (Monthly)</div>
+          <div className="chart-value">$15M+ Year 1</div>
+          <div className="chart-source">Source: Stripe Connect transaction logs</div>
         <ResponsiveContainer width="100%" height={200}>
           <AreaChart data={data.gmvGrowth}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="month" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -980,6 +1143,7 @@ function MarketplaceDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Verification Funnel</div>
         <div className="chart-value">94% completion</div>
+        <div className="chart-source">Source: Onboarding pipeline stages</div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data.verificationFunnel}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="stage" tick={{fontSize:9}}/><YAxis tick={{fontSize:10}}/>
@@ -992,6 +1156,7 @@ function MarketplaceDashboard({data}) {
       <div className="chart-card">
         <div className="chart-title">Dispute Rate: Verified vs Unverified</div>
         <div className="chart-value">&lt;2% verified</div>
+        <div className="chart-source">Source: Trust and safety incident logs</div>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={data.disputeRate}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
             <XAxis dataKey="month" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/>
@@ -1002,6 +1167,7 @@ function MarketplaceDashboard({data}) {
       </div>
       <div className="chart-card">
         <div className="chart-title">Supplier Tier Metrics</div>
+        <div className="chart-source">Source: Supplier verification scores</div>
         <table className="data-table">
           <thead><tr><th>Tier</th><th>Count</th><th>Avg Rev</th><th>Rating</th></tr></thead>
           <tbody>{data.supplierMetrics.map(s=>(
@@ -1009,6 +1175,25 @@ function MarketplaceDashboard({data}) {
           ))}</tbody>
         </table>
       </div>
+    </div>
+    </>
+  );
+}
+
+function DataPipeline({stages}) {
+  return (
+    <div className="pipeline-visual">
+      {stages.map((stage, i) => (
+        <React.Fragment key={i}>
+          {i > 0 && <div className="pipeline-arrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>}
+          <div className="pipeline-stage">
+            <div className="pipeline-label">{stage.label}</div>
+            <div className="pipeline-detail">{stage.detail}</div>
+          </div>
+        </React.Fragment>
+      ))}
     </div>
   );
 }
@@ -1338,7 +1523,7 @@ function ProductDetail({productId, onBack}) {
         {tab === "dashboard" && DashComponent && dashData && (
           <div className="dashboard-section">
             <div className="section-title" style={{marginBottom:20}}>Interactive Dashboard <span style={{fontSize:12,fontWeight:400,color:"var(--muted)"}}>(Dummy Data)</span></div>
-            <DashComponent data={dashData}/>
+            <DashComponent data={dashData} pipeline={product.pipeline}/>
           </div>
         )}
 

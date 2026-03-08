@@ -74,9 +74,15 @@ nav .nav-links a:hover{color:var(--text)}
 /* Dashboards */
 .dashboard-section{margin-bottom:48px}
 .dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.pipeline-visual{display:flex;align-items:center;gap:8px;margin-bottom:24px;padding:20px 24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow-x:auto}
+.pipeline-stage{flex:1;min-width:140px;padding:12px 16px;background:var(--accent-light);border-radius:8px;text-align:center}
+.pipeline-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-bottom:4px}
+.pipeline-detail{font-size:12px;color:#374151;line-height:1.4}
+.pipeline-arrow{flex-shrink:0;display:flex;align-items:center}
 .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
 .chart-title{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
 .chart-value{font-size:22px;font-weight:700;margin-bottom:12px}
+.chart-source{font-size:11px;color:var(--muted);margin-bottom:8px;font-style:italic}
 
 /* Pie chart legend */
 .pie-legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:8px;font-size:12px;color:var(--muted)}
@@ -212,6 +218,9 @@ footer{padding:40px 0;border-top:1px solid var(--border);text-align:center;color
   .featured-metrics{gap:16px}
   .product-grid{grid-template-columns:1fr;gap:16px;padding-bottom:48px}
   .dashboard-grid{grid-template-columns:1fr}
+  .pipeline-visual{flex-direction:column;gap:12px}
+  .pipeline-arrow{transform:rotate(90deg)}
+  .pipeline-stage{min-width:unset;width:100%}
   .metrics-banner{grid-template-columns:1fr 1fr;gap:12px;padding:16px}
   .metric-item .metric-val{font-size:22px}
   .detail-title{font-size:28px}
