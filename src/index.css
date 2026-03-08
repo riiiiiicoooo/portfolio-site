@@ -140,6 +140,44 @@ footer{padding:40px 0;border-top:1px solid var(--border);text-align:center;color
 .cta-button.secondary{background:var(--surface);border:1px solid var(--border);color:var(--text)}
 .cta-button.secondary:hover{border-color:#d1d5db;transform:translateY(-1px)}
 
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scaleUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.hero { animation: fadeInUp 0.6s ease-out; }
+.product-card { animation: fadeInUp 0.5s ease-out both; }
+.detail-page { animation: fadeIn 0.4s ease-out; }
+.about-page { animation: fadeIn 0.4s ease-out; }
+.section { animation: fadeInUp 0.5s ease-out both; }
+.stat .num { animation: scaleUp 0.6s ease-out 0.2s both; }
+
+/* Featured Product */
+.featured-product{margin-bottom:32px;padding:28px;background:linear-gradient(135deg,#f8fafc,#eef2ff);border:1px solid #e0e7ff;border-radius:var(--radius);cursor:pointer;transition:all .2s;animation:fadeInUp 0.5s ease-out}
+.featured-product:hover{border-color:#c7d2fe;box-shadow:0 4px 24px rgba(99,102,241,.1);transform:translateY(-2px)}
+.featured-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#6366f1;font-weight:700;margin-bottom:16px}
+.featured-content{display:flex;align-items:center;gap:24px}
+.featured-icon{width:56px;height:56px;flex-shrink:0}
+.featured-icon svg{width:56px;height:56px}
+.featured-info{flex:1}
+.featured-title{font-size:22px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+.featured-desc{font-size:14px;color:var(--muted);line-height:1.5}
+.featured-metrics{display:flex;gap:24px;flex-shrink:0}
+.featured-stat{text-align:center}
+.featured-val{display:block;font-size:24px;font-weight:700;letter-spacing:-.02em}
+.featured-stat-label{font-size:11px;color:var(--muted)}
+.featured-arrow{font-size:24px;color:var(--muted);transition:transform .2s}
+.featured-product:hover .featured-arrow{transform:translateX(4px);color:var(--text)}
+
 /* ============================================ */
 /* MOBILE RESPONSIVE                             */
 /* ============================================ */
@@ -166,6 +204,8 @@ footer{padding:40px 0;border-top:1px solid var(--border);text-align:center;color
   .stat .num{font-size:24px}
   .filter-bar{gap:6px;margin-bottom:24px}
   .filter-btn{padding:6px 12px;font-size:12px}
+  .featured-content{flex-direction:column;align-items:flex-start;gap:16px}
+  .featured-metrics{gap:16px}
   .product-grid{grid-template-columns:1fr;gap:16px;padding-bottom:48px}
   .dashboard-grid{grid-template-columns:1fr}
   .metrics-banner{grid-template-columns:1fr 1fr;gap:12px;padding:16px}

@@ -1095,10 +1095,10 @@ function Nav({onHome, onAbout}) {
   );
 }
 
-function ProductCard({product, onClick}) {
+function ProductCard({product, onClick, style}) {
   const stageClass = product.stage.toLowerCase().replace(/[- ]/g,'-');
   return (
-    <div className="product-card" onClick={onClick}>
+    <div className="product-card" onClick={onClick} style={style}>
       <span className={`card-stage stage-${stageClass}`}>{product.stage}</span>
       <div className="card-icon">{DOMAIN_ICONS[product.domain]}</div>
       <div className="card-domain">{product.domain}</div>
@@ -1231,8 +1231,25 @@ function HomePage({onSelectProduct}) {
             <button key={d} className={`filter-btn ${filter===d?"active":""}`} onClick={()=>setFilter(d)}>{d}</button>
           ))}
         </div>
+        {filter === "All" && (
+          <div className="featured-product" onClick={()=>onSelectProduct("contract-intelligence")}>
+            <div className="featured-label">Featured Case Study</div>
+            <div className="featured-content">
+              <div className="featured-icon">{DOMAIN_ICONS["Legal AI"]}</div>
+              <div className="featured-info">
+                <h3 className="featured-title">Contract Intelligence Platform</h3>
+                <p className="featured-desc">M&A Due Diligence Automation. Reduced contract review from 3-5 manual reviews per hour to 50-80 contracts per hour with 94.7% extraction accuracy.</p>
+              </div>
+              <div className="featured-metrics">
+                <div className="featured-stat"><span className="featured-val">16x</span><span className="featured-stat-label">Faster Review</span></div>
+                <div className="featured-stat"><span className="featured-val">$600K</span><span className="featured-stat-label">Annual Savings</span></div>
+              </div>
+              <span className="featured-arrow">&rarr;</span>
+            </div>
+          </div>
+        )}
         <div className="product-grid">
-          {filtered.map(p=><ProductCard key={p.id} product={p} onClick={()=>onSelectProduct(p.id)}/>)}
+          {filtered.map((p,i)=><ProductCard key={p.id} product={p} onClick={()=>onSelectProduct(p.id)} style={{animationDelay:`${i*0.05}s`}}/>)}
         </div>
       </div>
     </>
