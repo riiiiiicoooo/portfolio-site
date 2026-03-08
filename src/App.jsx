@@ -1086,13 +1086,13 @@ function AboutPage() {
           <div className="about-main">
             <h1 className="about-title">About Me</h1>
             <p className="about-lead">
-              I'm Jacob George — a Senior Product Manager and strategic advisor with 10+ years of experience leading product management across AI, SaaS, enterprise technology, and consulting organizations. Based in New York, I currently run Ampersand Consulting where I help companies define and ship products from zero to production.
+              I'm Jacob George, a Senior Product Manager and strategic advisor with 10+ years of experience leading product management across AI, SaaS, enterprise technology, and consulting organizations. Based in New York, I'm currently a Principal PM at Ampersand Consulting where I help companies define and ship products from zero to production.
             </p>
             <p className="about-body">
-              My background spans financial services, healthcare, defense, real estate, and enterprise SaaS. I've worked at Deloitte, Avanade (the Accenture &amp; Microsoft joint venture), and led product strategy for AI-powered platforms serving the Defense Health Agency and Navy Medicine — before going independent to focus on building.
+              My background spans financial services, healthcare, defense, real estate, and enterprise SaaS. I've worked at Deloitte, Avanade (the Accenture &amp; Microsoft joint venture), and led product strategy for AI-powered platforms serving the Defense Health Agency and Navy Medicine before focusing full time on building.
             </p>
             <p className="about-body">
-              What I do differently is bridge the gap between strategy and execution. I define product management frameworks and coach teams on best practices, but I also get hands-on — building with LLMs, RAG pipelines, and ML systems, shipping AI-native product experiences, and measuring outcomes with real data. Every product in this portfolio includes quantified results and interactive dashboards showing the impact.
+              What I do differently is bridge the gap between strategy and execution. I define product management frameworks and coach teams on best practices, but I also get hands-on building with LLMs, RAG pipelines, and ML systems, shipping AI-native product experiences, and measuring outcomes with real data. Every product in this portfolio includes quantified results and interactive dashboards showing the impact.
             </p>
             <p className="about-body">
               I'm most effective in ambiguous, high-complexity environments where the path forward isn't clear. I use design thinking and systems thinking to diagnose root causes, create clarity through structured problem-solving, and drive cross-functional alignment across engineering, design, data, and business teams.
@@ -1129,6 +1129,14 @@ function AboutPage() {
                 <div className="experience-item">
                   <div className="exp-role">Strategy Consultant</div>
                   <div className="exp-company">Deloitte &middot; 2017 – 2019</div>
+                </div>
+                <div className="experience-item">
+                  <div className="exp-role">Business Analyst</div>
+                  <div className="exp-company">ICF &middot; 2016 – 2017</div>
+                </div>
+                <div className="experience-item">
+                  <div className="exp-role">Research Analyst</div>
+                  <div className="exp-company">Synergy Enterprises &middot; 2015 – 2016</div>
                 </div>
               </div>
               <div className="about-education">B.S. Neuroscience, Temple University &middot; CSPO &middot; CSM &middot; SAFe</div>
