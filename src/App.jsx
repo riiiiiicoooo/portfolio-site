@@ -374,7 +374,7 @@ const DASHBOARDS = {
     authRequests: Array.from({length:14},(_,i)=>({day:`Day ${i+1}`,requests:Math.floor(800+Math.random()*400),blocked:Math.floor(5+Math.random()*15)})),
     tokenLifecycle: [{name:"Issued",value:4280},{name:"Active",value:312},{name:"Expired",value:3891},{name:"Revoked",value:77}],
     policyHits: [{policy:"Rate Limit",count:142},{policy:"Scope Violation",count:87},{policy:"IP Whitelist",count:34},{policy:"Time Window",count:21},{policy:"Resource Block",count:8}],
-    latency: Array.from({length:24},(_,i)=>({hour:`${i}:00`,p50:Math.floor(40+Math.random()*30),p95:Math.floor(120+Math.random()*80)}))
+    latency: Array.from({length:24},(_,i)=>{const base50=i>=2&&i<=5?28+Math.floor(Math.random()*12):i>=9&&i<=11?85+Math.floor(Math.random()*35):45+Math.floor(Math.random()*25);const base95=i>=2&&i<=5?52+Math.floor(Math.random()*20):i>=9&&i<=11?180+Math.floor(Math.random()*60):120+Math.floor(Math.random()*40);return{hour:`${i}:00`,p50:base50,p95:base95}})
   },
   "ai-data-ops": {
     throughput: Array.from({length:12},(_,i)=>({week:`W${i+1}`,examples:Math.floor(1800+i*80+Math.random()*300),errorRate:+(Math.max(2.5,8-i*.5+Math.random())).toFixed(1)})),
@@ -383,7 +383,7 @@ const DASHBOARDS = {
     modelImpact: Array.from({length:8},(_,i)=>({version:`v1.${i}`,f1:+(0.72+i*0.025+Math.random()*.01).toFixed(3),dataPoints:(i+1)*12000}))
   },
   "contract-intelligence": {
-    dealPipeline: [{status:"Ingested",count:847},{status:"Extracting",count:23},{status:"Reviewing",count:156},{status:"Complete",count:668}],
+    dealPipeline: [{status:"Ingested",count:847},{status:"Extracting",count:312},{status:"Reviewing",count:456},{status:"Complete",count:668}],
     riskDist: [{risk:"Critical",count:12,color:"#ef4444"},{risk:"High",count:47,color:"#f59e0b"},{risk:"Medium",count:134,color:"#3b82f6"},{risk:"Low",count:654,color:"#22c55e"}],
     extractionAccuracy: Array.from({length:10},(_,i)=>({week:`W${i+1}`,accuracy:+(88+i*.7+Math.random()*1.5).toFixed(1),contracts:Math.floor(40+i*8+Math.random()*20)})),
     clauseTypes: [{type:"Indemnification",count:234},{type:"Limitation of Liability",count:198},{type:"Change of Control",count:167},{type:"IP Assignment",count:145},{type:"Non-Compete",count:112},{type:"Termination",count:189}]
@@ -474,11 +474,13 @@ function AgentGateDashboard({data, pipeline}) {
           <div className="chart-value">6,840 requests</div>
           <div className="chart-source">Source: PostgreSQL audit_log table</div>
         <ResponsiveContainer width="100%" height={200}>
-          <AreaChart data={data.authRequests}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
-            <XAxis dataKey="day" tick={{fontSize:10}} interval={2}/><YAxis tick={{fontSize:10}}/>
-            <Tooltip/><Area type="monotone" dataKey="requests" fill="#3b82f6" fillOpacity={.15} stroke="#3b82f6" strokeWidth={2}/>
-            <Area type="monotone" dataKey="blocked" fill="#ef4444" fillOpacity={.15} stroke="#ef4444" strokeWidth={2}/>
-          </AreaChart>
+          <ComposedChart data={data.authRequests}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
+            <XAxis dataKey="day" tick={{fontSize:10}} interval={2}/>
+            <YAxis yAxisId="left" tick={{fontSize:10}}/>
+            <YAxis yAxisId="right" orientation="right" tick={{fontSize:10}} domain={[0,30]}/>
+            <Tooltip/><Area yAxisId="left" type="monotone" dataKey="requests" fill="#3b82f6" fillOpacity={.12} stroke="#3b82f6" strokeWidth={2}/>
+            <Bar yAxisId="right" dataKey="blocked" fill="#ef4444" radius={[2,2,0,0]} barSize={8}/>
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
       <div className="chart-card">
@@ -515,12 +517,16 @@ function AgentGateDashboard({data, pipeline}) {
         <div className="chart-value">p95: 168ms</div>
         <div className="chart-source">Source: FastAPI request metrics</div>
         <ResponsiveContainer width="100%" height={200}>
-          <LineChart data={data.latency}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
-            <XAxis dataKey="hour" tick={{fontSize:10}} interval={5}/><YAxis tick={{fontSize:10}}/>
-            <Tooltip/><Line type="monotone" dataKey="p50" stroke="#22c55e" strokeWidth={2} dot={false}/>
-            <Line type="monotone" dataKey="p95" stroke="#f59e0b" strokeWidth={2} dot={false}/>
-          </LineChart>
+          <AreaChart data={data.latency}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
+            <XAxis dataKey="hour" tick={{fontSize:10}} interval={5}/><YAxis tick={{fontSize:10}} domain={[0,280]} tickFormatter={v=>`${v}ms`}/>
+            <Tooltip formatter={(v)=>`${v}ms`}/><Area type="monotone" dataKey="p95" fill="#f59e0b" fillOpacity={.12} stroke="#f59e0b" strokeWidth={2}/>
+            <Area type="monotone" dataKey="p50" fill="#22c55e" fillOpacity={.15} stroke="#22c55e" strokeWidth={2}/>
+          </AreaChart>
         </ResponsiveContainer>
+        <div className="pie-legend">
+          <div className="pie-legend-item"><span className="pie-legend-dot" style={{background:"#22c55e"}}/>p50</div>
+          <div className="pie-legend-item"><span className="pie-legend-dot" style={{background:"#f59e0b"}}/>p95</div>
+        </div>
       </div>
     </div>
     </>
