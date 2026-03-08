@@ -177,6 +177,10 @@ footer{padding:40px 0;border-top:1px solid var(--border);text-align:center;color
 .featured-stat-label{font-size:11px;color:var(--muted)}
 .featured-arrow{font-size:24px;color:var(--muted);transition:transform .2s}
 .featured-product:hover .featured-arrow{transform:translateX(4px);color:var(--text)}
+.featured-dots{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.featured-dot{width:8px;height:8px;border-radius:50%;border:none;background:#cbd5e1;cursor:pointer;padding:0;transition:all .2s}
+.featured-dot.active{background:#6366f1;transform:scale(1.25)}
+.featured-dot:hover{background:#818cf8}
 
 /* ============================================ */
 /* MOBILE RESPONSIVE                             */

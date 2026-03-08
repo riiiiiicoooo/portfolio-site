@@ -1207,9 +1207,26 @@ function AboutPage() {
   );
 }
 
+const FEATURED_CASES = [
+  { id: "contract-intelligence", domain: "Legal AI", title: "Contract Intelligence Platform", desc: "M&A Due Diligence Automation. Reduced contract review from 3-5 manual reviews per hour to 50-80 contracts per hour with 94.7% extraction accuracy.", stats: [{val:"16x",label:"Faster Review"},{val:"$600K",label:"Annual Savings"}] },
+  { id: "field-sales", domain: "Sales Enablement", title: "Field Sales Command", desc: "Mobile-first field sales operations. Increased daily visit volume by 43% and hit 92% rep adoption within 6 weeks of pilot launch.", stats: [{val:"+43%",label:"Daily Visits"},{val:"$5.3M",label:"Revenue Lift"}] },
+  { id: "infra-automation", domain: "DevOps", title: "Infrastructure Automation Platform", desc: "Self-service enterprise infrastructure. Cut provisioning time by 85% and eliminated compliance violations across all engineering teams.", stats: [{val:"85%",label:"Time Reduction"},{val:"$12M",label:"Annual Value"}] },
+  { id: "agentgate", domain: "Developer Security", title: "AgentGate", desc: "Zero-trust authentication for AI agents. Eliminated credential exposures entirely after 23 incidents in the prior 6 months.", stats: [{val:"0",label:"Exposures"},{val:"<200ms",label:"Auth Latency"}] },
+  { id: "portfolio-intelligence", domain: "Real Estate Analytics", title: "Portfolio Intelligence Hub", desc: "Natural language querying for real estate data. Turned 24-48 hour analyst turnaround into sub-30-second self-service queries with 91.3% accuracy.", stats: [{val:"<30s",label:"Query Time"},{val:"91.3%",label:"SQL Accuracy"}] },
+];
+
 function HomePage({onSelectProduct}) {
   const [filter, setFilter] = useState("All");
+  const [featuredIdx, setFeaturedIdx] = useState(() => Math.floor(Math.random() * FEATURED_CASES.length));
   const filtered = filter === "All" ? PRODUCTS : PRODUCTS.filter(p => p.category === filter);
+  const featured = FEATURED_CASES[featuredIdx];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFeaturedIdx(prev => (prev + 1) % FEATURED_CASES.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -1232,19 +1249,25 @@ function HomePage({onSelectProduct}) {
           ))}
         </div>
         {filter === "All" && (
-          <div className="featured-product" onClick={()=>onSelectProduct("contract-intelligence")}>
+          <div className="featured-product" key={featured.id} onClick={()=>onSelectProduct(featured.id)}>
             <div className="featured-label">Featured Case Study</div>
             <div className="featured-content">
-              <div className="featured-icon">{DOMAIN_ICONS["Legal AI"]}</div>
+              <div className="featured-icon">{DOMAIN_ICONS[featured.domain]}</div>
               <div className="featured-info">
-                <h3 className="featured-title">Contract Intelligence Platform</h3>
-                <p className="featured-desc">M&A Due Diligence Automation. Reduced contract review from 3-5 manual reviews per hour to 50-80 contracts per hour with 94.7% extraction accuracy.</p>
+                <h3 className="featured-title">{featured.title}</h3>
+                <p className="featured-desc">{featured.desc}</p>
               </div>
               <div className="featured-metrics">
-                <div className="featured-stat"><span className="featured-val">16x</span><span className="featured-stat-label">Faster Review</span></div>
-                <div className="featured-stat"><span className="featured-val">$600K</span><span className="featured-stat-label">Annual Savings</span></div>
+                {featured.stats.map((s,i)=>(
+                  <div key={i} className="featured-stat"><span className="featured-val">{s.val}</span><span className="featured-stat-label">{s.label}</span></div>
+                ))}
               </div>
               <span className="featured-arrow">&rarr;</span>
+            </div>
+            <div className="featured-dots">
+              {FEATURED_CASES.map((_,i)=>(
+                <button key={i} className={`featured-dot ${i===featuredIdx?"active":""}`} onClick={(e)=>{e.stopPropagation();setFeaturedIdx(i)}}/>
+              ))}
             </div>
           </div>
         )}
