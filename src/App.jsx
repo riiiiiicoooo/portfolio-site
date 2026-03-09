@@ -4,6 +4,7 @@ import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, ComposedChart
 } from "recharts";
+import HomeConnectDemo from "./HomeConnect";
 
 // ============================================================================
 // PRODUCT DATA
@@ -350,7 +351,7 @@ const PRODUCTS = [
     name: "Verified Services Marketplace",
     domain: "Marketplace",
     category: "Consumer & Growth",
-    stage: "Approved",
+    stage: "Production",
     tagline: "Trust-First Two-Sided Marketplace",
     description: "Trust-first two-sided marketplace with a five-layer trust stack (Identity, Qualification, Accountability, Financial Protection, Reputation). Intelligent matching uses PostGIS geospatial radius queries (not zip code lookup tables) with composite scoring (35% quality, 25% completion, 20% response time, 15% tier bonus, 5% recency). Stripe Connect escrow with automated 3-5 day payouts replaced a 30-60 day payment cycle. Performance-based provider tiers (Standard, Preferred, Elite) where Elite providers are 11% of the network but generate 33% of GMV.",
     problem: "Existing provider network of 45 suppliers was managed via spreadsheets with a 15% verification rate. Verification took 2-3 weeks manually. Customer CSAT sat at 3.2/5.0 with an 8.3% dispute rate. Service coordinator spent 40+ hours per week on manual matching and follow-up. Provider research showed verification friction was the #1 reason suppliers abandoned other marketplaces.",
@@ -1551,8 +1552,11 @@ function ProductDetail({productId, onBack}) {
           <div className="tech-list">
             {product.tech.map(t=><span key={t} className="tech-chip">{t}</span>)}
           </div>
-          <div style={{marginTop:24}}>
+          <div style={{marginTop:24,display:"flex",gap:20,alignItems:"center",flexWrap:"wrap"}}>
             <a href={product.github} target="_blank" rel="noopener noreferrer" style={{fontSize:14,color:"var(--muted)",borderBottom:"1px solid var(--border)",paddingBottom:2}}>View on GitHub →</a>
+            {product.id === "verified-marketplace" && (
+              <a href="#homeconnect-demo" style={{fontSize:14,color:"#fff",background:"#0d9488",padding:"8px 18px",borderRadius:8,textDecoration:"none",fontWeight:600}}>Explore Live Demo →</a>
+            )}
           </div>
         </div>
       </div>
@@ -1568,6 +1572,7 @@ export default function App() {
     const handleHash = ()=>{
       const hash = window.location.hash.slice(1);
       if (hash === "about") { setPage("about"); setCurrentProduct(null); }
+      else if (hash === "homeconnect-demo") { setPage("homeconnect"); setCurrentProduct(null); }
       else if (hash && PRODUCTS.find(p=>p.id===hash)) { setPage("product"); setCurrentProduct(hash); }
       else { setPage("home"); setCurrentProduct(null); }
     };
@@ -1582,7 +1587,8 @@ export default function App() {
 
   return (
     <>
-      <Nav onHome={goHome} onAbout={goAbout}/>
+      {page !== "homeconnect" && <Nav onHome={goHome} onAbout={goAbout}/>}
+      {page === "homeconnect" && <HomeConnectDemo onExit={goHome}/>}
       {page === "about" && <AboutPage/>}
       {page === "product" && currentProduct && <ProductDetail productId={currentProduct} onBack={goHome}/>}
       {page === "home" && <HomePage onSelectProduct={goProduct}/>}
