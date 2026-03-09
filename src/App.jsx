@@ -39,6 +39,34 @@ const PRODUCTS = [
     github: "https://github.com/riiiiiicoooo/agentgate"
   },
   {
+    id: "verified-marketplace",
+    name: "Verified Services Marketplace",
+    domain: "Marketplace",
+    category: "Consumer & Growth",
+    stage: "Production",
+    tagline: "Trust-First Two-Sided Marketplace",
+    description: "Trust-first two-sided marketplace with a five-layer trust stack (Identity, Qualification, Accountability, Financial Protection, Reputation). Intelligent matching uses PostGIS geospatial radius queries (not zip code lookup tables) with composite scoring (35% quality, 25% completion, 20% response time, 15% tier bonus, 5% recency). Stripe Connect escrow with automated 3-5 day payouts replaced a 30-60 day payment cycle. Performance-based provider tiers (Standard, Preferred, Elite) where Elite providers are 11% of the network but generate 33% of GMV.",
+    problem: "Existing provider network of 45 suppliers was managed via spreadsheets with a 15% verification rate. Verification took 2-3 weeks manually. Customer CSAT sat at 3.2/5.0 with an 8.3% dispute rate. Service coordinator spent 40+ hours per week on manual matching and follow-up. Provider research showed verification friction was the #1 reason suppliers abandoned other marketplaces.",
+    solution: "Automated verification pipeline (Checkr identity, 34-state license API, ACORD insurance form parsing) with daily credential expiration monitoring and progressive reminder schedules. Launched with a provisional tier compromise: providers could work immediately but had 30 days to complete full verification (92% completed, 8% who didn't likely wouldn't have met quality bar). Cold start strategy focused on converting existing 45 provider relationships across 3 metros rather than expanding everywhere with thin supply, achieving 80%+ request fulfillment in week one. Dispute resolution with 48-hour response windows and double-blind reviews prevents retaliation.",
+    role: "Led this marketplace build over a 6-month engagement, from supplier research through two-sided launch. Defined the marketplace model after researching 12 competitor platforms and interviewing 30+ suppliers to understand what made them abandon other marketplaces (verification friction was the #1 complaint). Mapped the supplier onboarding journey end-to-end, wireframed the verification flow and trust badge display, and built a clickable prototype of the full onboarding experience that we tested with 10 suppliers before development. Created the marketplace economics model projecting GMV, take rate, and supplier acquisition costs to build the business case for the initial investment. Managed the lead developer and three contract engineers through a phased launch (supplier side first, then buyer side), ran early demos with anchor buyers to validate the trust framework, and measured ROI through verification completion rates, supplier activation time, and the premium pricing that verified suppliers could command.",
+    architecture: "Next.js marketplace frontend with FastAPI backend. Supabase for data, Stripe Connect for payments, Clerk for authentication, and n8n/Trigger.dev for verification workflow automation.",
+    pipeline: [
+      {label:"Ingest",detail:"Supplier applications + verification documents"},
+      {label:"Process",detail:"Background check pipeline + credential validator"},
+      {label:"Store",detail:"Supabase supplier_profiles + Stripe Connect"},
+      {label:"Serve",detail:"Marketplace API + trust score feed"}
+    ],
+    metrics: [
+      {value: "4x", label: "Throughput Increase", prev: ""},
+      {value: "$15M+", label: "Year 1 GMV Projection", prev: ""},
+      {value: "94%", label: "Verification Rate", prev: "from 15%"},
+      {value: "<2%", label: "Dispute Rate", prev: "from 8.3%"}
+    ],
+    tech: ["FastAPI","Supabase","Next.js","Stripe Connect","Clerk","PostGIS","Trigger.dev","Vercel"],
+    pivot: "Launched with a comprehensive 12-step provider verification process. Completion rate was 23% because providers abandoned halfway through. A/B tested a 'progressive verification' approach: list immediately with basic info, then unlock features as they complete additional verification steps. Completion rate hit 78% and time-to-first-listing dropped from 2 weeks to same-day.",
+    github: "https://github.com/riiiiiicoooo/verified-services-marketplace"
+  },
+  {
     id: "ai-data-ops",
     name: "AI Data Operations Platform",
     domain: "ML Infrastructure",
@@ -345,34 +373,6 @@ const PRODUCTS = [
     tech: ["FastAPI","PostgreSQL (Railway)","Next.js","n8n","Stripe"],
     pivot: "Built the first version with real-time scope change alerts. Project managers complained about alert fatigue — every minor clarification triggered a notification. So we implemented a 'drift scoring' system that distinguishes between cosmetic changes (low score) and scope-expanding changes (high score), only alerting when cumulative drift exceeds a configurable threshold. Overrun rate dropped from 28% to 11%.",
     github: "https://github.com/riiiiiicoooo/scope-tracker"
-  },
-  {
-    id: "verified-marketplace",
-    name: "Verified Services Marketplace",
-    domain: "Marketplace",
-    category: "Consumer & Growth",
-    stage: "Production",
-    tagline: "Trust-First Two-Sided Marketplace",
-    description: "Trust-first two-sided marketplace with a five-layer trust stack (Identity, Qualification, Accountability, Financial Protection, Reputation). Intelligent matching uses PostGIS geospatial radius queries (not zip code lookup tables) with composite scoring (35% quality, 25% completion, 20% response time, 15% tier bonus, 5% recency). Stripe Connect escrow with automated 3-5 day payouts replaced a 30-60 day payment cycle. Performance-based provider tiers (Standard, Preferred, Elite) where Elite providers are 11% of the network but generate 33% of GMV.",
-    problem: "Existing provider network of 45 suppliers was managed via spreadsheets with a 15% verification rate. Verification took 2-3 weeks manually. Customer CSAT sat at 3.2/5.0 with an 8.3% dispute rate. Service coordinator spent 40+ hours per week on manual matching and follow-up. Provider research showed verification friction was the #1 reason suppliers abandoned other marketplaces.",
-    solution: "Automated verification pipeline (Checkr identity, 34-state license API, ACORD insurance form parsing) with daily credential expiration monitoring and progressive reminder schedules. Launched with a provisional tier compromise: providers could work immediately but had 30 days to complete full verification (92% completed, 8% who didn't likely wouldn't have met quality bar). Cold start strategy focused on converting existing 45 provider relationships across 3 metros rather than expanding everywhere with thin supply, achieving 80%+ request fulfillment in week one. Dispute resolution with 48-hour response windows and double-blind reviews prevents retaliation.",
-    role: "Led this marketplace build over a 6-month engagement, from supplier research through two-sided launch. Defined the marketplace model after researching 12 competitor platforms and interviewing 30+ suppliers to understand what made them abandon other marketplaces (verification friction was the #1 complaint). Mapped the supplier onboarding journey end-to-end, wireframed the verification flow and trust badge display, and built a clickable prototype of the full onboarding experience that we tested with 10 suppliers before development. Created the marketplace economics model projecting GMV, take rate, and supplier acquisition costs to build the business case for the initial investment. Managed the lead developer and three contract engineers through a phased launch (supplier side first, then buyer side), ran early demos with anchor buyers to validate the trust framework, and measured ROI through verification completion rates, supplier activation time, and the premium pricing that verified suppliers could command.",
-    architecture: "Next.js marketplace frontend with FastAPI backend. Supabase for data, Stripe Connect for payments, Clerk for authentication, and n8n/Trigger.dev for verification workflow automation.",
-    pipeline: [
-      {label:"Ingest",detail:"Supplier applications + verification documents"},
-      {label:"Process",detail:"Background check pipeline + credential validator"},
-      {label:"Store",detail:"Supabase supplier_profiles + Stripe Connect"},
-      {label:"Serve",detail:"Marketplace API + trust score feed"}
-    ],
-    metrics: [
-      {value: "4x", label: "Throughput Increase", prev: ""},
-      {value: "$15M+", label: "Year 1 GMV Projection", prev: ""},
-      {value: "94%", label: "Verification Rate", prev: "from 15%"},
-      {value: "<2%", label: "Dispute Rate", prev: "from 8.3%"}
-    ],
-    tech: ["FastAPI","Supabase","Next.js","Stripe Connect","Clerk","PostGIS","Trigger.dev","Vercel"],
-    pivot: "Launched with a comprehensive 12-step provider verification process. Completion rate was 23% because providers abandoned halfway through. A/B tested a 'progressive verification' approach: list immediately with basic info, then unlock features as they complete additional verification steps. Completion rate hit 78% and time-to-first-listing dropped from 2 weeks to same-day.",
-    github: "https://github.com/riiiiiicoooo/verified-services-marketplace"
   }
 ];
 
@@ -1516,6 +1516,13 @@ function ProductDetail({productId, onBack}) {
             </div>
           ))}
         </div>
+
+        {product.id === "verified-marketplace" && (
+          <div style={{textAlign:"center",margin:"16px 0 24px"}}>
+            <a href="#homeconnect-demo" style={{display:"inline-block",fontSize:16,color:"#fff",background:"#0d9488",padding:"12px 28px",borderRadius:10,textDecoration:"none",fontWeight:600,letterSpacing:"0.01em"}}>Explore Live Demo →</a>
+            <div style={{fontSize:13,color:"var(--muted)",marginTop:8}}>Interactive marketplace walkthrough with realistic Atlanta metro data</div>
+          </div>
+        )}
 
         <div style={{fontSize:12,color:"var(--muted)",textAlign:"center",margin:"8px 0 24px"}}>Interactive visualizations based on anonymized production patterns. Data transformed for client confidentiality.</div>
 
