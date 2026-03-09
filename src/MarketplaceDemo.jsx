@@ -797,7 +797,7 @@ export default function MarketplaceDemo({ onExit }) {
               </div>
 
               <div style={{ fontSize: "11px", fontWeight: "600", color: colors.gray, textTransform: "uppercase", marginBottom: "8px" }}>Progress</div>
-              <div style={{ display: "flex", gap: "4px", fontSize: "11px", color: colors.gray" }}>
+              <div style={{ display: "flex", gap: "4px", fontSize: "11px", color: colors.gray }}>
                 <span style={{ color: colors.green }}>✓ Requested</span>
                 <span>→</span>
                 <span style={{ color: colors.green }}>✓ Accepted</span>
@@ -823,7 +823,7 @@ export default function MarketplaceDemo({ onExit }) {
                       <div style={{ fontSize: "11px", color: colors.gray }}>⭐ {job.rating}</div>
                     </div>
                   </div>
-                  <div style={{ fontSize: "11px", color: colors.gray" }}>{job.date}</div>
+                  <div style={{ fontSize: "11px", color: colors.gray }}>{job.date}</div>
                 </div>
               ))}
             </div>
