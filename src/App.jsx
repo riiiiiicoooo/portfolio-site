@@ -34,6 +34,7 @@ const PRODUCTS = [
       {value: "47", label: "Agents Secured", prev: ""}
     ],
     tech: ["FastAPI","PostgreSQL","Redis","OAuth 2.0","JWT","Vault","AWS Secrets Manager","TypeScript SDK"],
+    pivot: "Originally designed around mTLS certificate-based auth, but pilot teams found certificate management too operationally heavy. Pivoted to OAuth 2.0 Client Credentials Flow mid-sprint — this cut agent onboarding time from 2 days to 15 minutes and was the single decision that drove 100% adoption.",
     github: "https://github.com/riiiiiicoooo/agentgate"
   },
   {
@@ -61,6 +62,7 @@ const PRODUCTS = [
       {value: "3", label: "Active Clients", prev: ""}
     ],
     tech: ["FastAPI","Temporal","scikit-learn","PostgreSQL","Redis","Supabase","Trigger.dev","n8n"],
+    pivot: "Initially built a custom experimentation framework for annotator quality testing. Three months in, realized we were rebuilding PostHog poorly. Migrated to PostHog's feature flag and A/B testing infrastructure, saving 6 weeks of maintenance and letting us focus on what was actually novel — the multi-metric agreement engine.",
     github: "https://github.com/riiiiiicoooo/ai-data-operations-platform"
   },
   {
@@ -88,6 +90,7 @@ const PRODUCTS = [
       {value: "$2.1M", label: "Annual Savings", prev: ""}
     ],
     tech: ["Next.js","FastAPI","Supabase","pgvector","Claude","GPT-4","LangSmith","Trigger.dev"],
+    pivot: "Launched with GPT-4 as the sole extraction model. Accuracy on indemnification clauses was 78%. Ran a structured benchmark against Claude and found it hit 94% on full-contract extraction. Pivoted to Claude as primary with GPT-4 as fallback for specific clause types where it outperforms — a multi-model routing approach that wasn't in the original architecture.",
     github: "https://github.com/riiiiiicoooo/contract-intelligence-platform"
   },
   {
@@ -115,6 +118,7 @@ const PRODUCTS = [
       {value: "<50ms", label: "Personalization Latency", prev: ""}
     ],
     tech: ["FastAPI","Snowflake","Supabase","Segment","PostHog","Trigger.dev","n8n"],
+    pivot: "Built the personalization scoring with frequency as the top-weighted signal (40%). A/B testing revealed recency was actually 2x more predictive of conversion than frequency. Reweighted the model — recency to 30%, frequency down to 25% — and saw engagement lift jump from +12% to +28%.",
     github: "https://github.com/riiiiiicoooo/engagement-personalization-engine"
   },
   {
@@ -142,6 +146,7 @@ const PRODUCTS = [
       {value: "68", label: "Active Reps", prev: ""}
     ],
     tech: ["React Native","Expo","FastAPI","Supabase","Redux","n8n","Salesforce","Grafana"],
+    pivot: "Designed for online-first with offline as a fallback. After riding along with field reps in rural territories, discovered 23% of visits had zero connectivity. Completely inverted the architecture to offline-first with Redux-persisted local state and background sync. This became the feature reps cited most in satisfaction surveys.",
     github: "https://github.com/riiiiiicoooo/field-sales-command"
   },
   {
@@ -155,7 +160,7 @@ const PRODUCTS = [
     problem: "91.2% transaction success rate with manual reconciliation taking 3+ days and roughly $12K/month in undetected ledger imbalances. No real-time visibility into payment status. Progressive KYC wasn't available, causing 34% onboarding drop-off at the identity verification step. A single PSP outage revealed that without an internal source of truth, reconciliation across backup providers was nearly impossible.",
     solution: "Double-entry ledger as internal source of truth (not PSP as source of truth) with SERIALIZABLE isolation to prevent race conditions on concurrent balance reads. The decision to build a custom ledger added 3 weeks but proved critical during a Stripe outage when the internal ledger enabled zero-confusion reconciliation through the Adyen failover. Hybrid fraud detection uses synchronous rule-based scoring (<100ms, catches 85% of fraud) with async ML for borderline cases, avoiding the checkout latency spike that inline-ML caused. Progressive KYC tiers reduced onboarding drop-off from 34% to 7.8%.",
     role: "Delivered this platform over a 6-month engagement, from initial payments audit through full production rollout. Mapped the client's existing payment flow end-to-end with their finance and operations teams, identifying reconciliation bottlenecks and the manual exception handling process that was eating 20+ hours per week. Evaluated build vs. buy options for the ledger system, ran vendor demos of three off-the-shelf reconciliation tools, and ultimately recommended a custom build after none met the client's multi-currency requirements. Wireframed the reconciliation dashboard, exception queue, and audit trail interfaces, then built a prototype processing sample transactions through the double-entry pipeline to demo for the CFO and compliance team. Wrote the technical PRD with the lead developer, defined SLA targets, managed the build through a phased rollout starting with one payment channel, and measured ROI through transaction success rates and hours saved on manual reconciliation.",
-    architecture: "FastAPI service layer with PostgreSQL for double-entry ledger. Stripe Connect handles payment processing, dbt manages data transformations, and Grafana/Prometheus provide real-time monitoring.",
+    architecture: "FastAPI service layer with AWS RDS PostgreSQL for the double-entry ledger (SERIALIZABLE isolation, Multi-AZ failover). Kafka handles event streaming for transaction lifecycle events. Temporal orchestrates settlement and reconciliation workflows. Stripe Connect handles primary payment processing with Adyen failover. dbt manages data transformations, and Datadog provides unified observability across the full payment pipeline.",
     pipeline: [
       {label:"Ingest",detail:"Stripe webhooks + ACH/wire bank feeds"},
       {label:"Process",detail:"Double-entry reconciliation engine"},
@@ -168,7 +173,8 @@ const PRODUCTS = [
       {value: "$0", label: "Ledger Imbalance", prev: "from ~$12K/month"},
       {value: "99.97%", label: "Platform Uptime", prev: ""}
     ],
-    tech: ["FastAPI","PostgreSQL","Stripe Connect","n8n","Trigger.dev","Grafana","Prometheus","dbt"],
+    tech: ["FastAPI","AWS RDS PostgreSQL","Kafka","Temporal","Stripe Connect","dbt","Datadog"],
+    pivot: "Started with a single Stripe integration. When the client onboarded a merchant portfolio with high international volume, Stripe's cross-border fees were eating 3.2% of transaction value. Built a multi-PSP routing layer that dynamically routes to Adyen for international transactions, reducing processing costs by 41%.",
     github: "https://github.com/riiiiiicoooo/fintech-operations-platform"
   },
   {
@@ -195,7 +201,8 @@ const PRODUCTS = [
       {value: "100%", label: "Audit Coverage", prev: ""},
       {value: "<500ms", label: "Governance Overhead", prev: ""}
     ],
-    tech: ["FastAPI","Supabase","AWS Bedrock","LangSmith","n8n","Trigger.dev","Resend"],
+    tech: ["FastAPI","Supabase","AWS Bedrock","Azure OpenAI","Presidio","LangSmith","n8n","Trigger.dev"],
+    pivot: "First approach used an LLM to evaluate LLM outputs for bias and compliance — essentially an AI checking AI. The compliance team rejected this immediately: 'We can't explain to examiners why an AI said another AI's output was safe.' Pivoted to deterministic guardrails (regex patterns, embedding similarity thresholds) that produce auditable, explainable decisions.",
     github: "https://github.com/riiiiiicoooo/genai-governance"
   },
   {
@@ -222,7 +229,8 @@ const PRODUCTS = [
       {value: "3 weeks → 4 hrs", label: "Provisioning Time", prev: ""},
       {value: "0", label: "Compliance Violations", prev: ""}
     ],
-    tech: ["Temporal","Terraform","Ansible","FastAPI","PostgreSQL","TimescaleDB","OPA","Grafana"],
+    tech: ["Temporal","Terraform","Ansible","FastAPI","PostgreSQL","TimescaleDB","OPA","Datadog"],
+    pivot: "Built the initial provisioning engine as a monolithic Terraform apply. First production deployment took 47 minutes and timed out. Decomposed into a Temporal workflow with parallel provisioning of independent resources and sequential ordering of dependencies. Deployment time dropped to 8 minutes with granular rollback at each step.",
     github: "https://github.com/riiiiiicoooo/infrastructure-automation-platform"
   },
   {
@@ -249,7 +257,8 @@ const PRODUCTS = [
       {value: "12", label: "Integrations Monitored", prev: ""},
       {value: "99.4%", label: "Alert Accuracy", prev: ""}
     ],
-    tech: ["FastAPI","PostgreSQL","React","Grafana","n8n","Trigger.dev","Supabase"],
+    tech: ["FastAPI","PostgreSQL","React","Grafana","PagerDuty","ClickHouse","n8n","Supabase"],
+    pivot: "Launched with fixed threshold alerting (error rate > 5% = alert). Within the first week, the team got 200+ alerts because normal provider variance routinely crossed 5%. Switched to rolling baseline anomaly detection — each provider gets its own dynamic threshold based on 24-hour trailing behavior. Alert volume dropped 94% while catching more real incidents.",
     github: "https://github.com/riiiiiicoooo/integration-health-monitor"
   },
   {
@@ -277,6 +286,7 @@ const PRODUCTS = [
       {value: "4.6/5", label: "User Satisfaction", prev: ""}
     ],
     tech: ["FastAPI","Snowflake","Supabase","pgvector","Claude API","Cohere","Vercel","Playwright"],
+    pivot: "First version generated SQL directly from natural language without a semantic layer. Queries worked 60% of the time. The failure mode was subtle: the LLM would calculate 'occupancy rate' differently depending on how it was asked. Built a semantic business layer that maps every metric to a canonical SQL definition. Accuracy jumped from 60% to 91.3%.",
     github: "https://github.com/riiiiiicoooo/portfolio-intelligence-hub"
   },
   {
@@ -304,6 +314,7 @@ const PRODUCTS = [
       {value: "98%", label: "Advisor Satisfaction", prev: ""}
     ],
     tech: ["FastAPI","Supabase","Next.js","n8n","Trigger.dev","Clerk"],
+    pivot: "Originally designed as a standalone app requiring advisors to manually input client data. Adoption was near zero — advisors said 'I don't have time to enter data into another system.' Pivoted to automated ingestion from the existing CRM and portfolio system via n8n workflows. Prep time dropped from 45 minutes to 12 minutes with zero manual data entry.",
     github: "https://github.com/riiiiiicoooo/review-prep-engine"
   },
   {
@@ -330,7 +341,8 @@ const PRODUCTS = [
       {value: "4.2 days", label: "Avg Detection Lead", prev: ""},
       {value: "17", label: "Active Engagements", prev: ""}
     ],
-    tech: ["FastAPI","Supabase","Next.js","n8n","Trigger.dev","Stripe"],
+    tech: ["FastAPI","PostgreSQL (Railway)","Next.js","n8n","Stripe"],
+    pivot: "Built the first version with real-time scope change alerts. Project managers complained about alert fatigue — every minor clarification triggered a notification. Implemented a 'drift scoring' system that distinguishes between cosmetic changes (low score) and scope-expanding changes (high score), only alerting when cumulative drift exceeds a configurable threshold. Overrun rate dropped from 28% to 11%.",
     github: "https://github.com/riiiiiicoooo/scope-tracker"
   },
   {
@@ -357,7 +369,8 @@ const PRODUCTS = [
       {value: "94%", label: "Verification Rate", prev: "from 15%"},
       {value: "<2%", label: "Dispute Rate", prev: "from 8.3%"}
     ],
-    tech: ["FastAPI","Supabase","Next.js","Stripe Connect","Clerk","n8n","Trigger.dev","Vercel"],
+    tech: ["FastAPI","Supabase","Next.js","Stripe Connect","Clerk","PostGIS","Trigger.dev","Vercel"],
+    pivot: "Launched with a comprehensive 12-step provider verification process. Completion rate was 23% — providers abandoned halfway through. A/B tested a 'progressive verification' approach: list immediately with basic info, then unlock features as they complete additional verification steps. Completion rate hit 78% and time-to-first-listing dropped from 2 weeks to same-day.",
     github: "https://github.com/riiiiiicoooo/verified-services-marketplace"
   }
 ];
@@ -1423,11 +1436,12 @@ function HomePage({onSelectProduct}) {
     <>
       <div className="hero">
         <div className="container">
-          <h1>Product Portfolio</h1>
-          <p>13 products built across fintech, legal AI, healthcare, real estate, and enterprise SaaS. Each with quantified outcomes and interactive dashboards.</p>
+          <h1 className="hero-name">Jacob George</h1>
+          <p className="hero-tagline">Principal PM who builds AI products from zero to production.</p>
+          <p>13 products shipped across fintech, legal AI, healthcare, real estate, construction, manufacturing, and enterprise SaaS. Each with quantified outcomes and interactive dashboards.</p>
           <div className="stats-row">
             <div className="stat"><div className="num">13</div><div className="label">Products Built</div></div>
-            <div className="stat"><div className="num">8</div><div className="label">Industries</div></div>
+            <div className="stat"><div className="num">10</div><div className="label">Industries</div></div>
             <div className="stat"><div className="num">7</div><div className="label">In Production</div></div>
             <div className="stat"><div className="num">$35M+</div><div className="label">Combined Value</div></div>
           </div>
@@ -1474,7 +1488,6 @@ function ProductDetail({productId, onBack}) {
   const product = PRODUCTS.find(p=>p.id===productId);
   const DashComponent = DASHBOARD_COMPONENTS[productId];
   const dashData = DASHBOARDS[productId];
-  const [tab, setTab] = useState("overview");
 
   if (!product) return <div className="container" style={{padding:"80px 0"}}>Product not found.</div>;
 
@@ -1503,48 +1516,45 @@ function ProductDetail({productId, onBack}) {
           ))}
         </div>
 
-        <div className="detail-tabs">
-          <div className={`detail-tab ${tab==="overview"?"active":""}`} onClick={()=>setTab("overview")}>Overview</div>
-          <div className={`detail-tab ${tab==="dashboard"?"active":""}`} onClick={()=>setTab("dashboard")}>Dashboard</div>
-          <div className={`detail-tab ${tab==="tech"?"active":""}`} onClick={()=>setTab("tech")}>Tech Stack</div>
-        </div>
+        <div style={{fontSize:12,color:"var(--muted)",textAlign:"center",margin:"8px 0 24px"}}>Interactive visualizations based on anonymized production patterns. Data transformed for client confidentiality.</div>
 
-        {tab === "overview" && (
-          <>
-            <div className="section">
-              <div className="section-title">The Problem</div>
-              <div className="section-body"><p>{product.problem}</p></div>
-            </div>
-            <div className="section">
-              <div className="section-title">The Solution</div>
-              <div className="section-body"><p>{product.solution}</p></div>
-            </div>
-            <div className="section">
-              <div className="section-title">My Role</div>
-              <div className="section-body"><p>{product.role}</p></div>
-            </div>
-          </>
-        )}
-
-        {tab === "dashboard" && DashComponent && dashData && (
+        {DashComponent && dashData && (
           <div className="dashboard-section">
-            <div className="section-title" style={{marginBottom:20}}>Interactive Dashboard <span style={{fontSize:12,fontWeight:400,color:"var(--muted)"}}>(Dummy Data)</span></div>
+            <div className="section-title" style={{marginBottom:20}}>Interactive Dashboard</div>
             <DashComponent data={dashData} pipeline={product.pipeline}/>
           </div>
         )}
 
-        {tab === "tech" && (
+        {product.pipeline && <DataPipeline steps={product.pipeline}/>}
+
+        <div className="section">
+          <div className="section-title">The Problem</div>
+          <div className="section-body"><p>{product.problem}</p></div>
+        </div>
+        <div className="section">
+          <div className="section-title">The Solution</div>
+          <div className="section-body"><p>{product.solution}</p></div>
+        </div>
+        {product.pivot && (
           <div className="section">
-            <div className="section-title">Technology Stack</div>
-            {product.architecture && <p className="architecture-desc">{product.architecture}</p>}
-            <div className="tech-list">
-              {product.tech.map(t=><span key={t} className="tech-chip">{t}</span>)}
-            </div>
-            <div style={{marginTop:24}}>
-              <a href={product.github} target="_blank" rel="noopener noreferrer" style={{fontSize:14,color:"var(--muted)",borderBottom:"1px solid var(--border)",paddingBottom:2}}>View on GitHub →</a>
-            </div>
+            <div className="section-title">Key Pivot</div>
+            <div className="section-body"><p>{product.pivot}</p></div>
           </div>
         )}
+        <div className="section">
+          <div className="section-title">My Role</div>
+          <div className="section-body"><p>{product.role}</p></div>
+        </div>
+        <div className="section">
+          <div className="section-title">Technology Stack</div>
+          {product.architecture && <p className="architecture-desc">{product.architecture}</p>}
+          <div className="tech-list">
+            {product.tech.map(t=><span key={t} className="tech-chip">{t}</span>)}
+          </div>
+          <div style={{marginTop:24}}>
+            <a href={product.github} target="_blank" rel="noopener noreferrer" style={{fontSize:14,color:"var(--muted)",borderBottom:"1px solid var(--border)",paddingBottom:2}}>View on GitHub →</a>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -1582,6 +1592,8 @@ export default function App() {
             <div className="footer-left">Jacob George &middot; Consulting PM</div>
             <div className="footer-links">
               <a href="mailto:jacob.georgenyc@gmail.com">Email</a>
+              <span>&middot;</span>
+              <a href="https://www.linkedin.com/in/jacob-g-17630a127/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
               <span>&middot;</span>
               <a href="https://github.com/riiiiiicoooo" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
