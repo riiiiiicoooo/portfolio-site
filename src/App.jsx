@@ -34,7 +34,7 @@ const PRODUCTS = [
       {value: "47", label: "Agents Secured", prev: ""}
     ],
     tech: ["FastAPI","PostgreSQL","Redis","OAuth 2.0","JWT","Vault","AWS Secrets Manager","TypeScript SDK"],
-    pivot: "Originally designed around mTLS certificate-based auth, but pilot teams found certificate management too operationally heavy. Pivoted to OAuth 2.0 Client Credentials Flow mid-sprint — this cut agent onboarding time from 2 days to 15 minutes and was the single decision that drove 100% adoption.",
+    pivot: "Originally designed around mTLS certificate-based auth, but pilot teams found certificate management too operationally heavy. Pivoted to OAuth 2.0 Client Credentials Flow mid-sprint. This cut agent onboarding time from 2 days to 15 minutes and was the single decision that drove 100% adoption.",
     github: "https://github.com/riiiiiicoooo/agentgate"
   },
   {
@@ -62,7 +62,7 @@ const PRODUCTS = [
       {value: "3", label: "Active Clients", prev: ""}
     ],
     tech: ["FastAPI","Temporal","scikit-learn","PostgreSQL","Redis","Supabase","Trigger.dev","n8n"],
-    pivot: "Initially built a custom experimentation framework for annotator quality testing. Three months in, realized we were rebuilding PostHog poorly. Migrated to PostHog's feature flag and A/B testing infrastructure, saving 6 weeks of maintenance and letting us focus on what was actually novel — the multi-metric agreement engine.",
+    pivot: "Initially built a custom experimentation framework for annotator quality testing. Three months in, realized we were rebuilding PostHog poorly. Migrated to PostHog's feature flag and A/B testing infrastructure, saving 6 weeks of maintenance and letting us focus on what was actually novel: the multi-metric agreement engine.",
     github: "https://github.com/riiiiiicoooo/ai-data-operations-platform"
   },
   {
@@ -90,7 +90,7 @@ const PRODUCTS = [
       {value: "$2.1M", label: "Annual Savings", prev: ""}
     ],
     tech: ["Next.js","FastAPI","Supabase","pgvector","Claude","GPT-4","LangSmith","Trigger.dev"],
-    pivot: "Launched with GPT-4 as the sole extraction model. Accuracy on indemnification clauses was 78%. Ran a structured benchmark against Claude and found it hit 94% on full-contract extraction. Pivoted to Claude as primary with GPT-4 as fallback for specific clause types where it outperforms — a multi-model routing approach that wasn't in the original architecture.",
+    pivot: "Launched with GPT-4 as the sole extraction model. Accuracy on indemnification clauses was 78%. Ran a structured benchmark against Claude and found it hit 94% on full-contract extraction. Pivoted to Claude as primary with GPT-4 as fallback for specific clause types where it outperforms. This multi-model routing approach wasn't in the original architecture.",
     github: "https://github.com/riiiiiicoooo/contract-intelligence-platform"
   },
   {
@@ -118,7 +118,7 @@ const PRODUCTS = [
       {value: "<50ms", label: "Personalization Latency", prev: ""}
     ],
     tech: ["FastAPI","Snowflake","Supabase","Segment","PostHog","Trigger.dev","n8n"],
-    pivot: "Built the personalization scoring with frequency as the top-weighted signal (40%). A/B testing revealed recency was actually 2x more predictive of conversion than frequency. Reweighted the model — recency to 30%, frequency down to 25% — and saw engagement lift jump from +12% to +28%.",
+    pivot: "Built the personalization scoring with frequency as the top-weighted signal (40%). A/B testing revealed recency was actually 2x more predictive of conversion than frequency. Reweighted the model (recency to 30%, frequency down to 25%) and saw engagement lift jump from +12% to +28%.",
     github: "https://github.com/riiiiiicoooo/engagement-personalization-engine"
   },
   {
@@ -202,7 +202,7 @@ const PRODUCTS = [
       {value: "<500ms", label: "Governance Overhead", prev: ""}
     ],
     tech: ["FastAPI","Supabase","AWS Bedrock","Azure OpenAI","Presidio","LangSmith","n8n","Trigger.dev"],
-    pivot: "First approach used an LLM to evaluate LLM outputs for bias and compliance — essentially an AI checking AI. The compliance team rejected this immediately: 'We can't explain to examiners why an AI said another AI's output was safe.' Pivoted to deterministic guardrails (regex patterns, embedding similarity thresholds) that produce auditable, explainable decisions.",
+    pivot: "First approach used an LLM to evaluate LLM outputs for bias and compliance, essentially an AI checking AI. The compliance team rejected this immediately: 'We can't explain to examiners why an AI said another AI's output was safe.' Pivoted to deterministic guardrails (regex patterns, embedding similarity thresholds) that produce auditable, explainable decisions.",
     github: "https://github.com/riiiiiicoooo/genai-governance"
   },
   {
@@ -258,7 +258,7 @@ const PRODUCTS = [
       {value: "99.4%", label: "Alert Accuracy", prev: ""}
     ],
     tech: ["FastAPI","PostgreSQL","React","Grafana","PagerDuty","ClickHouse","n8n","Supabase"],
-    pivot: "Launched with fixed threshold alerting (error rate > 5% = alert). Within the first week, the team got 200+ alerts because normal provider variance routinely crossed 5%. Switched to rolling baseline anomaly detection — each provider gets its own dynamic threshold based on 24-hour trailing behavior. Alert volume dropped 94% while catching more real incidents.",
+    pivot: "Launched with fixed threshold alerting (error rate > 5% = alert). Within the first week, the team got 200+ alerts because normal provider variance routinely crossed 5%. Switched to rolling baseline anomaly detection where each provider now gets its own dynamic threshold based on 24-hour trailing behavior. Alert volume dropped 94% while catching more real incidents.",
     github: "https://github.com/riiiiiicoooo/integration-health-monitor"
   },
   {
@@ -314,7 +314,7 @@ const PRODUCTS = [
       {value: "98%", label: "Advisor Satisfaction", prev: ""}
     ],
     tech: ["FastAPI","Supabase","Next.js","n8n","Trigger.dev","Clerk"],
-    pivot: "Originally designed as a standalone app requiring advisors to manually input client data. Adoption was near zero — advisors said 'I don't have time to enter data into another system.' Pivoted to automated ingestion from the existing CRM and portfolio system via n8n workflows. Prep time dropped from 45 minutes to 12 minutes with zero manual data entry.",
+    pivot: "Originally designed as a standalone app requiring advisors to manually input client data. Adoption was near zero. Advisors said 'I don't have time to enter data into another system.' Pivoted to automated ingestion from the existing CRM and portfolio system via n8n workflows. Prep time dropped from 45 minutes to 12 minutes with zero manual data entry.",
     github: "https://github.com/riiiiiicoooo/review-prep-engine"
   },
   {
@@ -342,7 +342,7 @@ const PRODUCTS = [
       {value: "17", label: "Active Engagements", prev: ""}
     ],
     tech: ["FastAPI","PostgreSQL (Railway)","Next.js","n8n","Stripe"],
-    pivot: "Built the first version with real-time scope change alerts. Project managers complained about alert fatigue — every minor clarification triggered a notification. Implemented a 'drift scoring' system that distinguishes between cosmetic changes (low score) and scope-expanding changes (high score), only alerting when cumulative drift exceeds a configurable threshold. Overrun rate dropped from 28% to 11%.",
+    pivot: "Built the first version with real-time scope change alerts. Project managers complained about alert fatigue — every minor clarification triggered a notification. So we implemented a 'drift scoring' system that distinguishes between cosmetic changes (low score) and scope-expanding changes (high score), only alerting when cumulative drift exceeds a configurable threshold. Overrun rate dropped from 28% to 11%.",
     github: "https://github.com/riiiiiicoooo/scope-tracker"
   },
   {
@@ -370,7 +370,7 @@ const PRODUCTS = [
       {value: "<2%", label: "Dispute Rate", prev: "from 8.3%"}
     ],
     tech: ["FastAPI","Supabase","Next.js","Stripe Connect","Clerk","PostGIS","Trigger.dev","Vercel"],
-    pivot: "Launched with a comprehensive 12-step provider verification process. Completion rate was 23% — providers abandoned halfway through. A/B tested a 'progressive verification' approach: list immediately with basic info, then unlock features as they complete additional verification steps. Completion rate hit 78% and time-to-first-listing dropped from 2 weeks to same-day.",
+    pivot: "Launched with a comprehensive 12-step provider verification process. Completion rate was 23% because providers abandoned halfway through. A/B tested a 'progressive verification' approach: list immediately with basic info, then unlock features as they complete additional verification steps. Completion rate hit 78% and time-to-first-listing dropped from 2 weeks to same-day.",
     github: "https://github.com/riiiiiicoooo/verified-services-marketplace"
   }
 ];
