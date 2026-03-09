@@ -1525,7 +1525,7 @@ function ProductDetail({productId, onBack}) {
           </div>
         )}
 
-        {product.pipeline && <DataPipeline steps={product.pipeline}/>}
+        {product.pipeline && <DataPipeline stages={product.pipeline}/>}
 
         <div className="section">
           <div className="section-title">The Problem</div>
