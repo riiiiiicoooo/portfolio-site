@@ -6,6 +6,9 @@ import {
 } from "recharts";
 import HomeConnectDemo from "./HomeConnect";
 import FieldCommandDemo from "./FieldCommand";
+import ContractIntelDemo from "./ContractIntel";
+import PortfolioIntelDemo from "./PortfolioIntel";
+import MarketplaceDemo from "./MarketplaceDemo";
 
 // ============================================================================
 // PRODUCT DATA
@@ -1520,7 +1523,7 @@ function ProductDetail({productId, onBack}) {
 
         {product.id === "verified-marketplace" && (
           <div style={{textAlign:"center",margin:"16px 0 24px"}}>
-            <a href="#homeconnect-demo" style={{display:"inline-block",fontSize:16,color:"#fff",background:"#0d9488",padding:"12px 28px",borderRadius:10,textDecoration:"none",fontWeight:600,letterSpacing:"0.01em"}}>Explore Live Demo →</a>
+            <a href="#marketplace-demo" style={{display:"inline-block",fontSize:16,color:"#fff",background:"#c2410c",padding:"12px 28px",borderRadius:10,textDecoration:"none",fontWeight:600,letterSpacing:"0.01em"}}>Explore Live Demo →</a>
             <div style={{fontSize:13,color:"var(--muted)",marginTop:8}}>Interactive marketplace walkthrough with realistic Atlanta metro data</div>
           </div>
         )}
@@ -1529,6 +1532,20 @@ function ProductDetail({productId, onBack}) {
           <div style={{textAlign:"center",margin:"16px 0 24px"}}>
             <a href="#fieldcommand-demo" style={{display:"inline-block",fontSize:16,color:"#fff",background:"#1e3a5f",padding:"12px 28px",borderRadius:10,textDecoration:"none",fontWeight:600,letterSpacing:"0.01em"}}>Explore Live Demo →</a>
             <div style={{fontSize:13,color:"var(--muted)",marginTop:8}}>Interactive mobile app walkthrough with realistic field sales data</div>
+          </div>
+        )}
+
+        {product.id === "contract-intelligence" && (
+          <div style={{textAlign:"center",margin:"16px 0 24px"}}>
+            <a href="#contractintel-demo" style={{display:"inline-block",fontSize:16,color:"#fff",background:"#4338ca",padding:"12px 28px",borderRadius:10,textDecoration:"none",fontWeight:600,letterSpacing:"0.01em"}}>Explore Live Demo →</a>
+            <div style={{fontSize:13,color:"var(--muted)",marginTop:8}}>Interactive contract analysis walkthrough with realistic M&A data</div>
+          </div>
+        )}
+
+        {product.id === "portfolio-intelligence" && (
+          <div style={{textAlign:"center",margin:"16px 0 24px"}}>
+            <a href="#portfoliointel-demo" style={{display:"inline-block",fontSize:16,color:"#fff",background:"#0f766e",padding:"12px 28px",borderRadius:10,textDecoration:"none",fontWeight:600,letterSpacing:"0.01em"}}>Explore Live Demo →</a>
+            <div style={{fontSize:13,color:"var(--muted)",marginTop:8}}>Interactive analytics walkthrough with realistic real estate data</div>
           </div>
         )}
 
@@ -1570,7 +1587,13 @@ function ProductDetail({productId, onBack}) {
           <div style={{marginTop:24,display:"flex",gap:20,alignItems:"center",flexWrap:"wrap"}}>
             <a href={product.github} target="_blank" rel="noopener noreferrer" style={{fontSize:14,color:"var(--muted)",borderBottom:"1px solid var(--border)",paddingBottom:2}}>View on GitHub →</a>
             {product.id === "verified-marketplace" && (
-              <a href="#homeconnect-demo" style={{fontSize:14,color:"#fff",background:"#0d9488",padding:"8px 18px",borderRadius:8,textDecoration:"none",fontWeight:600}}>Explore Live Demo →</a>
+              <a href="#marketplace-demo" style={{fontSize:14,color:"#fff",background:"#c2410c",padding:"8px 18px",borderRadius:8,textDecoration:"none",fontWeight:600}}>Explore Live Demo →</a>
+            )}
+            {product.id === "contract-intelligence" && (
+              <a href="#contractintel-demo" style={{fontSize:14,color:"#fff",background:"#4338ca",padding:"8px 18px",borderRadius:8,textDecoration:"none",fontWeight:600}}>Explore Live Demo →</a>
+            )}
+            {product.id === "portfolio-intelligence" && (
+              <a href="#portfoliointel-demo" style={{fontSize:14,color:"#fff",background:"#0f766e",padding:"8px 18px",borderRadius:8,textDecoration:"none",fontWeight:600}}>Explore Live Demo →</a>
             )}
           </div>
         </div>
@@ -1589,6 +1612,9 @@ export default function App() {
       if (hash === "about") { setPage("about"); setCurrentProduct(null); }
       else if (hash === "homeconnect-demo") { setPage("homeconnect"); setCurrentProduct(null); }
       else if (hash === "fieldcommand-demo") { setPage("fieldcommand"); setCurrentProduct(null); }
+      else if (hash === "contractintel-demo") { setPage("contractintel"); setCurrentProduct(null); }
+      else if (hash === "portfoliointel-demo") { setPage("portfoliointel"); setCurrentProduct(null); }
+      else if (hash === "marketplace-demo") { setPage("marketplace"); setCurrentProduct(null); }
       else if (hash && PRODUCTS.find(p=>p.id===hash)) { setPage("product"); setCurrentProduct(hash); }
       else { setPage("home"); setCurrentProduct(null); }
     };
@@ -1603,9 +1629,12 @@ export default function App() {
 
   return (
     <>
-      {page !== "homeconnect" && page !== "fieldcommand" && <Nav onHome={goHome} onAbout={goAbout}/>}
+      {page !== "homeconnect" && page !== "fieldcommand" && page !== "contractintel" && page !== "portfoliointel" && page !== "marketplace" && <Nav onHome={goHome} onAbout={goAbout}/>}
       {page === "homeconnect" && <HomeConnectDemo onExit={goHome}/>}
       {page === "fieldcommand" && <FieldCommandDemo onExit={goHome}/>}
+      {page === "contractintel" && <ContractIntelDemo onExit={goHome}/>}
+      {page === "portfoliointel" && <PortfolioIntelDemo onExit={goHome}/>}
+      {page === "marketplace" && <MarketplaceDemo onExit={goHome}/>}
       {page === "about" && <AboutPage/>}
       {page === "product" && currentProduct && <ProductDetail productId={currentProduct} onBack={goHome}/>}
       {page === "home" && <HomePage onSelectProduct={goProduct}/>}
