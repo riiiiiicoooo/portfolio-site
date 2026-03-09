@@ -8,6 +8,7 @@ import HomeConnectDemo from "./HomeConnect";
 import FieldCommandDemo from "./FieldCommand";
 import ContractIntelDemo from "./ContractIntel";
 import PortfolioIntelDemo from "./PortfolioIntel";
+import AgentOrchDemo from "./AgentOrchDemo";
 
 // ============================================================================
 // PRODUCT DATA
@@ -376,6 +377,34 @@ const PRODUCTS = [
     tech: ["FastAPI","PostgreSQL (Railway)","Next.js","n8n","Stripe"],
     pivot: "Built the first version with real-time scope change alerts. Project managers complained about alert fatigue — every minor clarification triggered a notification. So we implemented a 'drift scoring' system that distinguishes between cosmetic changes (low score) and scope-expanding changes (high score), only alerting when cumulative drift exceeds a configurable threshold. Overrun rate dropped from 28% to 11%.",
     github: "https://github.com/riiiiiicoooo/scope-tracker"
+  },
+  {
+    id: "agent-orchestration",
+    name: "Agent Orchestration Platform",
+    domain: "AI Infrastructure",
+    category: "AI & ML",
+    stage: "Production",
+    tagline: "Multi-Agent Coordination for Enterprise Workflows",
+    description: "Supervisor-pattern agent orchestration platform coordinating 5 specialized AI agents across claims processing, underwriting, customer service, document processing, and analytics. Uses LangGraph for stateful workflow execution with checkpointing and human-in-the-loop gates. Multi-model routing (Claude primary, GPT-4o secondary, Haiku for fast classification) reduced LLM spend 60% through shared knowledge base, prompt caching (37% hit rate), and intelligent model selection.",
+    problem: "Insurance TPA had deployed 7 separate AI tools over 18 months, each running independently. Combined LLM spend was $47K/month with 40% redundant token usage (each tool maintained its own context, re-processing the same documents). No unified monitoring, no shared memory, and no centralized guardrails. One agent hallucinated a coverage determination that reached a policyholder before anyone caught it. No cost attribution — nobody knew which agent was spending what.",
+    solution: "Unified orchestration with a supervisor agent classifying intent via Haiku (<200ms), routing to specialized agents, and enforcing five-layer deterministic guardrails (PII detection, budget enforcement, schema validation, compliance rules, content filtering). Three-tier memory architecture (Redis session state → PostgreSQL conversation history → pgvector long-term knowledge) eliminates redundant document processing. Per-agent circuit breakers prevent cascading failures. The pivot from pipeline to supervisor pattern cut average cost per task from $0.51 to $0.08.",
+    role: "Led this platform from research through production over a 16-week engagement. Conducted deep research across agent orchestration frameworks (LangGraph, CrewAI, AutoGen, Swarm) and architectural patterns (supervisor, pipeline, mesh) before recommending the supervisor pattern based on Apex's well-defined domain boundaries. Mapped all 7 existing AI tools, their overlapping functionality, and combined cost structure to build the consolidation business case. Designed the three-tier memory architecture and five-layer guardrail system after interviewing compliance officers about regulatory requirements (insurance regulators need explainable, deterministic safety decisions — not 'AI checking AI'). Wireframed the orchestration dashboard and agent management interface, managed the lead developer through the LangGraph implementation, and ran a phased rollout starting with customer service (highest volume, lowest risk) before adding claims and underwriting agents.",
+    architecture: "FastAPI backend with LangGraph orchestration engine. Supabase PostgreSQL with pgvector for unified data + vector search. Redis for session state and inter-agent communication via Redis Streams. Claude and GPT-4o via provider abstraction layer. LangSmith for agent tracing and evaluation.",
+    pipeline: [
+      {label:"Ingest",detail:"API requests + document uploads"},
+      {label:"Process",detail:"LangGraph supervisor + specialized agents"},
+      {label:"Store",detail:"PostgreSQL conversations + pgvector knowledge"},
+      {label:"Serve",detail:"Orchestration API + WebSocket agent status"}
+    ],
+    metrics: [
+      {value: "60%", label: "LLM Cost Reduction", prev: "$47K → $19K/month"},
+      {value: "94.2%", label: "Task Completion Rate", prev: "from 67%"},
+      {value: "2.4s", label: "Avg Latency", prev: "from 15.2s"},
+      {value: "0", label: "Hallucination Incidents", prev: "from 3/month"}
+    ],
+    tech: ["FastAPI","LangGraph","Claude","GPT-4o","Supabase","pgvector","Redis","LangSmith","Trigger.dev","n8n"],
+    pivot: "Originally designed as a pipeline pattern where each agent processed sequentially. The pipeline approach failed in production: 70% of requests only needed 1-2 agents, yet every request paid the full pipeline latency. A $0.02 FAQ response was routing through all 5 agents at $0.51 total. Pivoted to supervisor pattern with intelligent routing — the supervisor classifies intent (<200ms via Haiku) and routes to only the necessary agents. Average cost per task dropped from $0.51 to $0.08.",
+    github: "https://github.com/riiiiiicoooo/agent-orchestration-platform"
   }
 ];
 
@@ -475,6 +504,12 @@ const DASHBOARDS = {
     verificationFunnel: [{stage:"Applied",count:2400},{stage:"Docs Submitted",count:1920},{stage:"Background Check",count:1680},{stage:"Verified",count:1560}],
     disputeRate: Array.from({length:12},(_,i)=>({month:`M${i+1}`,verified:+(1.2+Math.random()*.8).toFixed(1),unverified:+(6+Math.random()*3).toFixed(1)})),
     supplierMetrics: [{tier:"Premium Verified",count:312,avgRevenue:4800,rating:4.8},{tier:"Verified",count:1248,avgRevenue:2200,rating:4.3},{tier:"Pending",count:360,avgRevenue:800,rating:3.6}]
+  },
+  "agent-orchestration": {
+    agentTasks: Array.from({length:14},(_,i)=>({day:`Day ${i+1}`,claims:Math.floor(80+Math.random()*30),underwriting:Math.floor(50+Math.random()*20),customer:Math.floor(250+Math.random()*80),document:Math.floor(40+Math.random()*15),analytics:Math.floor(25+Math.random()*12)})),
+    costTrend: Array.from({length:12},(_,i)=>({week:`W${i+1}`,cost:+(1800-i*110+Math.random()*100).toFixed(0),tasks:Math.floor(4000+i*300+Math.random()*200)})),
+    agentPerformance: [{agent:"Claims",completion:96.2,latency:2.1,cost:0.08},{agent:"Underwriting",completion:91.8,latency:3.4,cost:0.14},{agent:"Customer Service",completion:98.4,latency:0.8,cost:0.02},{agent:"Document",completion:89.5,latency:4.2,cost:0.11},{agent:"Analytics",completion:94.1,latency:5.1,cost:0.16}],
+    guardrailHits: [{type:"PII Detection",count:89},{type:"Budget Cap",count:12},{type:"Schema Fail",count:34},{type:"Compliance",count:23},{type:"Injection Block",count:8}]
   }
 };
 
@@ -1221,6 +1256,72 @@ function DataPipeline({stages}) {
   );
 }
 
+function AgentOrchDashboard({data, pipeline}) {
+  return (
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card">
+          <div className="chart-title">Tasks by Agent (14-Day)</div>
+          <div className="chart-value">7,007 total tasks</div>
+          <div className="chart-source">Source: PostgreSQL tasks table</div>
+          <ResponsiveContainer width="100%" height={200}>
+            <AreaChart data={data.agentTasks}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
+              <XAxis dataKey="day" tick={{fontSize:10}} interval={2}/>
+              <YAxis tick={{fontSize:10}}/>
+              <Tooltip/>
+              <Area type="monotone" dataKey="customer" stackId="1" fill="#8b5cf6" fillOpacity={0.7} stroke="#8b5cf6"/>
+              <Area type="monotone" dataKey="claims" stackId="1" fill="#3b82f6" fillOpacity={0.7} stroke="#3b82f6"/>
+              <Area type="monotone" dataKey="underwriting" stackId="1" fill="#22c55e" fillOpacity={0.7} stroke="#22c55e"/>
+              <Area type="monotone" dataKey="document" stackId="1" fill="#f59e0b" fillOpacity={0.7} stroke="#f59e0b"/>
+              <Area type="monotone" dataKey="analytics" stackId="1" fill="#06b6d4" fillOpacity={0.7} stroke="#06b6d4"/>
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="chart-card">
+          <div className="chart-title">Cost Optimization Trend</div>
+          <div className="chart-value">$19K/month (from $47K)</div>
+          <div className="chart-source">Source: token_usage table aggregation</div>
+          <ResponsiveContainer width="100%" height={200}>
+            <ComposedChart data={data.costTrend}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
+              <XAxis dataKey="week" tick={{fontSize:10}}/>
+              <YAxis yAxisId="left" tick={{fontSize:10}}/>
+              <YAxis yAxisId="right" orientation="right" tick={{fontSize:10}}/>
+              <Tooltip/>
+              <Bar yAxisId="left" dataKey="cost" fill="#8b5cf6" radius={[2,2,0,0]} barSize={16} name="Weekly Cost ($)"/>
+              <Line yAxisId="right" type="monotone" dataKey="tasks" stroke="#22c55e" strokeWidth={2} dot={false} name="Tasks"/>
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="chart-card">
+          <div className="chart-title">Agent Performance</div>
+          <div className="chart-value">94.2% avg completion</div>
+          <div className="chart-source">Source: LangSmith evaluation results</div>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={data.agentPerformance} layout="vertical"><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
+              <XAxis type="number" tick={{fontSize:10}} domain={[80,100]}/>
+              <YAxis type="category" dataKey="agent" tick={{fontSize:10}} width={90}/>
+              <Tooltip/><Bar dataKey="completion" fill="#8b5cf6" radius={[0,4,4,0]} name="Completion %"/>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="chart-card">
+          <div className="chart-title">Guardrail Activity</div>
+          <div className="chart-value">166 interventions</div>
+          <div className="chart-source">Source: guardrail_events table</div>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={data.guardrailHits}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
+              <XAxis dataKey="type" tick={{fontSize:9}} interval={0} angle={-20} textAnchor="end" height={50}/>
+              <YAxis tick={{fontSize:10}}/>
+              <Tooltip/><Bar dataKey="count" fill="#111" radius={[4,4,0,0]}/>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </>
+  );
+}
+
 const DASHBOARD_COMPONENTS = {
   agentgate: AgentGateDashboard,
   "ai-data-ops": AIDataOpsDashboard,
@@ -1235,6 +1336,7 @@ const DASHBOARD_COMPONENTS = {
   "review-prep": ReviewPrepDashboard,
   "scope-tracker": ScopeTrackerDashboard,
   "verified-marketplace": MarketplaceDashboard,
+  "agent-orchestration": AgentOrchDashboard,
 };
 
 // ============================================================================
@@ -1279,6 +1381,9 @@ const DOMAIN_ICONS = {
   ),
   "Marketplace": (
     <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#dbeafe"/><path d="M14 20l2-6h16l2 6" stroke="#1e40af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M14 20v14h20V20" stroke="#1e40af" strokeWidth="2" fill="none"/><rect x="20" y="26" width="8" height="8" rx="1" stroke="#3b82f6" strokeWidth="2" fill="none"/></svg>
+  ),
+  "AI Infrastructure": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#ede9fe"/><circle cx="24" cy="24" r="6" stroke="#6d28d9" strokeWidth="2" fill="none"/><circle cx="14" cy="14" r="3" stroke="#8b5cf6" strokeWidth="1.5" fill="none"/><circle cx="34" cy="14" r="3" stroke="#8b5cf6" strokeWidth="1.5" fill="none"/><circle cx="14" cy="34" r="3" stroke="#8b5cf6" strokeWidth="1.5" fill="none"/><circle cx="34" cy="34" r="3" stroke="#8b5cf6" strokeWidth="1.5" fill="none"/><line x1="18" y1="20" x2="16" y2="17" stroke="#7c3aed" strokeWidth="1.5"/><line x1="30" y1="20" x2="32" y2="17" stroke="#7c3aed" strokeWidth="1.5"/><line x1="18" y1="28" x2="16" y2="31" stroke="#7c3aed" strokeWidth="1.5"/><line x1="30" y1="28" x2="32" y2="31" stroke="#7c3aed" strokeWidth="1.5"/></svg>
   ),
 };
 
@@ -1548,6 +1653,13 @@ function ProductDetail({productId, onBack}) {
           </div>
         )}
 
+        {product.id === "agent-orchestration" && (
+          <div style={{textAlign:"center",margin:"16px 0 24px"}}>
+            <a href="#agentorch-demo" style={{display:"inline-block",fontSize:16,color:"#fff",background:"#6d28d9",padding:"12px 28px",borderRadius:10,textDecoration:"none",fontWeight:600,letterSpacing:"0.01em"}}>Explore Live Demo →</a>
+            <div style={{fontSize:13,color:"var(--muted)",marginTop:8}}>Interactive orchestration command center with supervisor chat and agent monitoring</div>
+          </div>
+        )}
+
         <div style={{fontSize:12,color:"var(--muted)",textAlign:"center",margin:"8px 0 24px"}}>Interactive visualizations based on anonymized production patterns. Data transformed for client confidentiality.</div>
 
         {DashComponent && dashData && (
@@ -1594,6 +1706,9 @@ function ProductDetail({productId, onBack}) {
             {product.id === "portfolio-intelligence" && (
               <a href="#portfoliointel-demo" style={{fontSize:14,color:"#fff",background:"#0f766e",padding:"8px 18px",borderRadius:8,textDecoration:"none",fontWeight:600}}>Explore Live Demo →</a>
             )}
+            {product.id === "agent-orchestration" && (
+              <a href="#agentorch-demo" style={{fontSize:14,color:"#fff",background:"#6d28d9",padding:"8px 18px",borderRadius:8,textDecoration:"none",fontWeight:600}}>Explore Live Demo →</a>
+            )}
           </div>
         </div>
       </div>
@@ -1613,6 +1728,7 @@ export default function App() {
       else if (hash === "fieldcommand-demo") { setPage("fieldcommand"); setCurrentProduct(null); }
       else if (hash === "contractintel-demo") { setPage("contractintel"); setCurrentProduct(null); }
       else if (hash === "portfoliointel-demo") { setPage("portfoliointel"); setCurrentProduct(null); }
+      else if (hash === "agentorch-demo") { setPage("agentorch"); setCurrentProduct(null); }
       else if (hash && PRODUCTS.find(p=>p.id===hash)) { setPage("product"); setCurrentProduct(hash); }
       else { setPage("home"); setCurrentProduct(null); }
     };
@@ -1627,11 +1743,12 @@ export default function App() {
 
   return (
     <>
-      {page !== "homeconnect" && page !== "fieldcommand" && page !== "contractintel" && page !== "portfoliointel" && <Nav onHome={goHome} onAbout={goAbout}/>}
+      {page !== "homeconnect" && page !== "fieldcommand" && page !== "contractintel" && page !== "portfoliointel" && page !== "agentorch" && <Nav onHome={goHome} onAbout={goAbout}/>}
       {page === "homeconnect" && <HomeConnectDemo onExit={goHome}/>}
       {page === "fieldcommand" && <FieldCommandDemo onExit={goHome}/>}
       {page === "contractintel" && <ContractIntelDemo onExit={goHome}/>}
       {page === "portfoliointel" && <PortfolioIntelDemo onExit={goHome}/>}
+      {page === "agentorch" && <AgentOrchDemo onExit={goHome}/>}
       {page === "about" && <AboutPage/>}
       {page === "product" && currentProduct && <ProductDetail productId={currentProduct} onBack={goHome}/>}
       {page === "home" && <HomePage onSelectProduct={goProduct}/>}
