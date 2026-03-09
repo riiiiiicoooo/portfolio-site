@@ -5,6 +5,7 @@ import {
   ResponsiveContainer, ComposedChart
 } from "recharts";
 import HomeConnectDemo from "./HomeConnect";
+import FieldCommandDemo from "./FieldCommand";
 
 // ============================================================================
 // PRODUCT DATA
@@ -1524,6 +1525,13 @@ function ProductDetail({productId, onBack}) {
           </div>
         )}
 
+        {product.id === "field-sales" && (
+          <div style={{textAlign:"center",margin:"16px 0 24px"}}>
+            <a href="#fieldcommand-demo" style={{display:"inline-block",fontSize:16,color:"#fff",background:"#1e3a5f",padding:"12px 28px",borderRadius:10,textDecoration:"none",fontWeight:600,letterSpacing:"0.01em"}}>Explore Live Demo →</a>
+            <div style={{fontSize:13,color:"var(--muted)",marginTop:8}}>Interactive mobile app walkthrough with realistic field sales data</div>
+          </div>
+        )}
+
         <div style={{fontSize:12,color:"var(--muted)",textAlign:"center",margin:"8px 0 24px"}}>Interactive visualizations based on anonymized production patterns. Data transformed for client confidentiality.</div>
 
         {DashComponent && dashData && (
@@ -1580,6 +1588,7 @@ export default function App() {
       const hash = window.location.hash.slice(1);
       if (hash === "about") { setPage("about"); setCurrentProduct(null); }
       else if (hash === "homeconnect-demo") { setPage("homeconnect"); setCurrentProduct(null); }
+      else if (hash === "fieldcommand-demo") { setPage("fieldcommand"); setCurrentProduct(null); }
       else if (hash && PRODUCTS.find(p=>p.id===hash)) { setPage("product"); setCurrentProduct(hash); }
       else { setPage("home"); setCurrentProduct(null); }
     };
@@ -1594,8 +1603,9 @@ export default function App() {
 
   return (
     <>
-      {page !== "homeconnect" && <Nav onHome={goHome} onAbout={goAbout}/>}
+      {page !== "homeconnect" && page !== "fieldcommand" && <Nav onHome={goHome} onAbout={goAbout}/>}
       {page === "homeconnect" && <HomeConnectDemo onExit={goHome}/>}
+      {page === "fieldcommand" && <FieldCommandDemo onExit={goHome}/>}
       {page === "about" && <AboutPage/>}
       {page === "product" && currentProduct && <ProductDetail productId={currentProduct} onBack={goHome}/>}
       {page === "home" && <HomePage onSelectProduct={goProduct}/>}
