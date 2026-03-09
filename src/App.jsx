@@ -9,6 +9,7 @@ import FieldCommandDemo from "./FieldCommand";
 import ContractIntelDemo from "./ContractIntel";
 import PortfolioIntelDemo from "./PortfolioIntel";
 import AgentOrchDemo from "./AgentOrchDemo";
+import ClinicalAIDemo from "./ClinicalAIDemo";
 
 // ============================================================================
 // PRODUCT DATA
@@ -405,6 +406,34 @@ const PRODUCTS = [
     tech: ["FastAPI","LangGraph","Claude","GPT-4o","Supabase","pgvector","Redis","LangSmith","Trigger.dev","n8n"],
     pivot: "Originally designed as a pipeline pattern where each agent processed sequentially. The pipeline approach failed in production: 70% of requests only needed 1-2 agents, yet every request paid the full pipeline latency. A $0.02 FAQ response was routing through all 5 agents at $0.51 total. Pivoted to supervisor pattern with intelligent routing — the supervisor classifies intent (<200ms via Haiku) and routes to only the necessary agents. Average cost per task dropped from $0.51 to $0.08.",
     github: "https://github.com/riiiiiicoooo/agent-orchestration-platform"
+  },
+  {
+    id: "clinical-ai",
+    name: "Clinical AI Platform",
+    domain: "Clinical AI",
+    category: "AI & ML",
+    stage: "Production",
+    tagline: "HIPAA-Compliant AI for Prior Authorization & Revenue Cycle",
+    description: "End-to-end clinical AI platform automating prior authorization, medical coding, and revenue cycle analytics for a 38-provider multi-specialty group. SMART on FHIR integration with Epic pulls real-time patient data, a clinical NLP pipeline (SciSpaCy + MedCAT) extracts structured medical concepts from encounter notes, and three specialized AI agents handle PA generation, coding optimization, and denial prediction. Five-layer deterministic compliance guardrails ensure HIPAA adherence with field-level AES-256 encryption and immutable audit logging.",
+    problem: "Meridian Health Partners processed 4,200 prior auth requests monthly with an 18.4% denial rate and 3.8-day average turnaround. Two full-time staff spent 80% of their time on PA paperwork. Medical coders worked a 72-hour backlog with 91.3% accuracy, and $2.1M in annual revenue leaked through preventable denials, under-coded encounters, and missed appeal deadlines. The revenue cycle team couldn't identify denial patterns until quarterly reviews — by then, appeal windows had closed.",
+    solution: "Three-workflow AI platform: PA Engine auto-generates authorization requests by matching patient clinical data against payer-specific criteria (BCBS NC, Aetna, UHC), achieving 6.2-hour average turnaround. Medical Coding Intelligence uses NLP-extracted concepts to suggest ICD-10-CM/CPT codes with specificity optimization and CCI bundling checks. Revenue Cycle Analytics predicts denials before submission and identifies root causes across payer/procedure/provider dimensions. All workflows enforce five-layer deterministic guardrails — PHI detection, RBAC, encryption, audit logging, and clinical safety checks — with zero LLM-as-judge patterns for compliance predictability.",
+    role: "Led this product from research through production over a 14-week engagement with Meridian Health Partners, a 38-provider multi-specialty group in Charlotte, NC. Started with a 2-week discovery phase: interviewed 6 PA coordinators, 4 medical coders, and the revenue cycle director to map the end-to-end claims lifecycle and quantify the $4.8M annual cost of inefficiency. Originally scoped as an ambient clinical documentation tool, but discovery revealed that market was saturated (Abridge, Nuance DAX) and Meridian's real pain was post-encounter operations. Pivoted to PA automation + coding + denial analytics — where ROI was immediately measurable. Designed the FHIR integration architecture after evaluating Epic's SMART on FHIR R4 APIs, built the payer criteria matching logic with the PA team, and specified the five-layer guardrail system after consulting with Meridian's HIPAA compliance officer. Managed the lead developer and two offshore engineers through the build, running weekly demos tracking denial rate reduction as the primary success metric.",
+    architecture: "FastAPI backend with SMART on FHIR R4 integration (Epic). SciSpaCy + MedCAT NLP pipeline for clinical concept extraction. Claude Enterprise (BAA-signed) powering three specialized agents. Supabase PostgreSQL with pgvector for knowledge retrieval. Redis for HIPAA-compliant session management (30-min auto-logoff). Field-level AES-256 encryption via Fernet. LangSmith for agent tracing and clinical safety evaluation.",
+    pipeline: [
+      {label:"Ingest",detail:"FHIR R4 patient data + clinical notes"},
+      {label:"Process",detail:"NLP extraction + AI agent generation"},
+      {label:"Store",detail:"Encrypted PostgreSQL + pgvector knowledge"},
+      {label:"Serve",detail:"PA submission API + real-time analytics"}
+    ],
+    metrics: [
+      {value: "6.2h", label: "PA Turnaround", prev: "from 3.8 days"},
+      {value: "9.1%", label: "Denial Rate", prev: "from 18.4%"},
+      {value: "97.8%", label: "Coding Accuracy", prev: "from 91.3%"},
+      {value: "$2.1M", label: "Revenue Recovered", prev: "annual"}
+    ],
+    tech: ["FastAPI","SMART on FHIR","SciSpaCy","MedCAT","Claude Enterprise","Supabase","pgvector","Redis","LangSmith","Trigger.dev","n8n"],
+    pivot: "Originally scoped as an ambient clinical documentation tool — recording patient encounters and generating structured notes. During discovery, learned that Abridge and Nuance DAX had locked up the ambient documentation market with deep EHR integrations that would take 12+ months to match. But the PA coordinators kept saying: 'The documentation is fine — it's what happens AFTER the encounter that kills us.' Pivoted to post-encounter operations intelligence: PA automation, coding optimization, and denial analytics. This reframe turned a crowded-market risk into a greenfield opportunity, and the ROI was immediately measurable — denial rate reduction showed up in the first monthly claims cycle.",
+    github: "https://github.com/riiiiiicoooo/clinical-ai-platform"
   }
 ];
 
@@ -510,6 +539,12 @@ const DASHBOARDS = {
     costTrend: Array.from({length:12},(_,i)=>({week:`W${i+1}`,cost:+(1800-i*110+Math.random()*100).toFixed(0),tasks:Math.floor(4000+i*300+Math.random()*200)})),
     agentPerformance: [{agent:"Claims",completion:96.2,latency:2.1,cost:0.08},{agent:"Underwriting",completion:91.8,latency:3.4,cost:0.14},{agent:"Customer Service",completion:98.4,latency:0.8,cost:0.02},{agent:"Document",completion:89.5,latency:4.2,cost:0.11},{agent:"Analytics",completion:94.1,latency:5.1,cost:0.16}],
     guardrailHits: [{type:"PII Detection",count:89},{type:"Budget Cap",count:12},{type:"Schema Fail",count:34},{type:"Compliance",count:23},{type:"Injection Block",count:8}]
+  },
+  "clinical-ai": {
+    paVolume: Array.from({length:14},(_,i)=>({day:`Day ${i+1}`,submitted:Math.floor(130+Math.random()*40),approved:Math.floor(105+Math.random()*30),denied:Math.floor(8+Math.random()*10),pending:Math.floor(15+Math.random()*12)})),
+    denialTrend: Array.from({length:12},(_,i)=>({month:`M${i+1}`,rate:+(18.4-i*0.78+Math.random()*0.5).toFixed(1),appeals:Math.floor(12+Math.random()*8),recovered:Math.floor(15000+i*3000+Math.random()*5000)})),
+    codingAccuracy: [{category:"ICD-10-CM",accuracy:97.8,suggestions:1240},{category:"CPT",accuracy:96.4,suggestions:890},{category:"Modifiers",accuracy:98.2,suggestions:320},{category:"Bundling",accuracy:99.1,suggestions:210}],
+    complianceMetrics: [{layer:"PHI Detection",checks:18420,blocked:342},{layer:"RBAC",checks:18420,blocked:28},{layer:"Encryption",checks:9210,blocked:0},{layer:"Audit Log",checks:18420,blocked:0},{layer:"Clinical Safety",checks:4680,blocked:67}]
   }
 };
 
@@ -1322,6 +1357,70 @@ function AgentOrchDashboard({data, pipeline}) {
   );
 }
 
+function ClinicalAIDashboard({data, pipeline}) {
+  return (
+    <>
+      {pipeline && <DataPipeline stages={pipeline}/>}
+      <div className="dashboard-grid">
+        <div className="chart-card">
+          <div className="chart-title">PA Volume (14-Day)</div>
+          <div className="chart-value">4,200 requests/month</div>
+          <div className="chart-source">Source: prior_auth_requests table</div>
+          <ResponsiveContainer width="100%" height={200}>
+            <AreaChart data={data.paVolume}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
+              <XAxis dataKey="day" tick={{fontSize:10}} interval={2}/>
+              <YAxis tick={{fontSize:10}}/>
+              <Tooltip/>
+              <Area type="monotone" dataKey="approved" stackId="1" fill="#059669" fillOpacity={0.7} stroke="#059669"/>
+              <Area type="monotone" dataKey="pending" stackId="1" fill="#f59e0b" fillOpacity={0.7} stroke="#f59e0b"/>
+              <Area type="monotone" dataKey="denied" stackId="1" fill="#ef4444" fillOpacity={0.7} stroke="#ef4444"/>
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="chart-card">
+          <div className="chart-title">Denial Rate Trend</div>
+          <div className="chart-value">18.4% → 9.1%</div>
+          <div className="chart-source">Source: claims analytics pipeline</div>
+          <ResponsiveContainer width="100%" height={200}>
+            <ComposedChart data={data.denialTrend}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
+              <XAxis dataKey="month" tick={{fontSize:10}}/>
+              <YAxis yAxisId="left" tick={{fontSize:10}}/>
+              <YAxis yAxisId="right" orientation="right" tick={{fontSize:10}}/>
+              <Tooltip/>
+              <Line yAxisId="left" type="monotone" dataKey="rate" stroke="#ef4444" strokeWidth={2} name="Denial Rate %"/>
+              <Bar yAxisId="right" dataKey="recovered" fill="#059669" radius={[2,2,0,0]} barSize={16} name="Revenue Recovered ($)"/>
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="chart-card">
+          <div className="chart-title">Coding Accuracy by Category</div>
+          <div className="chart-value">97.8% overall</div>
+          <div className="chart-source">Source: coding_suggestions accepted vs modified</div>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={data.codingAccuracy} layout="vertical"><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
+              <XAxis type="number" tick={{fontSize:10}} domain={[94,100]}/>
+              <YAxis type="category" dataKey="category" tick={{fontSize:10}} width={90}/>
+              <Tooltip/><Bar dataKey="accuracy" fill="#059669" radius={[0,4,4,0]} name="Accuracy %"/>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="chart-card">
+          <div className="chart-title">Compliance Guardrails</div>
+          <div className="chart-value">437 interventions</div>
+          <div className="chart-source">Source: HIPAA audit_log table</div>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={data.complianceMetrics}><CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
+              <XAxis dataKey="layer" tick={{fontSize:9}} interval={0} angle={-20} textAnchor="end" height={50}/>
+              <YAxis tick={{fontSize:10}}/>
+              <Tooltip/><Bar dataKey="blocked" fill="#111" radius={[4,4,0,0]} name="Blocked"/>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </>
+  );
+}
+
 const DASHBOARD_COMPONENTS = {
   agentgate: AgentGateDashboard,
   "ai-data-ops": AIDataOpsDashboard,
@@ -1337,6 +1436,7 @@ const DASHBOARD_COMPONENTS = {
   "scope-tracker": ScopeTrackerDashboard,
   "verified-marketplace": MarketplaceDashboard,
   "agent-orchestration": AgentOrchDashboard,
+  "clinical-ai": ClinicalAIDashboard,
 };
 
 // ============================================================================
@@ -1384,6 +1484,9 @@ const DOMAIN_ICONS = {
   ),
   "AI Infrastructure": (
     <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#ede9fe"/><circle cx="24" cy="24" r="6" stroke="#6d28d9" strokeWidth="2" fill="none"/><circle cx="14" cy="14" r="3" stroke="#8b5cf6" strokeWidth="1.5" fill="none"/><circle cx="34" cy="14" r="3" stroke="#8b5cf6" strokeWidth="1.5" fill="none"/><circle cx="14" cy="34" r="3" stroke="#8b5cf6" strokeWidth="1.5" fill="none"/><circle cx="34" cy="34" r="3" stroke="#8b5cf6" strokeWidth="1.5" fill="none"/><line x1="18" y1="20" x2="16" y2="17" stroke="#7c3aed" strokeWidth="1.5"/><line x1="30" y1="20" x2="32" y2="17" stroke="#7c3aed" strokeWidth="1.5"/><line x1="18" y1="28" x2="16" y2="31" stroke="#7c3aed" strokeWidth="1.5"/><line x1="30" y1="28" x2="32" y2="31" stroke="#7c3aed" strokeWidth="1.5"/></svg>
+  ),
+  "Clinical AI": (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#ecfdf5"/><path d="M24 14v20M14 24h20" stroke="#059669" strokeWidth="2.5" strokeLinecap="round"/><circle cx="24" cy="24" r="10" stroke="#047857" strokeWidth="2" fill="none"/><path d="M18 18l2.5 2.5M30 18l-2.5 2.5M18 30l2.5-2.5M30 30l-2.5-2.5" stroke="#10b981" strokeWidth="1.5" strokeLinecap="round"/></svg>
   ),
 };
 
@@ -1660,6 +1763,13 @@ function ProductDetail({productId, onBack}) {
           </div>
         )}
 
+        {product.id === "clinical-ai" && (
+          <div style={{textAlign:"center",margin:"16px 0 24px"}}>
+            <a href="#clinicalai-demo" style={{display:"inline-block",fontSize:16,color:"#fff",background:"#059669",padding:"12px 28px",borderRadius:10,textDecoration:"none",fontWeight:600,letterSpacing:"0.01em"}}>Explore Live Demo →</a>
+            <div style={{fontSize:13,color:"var(--muted)",marginTop:8}}>Interactive clinical AI command center with PA automation, coding intelligence, and HIPAA compliance</div>
+          </div>
+        )}
+
         <div style={{fontSize:12,color:"var(--muted)",textAlign:"center",margin:"8px 0 24px"}}>Interactive visualizations based on anonymized production patterns. Data transformed for client confidentiality.</div>
 
         {DashComponent && dashData && (
@@ -1709,6 +1819,9 @@ function ProductDetail({productId, onBack}) {
             {product.id === "agent-orchestration" && (
               <a href="#agentorch-demo" style={{fontSize:14,color:"#fff",background:"#6d28d9",padding:"8px 18px",borderRadius:8,textDecoration:"none",fontWeight:600}}>Explore Live Demo →</a>
             )}
+            {product.id === "clinical-ai" && (
+              <a href="#clinicalai-demo" style={{fontSize:14,color:"#fff",background:"#059669",padding:"8px 18px",borderRadius:8,textDecoration:"none",fontWeight:600}}>Explore Live Demo →</a>
+            )}
           </div>
         </div>
       </div>
@@ -1729,6 +1842,7 @@ export default function App() {
       else if (hash === "contractintel-demo") { setPage("contractintel"); setCurrentProduct(null); }
       else if (hash === "portfoliointel-demo") { setPage("portfoliointel"); setCurrentProduct(null); }
       else if (hash === "agentorch-demo") { setPage("agentorch"); setCurrentProduct(null); }
+      else if (hash === "clinicalai-demo") { setPage("clinicalai"); setCurrentProduct(null); }
       else if (hash && PRODUCTS.find(p=>p.id===hash)) { setPage("product"); setCurrentProduct(hash); }
       else { setPage("home"); setCurrentProduct(null); }
     };
@@ -1743,12 +1857,13 @@ export default function App() {
 
   return (
     <>
-      {page !== "homeconnect" && page !== "fieldcommand" && page !== "contractintel" && page !== "portfoliointel" && page !== "agentorch" && <Nav onHome={goHome} onAbout={goAbout}/>}
+      {page !== "homeconnect" && page !== "fieldcommand" && page !== "contractintel" && page !== "portfoliointel" && page !== "agentorch" && page !== "clinicalai" && <Nav onHome={goHome} onAbout={goAbout}/>}
       {page === "homeconnect" && <HomeConnectDemo onExit={goHome}/>}
       {page === "fieldcommand" && <FieldCommandDemo onExit={goHome}/>}
       {page === "contractintel" && <ContractIntelDemo onExit={goHome}/>}
       {page === "portfoliointel" && <PortfolioIntelDemo onExit={goHome}/>}
       {page === "agentorch" && <AgentOrchDemo onExit={goHome}/>}
+      {page === "clinicalai" && <ClinicalAIDemo onExit={goHome}/>}
       {page === "about" && <AboutPage/>}
       {page === "product" && currentProduct && <ProductDetail productId={currentProduct} onBack={goHome}/>}
       {page === "home" && <HomePage onSelectProduct={goProduct}/>}
