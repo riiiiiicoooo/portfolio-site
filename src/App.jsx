@@ -1654,7 +1654,6 @@ function HomePage({onSelectProduct}) {
           <div className="stats-row">
             <div className="stat"><div className="num">15</div><div className="label">Products Built</div></div>
             <div className="stat"><div className="num">10</div><div className="label">Industries</div></div>
-            <div className="stat"><div className="num">8</div><div className="label">In Production</div></div>
             <div className="stat"><div className="num">$35M+</div><div className="label">Combined Value</div></div>
           </div>
         </div>
