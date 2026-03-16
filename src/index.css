@@ -245,3 +245,104 @@ footer{padding:40px 0;border-top:1px solid var(--border);text-align:center;color
   .card-title{font-size:18px}
   .card-metric .val{font-size:20px}
 }
+
+/* Speed badge */
+.speed-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #166534;
+  margin: 8px 0 16px;
+  letter-spacing: 0.02em;
+}
+
+/* How I Work section */
+.how-i-work {
+  margin: 40px 0 32px;
+  padding: 32px;
+  background: #fafafa;
+  border-radius: 16px;
+  border: 1px solid #e5e5e5;
+}
+.how-i-work-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #111;
+}
+.how-i-work-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+@media (max-width: 768px) {
+  .how-i-work-steps {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .how-i-work-steps {
+    grid-template-columns: 1fr;
+  }
+}
+.work-step {
+  padding: 0;
+}
+.step-num {
+  font-size: 28px;
+  font-weight: 800;
+  color: #d4d4d4;
+  margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.step-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 6px;
+}
+.step-desc {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Build narrative timeline */
+.build-narrative {
+  position: relative;
+  padding-left: 24px;
+  border-left: 2px solid #e5e5e5;
+  margin: 32px 0;
+}
+.narrative-step {
+  margin-bottom: 32px;
+  position: relative;
+}
+.narrative-step::before {
+  content: '';
+  position: absolute;
+  left: -29px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d4d4d4;
+  border: 2px solid #fff;
+}
+.pivot-step::before {
+  background: #f59e0b;
+}
+.narrative-marker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #a3a3a3;
+  margin-bottom: 4px;
+}
+.pivot-step .narrative-marker {
+  color: #f59e0b;
+}
