@@ -41,7 +41,12 @@ const PRODUCTS = [
     ],
     tech: ["FastAPI","PostgreSQL","Redis","OAuth 2.0","JWT","Vault","AWS Secrets Manager","TypeScript SDK"],
     pivot: "Originally designed around mTLS certificate-based auth, but pilot teams found certificate management too operationally heavy. Pivoted to OAuth 2.0 Client Credentials Flow mid-sprint. This cut agent onboarding time from 2 days to 15 minutes and was the single decision that drove 100% adoption.",
-    github: "https://github.com/riiiiiicoooo/agentgate"
+    github: "https://github.com/riiiiiicoooo/agentgate",
+    operationalDocs: {
+      slos: ["Auth Latency P95 < 200ms", "Token Issuance Success Rate 99.5%", "Audit Log Completeness 100%", "Secret Rotation SLA < 4hr"],
+      capacityHighlight: "Current: 47 agents, 12K auth requests/day. Scales to 500 agents at $890/mo (Redis cluster + connection pooling).",
+      runbooks: ["Vault Connectivity Failure", "Token Issuance Spike", "Secret Rotation Timeout"]
+    }
   },
   {
     id: "verified-marketplace",
@@ -69,7 +74,12 @@ const PRODUCTS = [
     ],
     tech: ["FastAPI","Supabase","Next.js","Stripe Connect","Clerk","PostGIS","Trigger.dev","Vercel"],
     pivot: "Launched with a comprehensive 12-step provider verification process. Completion rate was 23% because providers abandoned halfway through. A/B tested a 'progressive verification' approach: list immediately with basic info, then unlock features as they complete additional verification steps. Completion rate hit 78% and time-to-first-listing dropped from 2 weeks to same-day.",
-    github: "https://github.com/riiiiiicoooo/verified-services-marketplace"
+    github: "https://github.com/riiiiiicoooo/verified-services-marketplace",
+    operationalDocs: {
+      slos: ["Search-to-Match P95 < 2s", "Provider Verification Completion 92%", "Dispute Resolution < 48hr", "Payment Settlement 99.5% within 5 days"],
+      capacityHighlight: "Current: 45 providers, 3 metros. Scales to 500 providers / 15 metros at $1,200/mo (PostGIS indexing + Stripe Connect batching).",
+      runbooks: ["Stripe Connect Payout Failure", "Verification Pipeline Backlog", "Provider Trust Score Anomaly"]
+    }
   },
   {
     id: "ai-data-ops",
@@ -97,7 +107,12 @@ const PRODUCTS = [
     ],
     tech: ["FastAPI","Temporal","scikit-learn","PostgreSQL","Redis","Supabase","Trigger.dev","n8n"],
     pivot: "Initially built a custom experimentation framework for annotator quality testing. Three months in, realized we were rebuilding PostHog poorly. Migrated to PostHog's feature flag and A/B testing infrastructure, saving 6 weeks of maintenance and letting us focus on what was actually novel: the multi-metric agreement engine.",
-    github: "https://github.com/riiiiiicoooo/ai-data-operations-platform"
+    github: "https://github.com/riiiiiicoooo/ai-data-operations-platform",
+    operationalDocs: {
+      slos: ["Annotation Quality Score > 0.85 kappa", "Task Assignment Latency P95 < 500ms", "Export Data Integrity 100%", "Annotator Onboarding < 3 days"],
+      capacityHighlight: "Current: 3 clients, 2,340 examples/team-day. Scales to 15 clients at $2,100/mo (Temporal worker fleet + partitioned task queues).",
+      runbooks: ["Quality Score Degradation", "Temporal Worker Backlog", "Inter-Annotator Agreement Drop"]
+    }
   },
   {
     id: "contract-intelligence",
@@ -125,7 +140,12 @@ const PRODUCTS = [
     ],
     tech: ["Next.js","FastAPI","Supabase","pgvector","Claude","GPT-4","LangSmith","Trigger.dev"],
     pivot: "Launched with GPT-4 as the sole extraction model. Accuracy on indemnification clauses was 78%. Ran a structured benchmark against Claude and found it hit 94% on full-contract extraction. Pivoted to Claude as primary with GPT-4 as fallback for specific clause types where it outperforms. This multi-model routing approach wasn't in the original architecture.",
-    github: "https://github.com/riiiiiicoooo/contract-intelligence-platform"
+    github: "https://github.com/riiiiiicoooo/contract-intelligence-platform",
+    operationalDocs: {
+      slos: ["Extraction Accuracy > 94%", "Contract Processing P95 < 30s", "Audit Trail Completeness 100%", "Risk Flag Recall > 90%"],
+      capacityHighlight: "Current: 50-80 contracts/hr. Scales to 500 contracts/hr at $1,800/mo (pgvector indexing + Claude batch API).",
+      runbooks: ["LLM Extraction Accuracy Drop", "Document Processing Queue Backlog", "Risk Classification False Positive Spike"]
+    }
   },
   {
     id: "engagement-engine",
@@ -153,7 +173,12 @@ const PRODUCTS = [
     ],
     tech: ["FastAPI","Snowflake","Supabase","Segment","PostHog","Trigger.dev","n8n"],
     pivot: "Built the personalization scoring with frequency as the top-weighted signal (40%). A/B testing revealed recency was actually 2x more predictive of conversion than frequency. Reweighted the model (recency to 30%, frequency down to 25%) and saw engagement lift jump from +12% to +28%.",
-    github: "https://github.com/riiiiiicoooo/engagement-personalization-engine"
+    github: "https://github.com/riiiiiicoooo/engagement-personalization-engine",
+    operationalDocs: {
+      slos: ["Personalization Latency P95 < 200ms", "Experiment Assignment Consistency 99.9%", "Event Processing Lag < 5s", "Segment Refresh < 15min"],
+      capacityHighlight: "Current: 50K events/day. Scales to 2M events/day at $1,500/mo (Snowflake auto-scale + Redis event buffer).",
+      runbooks: ["Segment Drift Detection", "A/B Test Statistical Power Warning", "Event Pipeline Lag Spike"]
+    }
   },
   {
     id: "field-sales",
@@ -181,7 +206,12 @@ const PRODUCTS = [
     ],
     tech: ["React Native","Expo","FastAPI","Supabase","Redux","n8n","Salesforce","Grafana"],
     pivot: "Designed for online-first with offline as a fallback. After riding along with field reps in rural territories, discovered 23% of visits had zero connectivity. Completely inverted the architecture to offline-first with Redux-persisted local state and background sync. This became the feature reps cited most in satisfaction surveys.",
-    github: "https://github.com/riiiiiicoooo/field-sales-command"
+    github: "https://github.com/riiiiiicoooo/field-sales-command",
+    operationalDocs: {
+      slos: ["Offline Sync Success Rate 99.5%", "Route Optimization P95 < 3s", "CRM Sync Lag < 5min", "Mobile App Crash Rate < 0.1%"],
+      capacityHighlight: "Current: 85 reps, 340 visits/day. Scales to 500 reps at $980/mo (Snowflake warehouse + Redis queue).",
+      runbooks: ["Salesforce Sync Failure", "Offline Data Conflict Resolution", "Route Optimization Timeout"]
+    }
   },
   {
     id: "fintech-ops",
@@ -209,7 +239,13 @@ const PRODUCTS = [
     ],
     tech: ["FastAPI","AWS RDS PostgreSQL","Kafka","Temporal","Stripe Connect","dbt","Datadog"],
     pivot: "Started with a single Stripe integration. When the client onboarded a merchant portfolio with high international volume, Stripe's cross-border fees were eating 3.2% of transaction value. Built a multi-PSP routing layer that dynamically routes to Adyen for international transactions, reducing processing costs by 41%.",
-    github: "https://github.com/riiiiiicoooo/fintech-operations-platform"
+    github: "https://github.com/riiiiiicoooo/fintech-operations-platform",
+    operationalDocs: {
+      slos: ["Transaction Success Rate 99.0%", "API Latency P95 < 500ms", "Reconciliation Completeness 99.5%", "Fraud Detection < 200ms", "Platform Availability 99.9%"],
+      capacityHighlight: "Current: 4,200 txn/day, $1,005/mo. Scales to 42K txn/day at $3,390/mo. 100x ceiling at $12,160/mo with async PSP migration.",
+      runbooks: ["PSP Outage & Failover", "Database Connection Exhaustion", "Settlement Batch Failure", "Fraud Rule Excessive Declines", "Reconciliation Exception Spike"],
+      loadTest: "Locust load test: 50 concurrent users, 9,100 requests in 10 min. Primary bottleneck: synchronous PSP calls (3-5x improvement projected with async migration)."
+    }
   },
   {
     id: "genai-governance",
@@ -237,7 +273,12 @@ const PRODUCTS = [
     ],
     tech: ["FastAPI","Supabase","AWS Bedrock","Azure OpenAI","Presidio","LangSmith","n8n","Trigger.dev"],
     pivot: "First approach used an LLM to evaluate LLM outputs for bias and compliance, essentially an AI checking AI. The compliance team rejected this immediately: 'We can't explain to examiners why an AI said another AI's output was safe.' Pivoted to deterministic guardrails (regex patterns, embedding similarity thresholds) that produce auditable, explainable decisions.",
-    github: "https://github.com/riiiiiicoooo/genai-governance"
+    github: "https://github.com/riiiiiicoooo/genai-governance",
+    operationalDocs: {
+      slos: ["Guardrail Latency P95 < 200ms", "PII Detection Recall > 99%", "Audit Log Completeness 100%", "Bias Test Coverage 100% monthly"],
+      capacityHighlight: "Current: 43K interactions/mo. Scales to 500K interactions/mo at $1,400/mo (stateless guardrails + Redis cache).",
+      runbooks: ["Guardrail False Positive Spike", "LLM Provider Latency Degradation", "Bias Detection Alert"]
+    }
   },
   {
     id: "infra-automation",
@@ -265,7 +306,12 @@ const PRODUCTS = [
     ],
     tech: ["Temporal","Terraform","Ansible","FastAPI","PostgreSQL","TimescaleDB","OPA","Datadog"],
     pivot: "Built the initial provisioning engine as a monolithic Terraform apply. First production deployment took 47 minutes and timed out. Decomposed into a Temporal workflow with parallel provisioning of independent resources and sequential ordering of dependencies. Deployment time dropped to 8 minutes with granular rollback at each step.",
-    github: "https://github.com/riiiiiicoooo/infrastructure-automation-platform"
+    github: "https://github.com/riiiiiicoooo/infrastructure-automation-platform",
+    operationalDocs: {
+      slos: ["Provisioning Success Rate 99.5%", "Deployment Time P95 < 12min", "Policy Compliance 100%", "Anomaly Detection Latency < 30s"],
+      capacityHighlight: "Current: 200 deployments/week. Scales to 2,000/week at $2,200/mo (Temporal worker fleet + TimescaleDB retention).",
+      runbooks: ["Terraform Apply Failure", "OPA Policy Violation Cascade", "Anomaly Detection False Positive Storm"]
+    }
   },
   {
     id: "integration-health",
@@ -293,7 +339,12 @@ const PRODUCTS = [
     ],
     tech: ["FastAPI","PostgreSQL","React","Grafana","PagerDuty","ClickHouse","n8n","Supabase"],
     pivot: "Launched with fixed threshold alerting (error rate > 5% = alert). Within the first week, the team got 200+ alerts because normal provider variance routinely crossed 5%. Switched to rolling baseline anomaly detection where each provider now gets its own dynamic threshold based on 24-hour trailing behavior. Alert volume dropped 94% while catching more real incidents.",
-    github: "https://github.com/riiiiiicoooo/integration-health-monitor"
+    github: "https://github.com/riiiiiicoooo/integration-health-monitor",
+    operationalDocs: {
+      slos: ["Webhook Processing P95 < 500ms", "Alert Precision > 85%", "Health Check Freshness < 60s", "Dashboard Load Time P95 < 2s"],
+      capacityHighlight: "Current: 15 integrations, 8K events/day. Scales to 100 integrations at $750/mo (PostgreSQL partitioning + Grafana optimization).",
+      runbooks: ["Provider Webhook Outage", "Alert Storm / False Positive Cascade", "Health Score Calculation Drift"]
+    }
   },
   {
     id: "portfolio-intelligence",
@@ -321,7 +372,12 @@ const PRODUCTS = [
     ],
     tech: ["FastAPI","Snowflake","Supabase","pgvector","Claude API","Cohere","Vercel","Playwright"],
     pivot: "First version generated SQL directly from natural language without a semantic layer. Queries worked 60% of the time. The failure mode was subtle: the LLM would calculate 'occupancy rate' differently depending on how it was asked. Built a semantic business layer that maps every metric to a canonical SQL definition. Accuracy jumped from 60% to 91.3%.",
-    github: "https://github.com/riiiiiicoooo/portfolio-intelligence-hub"
+    github: "https://github.com/riiiiiicoooo/portfolio-intelligence-hub",
+    operationalDocs: {
+      slos: ["Query Accuracy > 91%", "Text-to-SQL Latency P95 < 5s", "Data Freshness < 24hr", "Semantic Layer Coverage 100%"],
+      capacityHighlight: "Current: 200 queries/day. Scales to 5,000 queries/day at $1,100/mo (Snowflake auto-suspend + pgvector index optimization).",
+      runbooks: ["SQL Generation Accuracy Drop", "Snowflake Query Timeout", "Semantic Layer Sync Failure"]
+    }
   },
   {
     id: "review-prep",
@@ -349,7 +405,12 @@ const PRODUCTS = [
     ],
     tech: ["FastAPI","Supabase","Next.js","n8n","Trigger.dev","Clerk"],
     pivot: "Originally designed as a standalone app requiring advisors to manually input client data. Adoption was near zero. Advisors said 'I don't have time to enter data into another system.' Pivoted to automated ingestion from the existing CRM and portfolio system via n8n workflows. Prep time dropped from 45 minutes to 12 minutes with zero manual data entry.",
-    github: "https://github.com/riiiiiicoooo/review-prep-engine"
+    github: "https://github.com/riiiiiicoooo/review-prep-engine",
+    operationalDocs: {
+      slos: ["Prep Generation P95 < 45s", "Data Source Sync Success 99.5%", "Advisor Adoption > 80%", "CRM Integration Uptime 99.9%"],
+      capacityHighlight: "Current: 120 preps/week. Scales to 2,000 preps/week at $900/mo (n8n workflow parallelism + Supabase connection pooling).",
+      runbooks: ["CRM Data Pull Failure", "Prep Generation Timeout", "Stale Portfolio Data Alert"]
+    }
   },
   {
     id: "scope-tracker",
@@ -377,7 +438,12 @@ const PRODUCTS = [
     ],
     tech: ["FastAPI","PostgreSQL (Railway)","Next.js","n8n","Stripe"],
     pivot: "Built the first version with real-time scope change alerts. Project managers complained about alert fatigue — every minor clarification triggered a notification. So we implemented a 'drift scoring' system that distinguishes between cosmetic changes (low score) and scope-expanding changes (high score), only alerting when cumulative drift exceeds a configurable threshold. Overrun rate dropped from 28% to 11%.",
-    github: "https://github.com/riiiiiicoooo/scope-tracker"
+    github: "https://github.com/riiiiiicoooo/scope-tracker",
+    operationalDocs: {
+      slos: ["Drift Detection Latency < 5min", "Billing Accuracy 99.9%", "Dashboard Load P95 < 2s", "Alert Delivery < 60s"],
+      capacityHighlight: "Current: 50 projects, 200 change events/day. Scales to 500 projects at $650/mo (PostgreSQL partitioning + Stripe webhook batching).",
+      runbooks: ["Stripe Webhook Delivery Failure", "Drift Score Calculation Error", "Invoice Generation Timeout"]
+    }
   },
   {
     id: "agent-orchestration",
@@ -405,7 +471,12 @@ const PRODUCTS = [
     ],
     tech: ["FastAPI","LangGraph","Claude","GPT-4o","Supabase","pgvector","Redis","LangSmith","Trigger.dev","n8n"],
     pivot: "Originally designed as a pipeline pattern where each agent processed sequentially. The pipeline approach failed in production: 70% of requests only needed 1-2 agents, yet every request paid the full pipeline latency. A $0.02 FAQ response was routing through all 5 agents at $0.51 total. Pivoted to supervisor pattern with intelligent routing — the supervisor classifies intent (<200ms via Haiku) and routes to only the necessary agents. Average cost per task dropped from $0.51 to $0.08.",
-    github: "https://github.com/riiiiiicoooo/agent-orchestration-platform"
+    github: "https://github.com/riiiiiicoooo/agent-orchestration-platform",
+    operationalDocs: {
+      slos: ["Agent Response P95 < 2s", "Orchestration Success Rate 99.0%", "Rate Limit Accuracy 100%", "Session Recovery < 10s"],
+      capacityHighlight: "Current: 12 agents, 5K tasks/day. Scales to 100 agents at $1,600/mo (Redis Streams + LangGraph checkpoint optimization).",
+      runbooks: ["Agent Deadlock / Infinite Loop", "LLM Provider Rate Limit Exceeded", "Supervisor Escalation Backlog"]
+    }
   },
   {
     id: "clinical-ai",
@@ -433,7 +504,12 @@ const PRODUCTS = [
     ],
     tech: ["FastAPI","SMART on FHIR","SciSpaCy","MedCAT","Claude Enterprise","Supabase","pgvector","Redis","LangSmith","Trigger.dev","n8n"],
     pivot: "Originally scoped as an ambient clinical documentation tool — recording patient encounters and generating structured notes. During discovery, learned that Abridge and Nuance DAX had locked up the ambient documentation market with deep EHR integrations that would take 12+ months to match. But the PA coordinators kept saying: 'The documentation is fine — it's what happens AFTER the encounter that kills us.' Pivoted to post-encounter operations intelligence: PA automation, coding optimization, and denial analytics. This reframe turned a crowded-market risk into a greenfield opportunity, and the ROI was immediately measurable — denial rate reduction showed up in the first monthly claims cycle.",
-    github: "https://github.com/riiiiiicoooo/clinical-ai-platform"
+    github: "https://github.com/riiiiiicoooo/clinical-ai-platform",
+    operationalDocs: {
+      slos: ["Clinical Decision Latency P95 < 3s", "HIPAA Audit Completeness 100%", "PHI Encryption Coverage 100%", "Agent Accuracy > 95%"],
+      capacityHighlight: "Current: 500 encounters/day. Scales to 5,000 encounters/day at $2,800/mo (FHIR batch API + Redis session clustering).",
+      runbooks: ["Epic FHIR Integration Failure", "PHI Exposure Incident", "Clinical Agent Hallucination Detection"]
+    }
   }
 ];
 
@@ -1798,6 +1874,35 @@ function ProductDetail({productId, onBack}) {
           <div className="section-title">My Role</div>
           <div className="section-body"><p>{product.role}</p></div>
         </div>
+        {product.operationalDocs && (
+          <div className="section">
+            <div className="section-title">Operational Maturity</div>
+            <div className="section-body">
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:16}}>
+                <div style={{background:"var(--card)",border:"1px solid var(--border)",borderRadius:10,padding:16}}>
+                  <div style={{fontSize:13,fontWeight:600,color:"var(--accent)",marginBottom:8,textTransform:"uppercase",letterSpacing:"0.05em"}}>Service Level Objectives</div>
+                  {product.operationalDocs.slos.map((s,i)=>(
+                    <div key={i} style={{fontSize:13,color:"var(--text)",padding:"4px 0",borderBottom:i<product.operationalDocs.slos.length-1?"1px solid var(--border)":"none"}}>{s}</div>
+                  ))}
+                </div>
+                <div style={{background:"var(--card)",border:"1px solid var(--border)",borderRadius:10,padding:16}}>
+                  <div style={{fontSize:13,fontWeight:600,color:"var(--accent)",marginBottom:8,textTransform:"uppercase",letterSpacing:"0.05em"}}>Incident Runbooks</div>
+                  {product.operationalDocs.runbooks.map((r,i)=>(
+                    <div key={i} style={{fontSize:13,color:"var(--text)",padding:"4px 0",borderBottom:i<product.operationalDocs.runbooks.length-1?"1px solid var(--border)":"none"}}>{r}</div>
+                  ))}
+                </div>
+              </div>
+              <div style={{background:"var(--card)",border:"1px solid var(--border)",borderRadius:10,padding:16}}>
+                <div style={{fontSize:13,fontWeight:600,color:"var(--accent)",marginBottom:8,textTransform:"uppercase",letterSpacing:"0.05em"}}>Capacity Planning</div>
+                <div style={{fontSize:13,color:"var(--text)"}}>{product.operationalDocs.capacityHighlight}</div>
+                {product.operationalDocs.loadTest && (
+                  <div style={{fontSize:13,color:"var(--muted)",marginTop:8,fontStyle:"italic"}}>{product.operationalDocs.loadTest}</div>
+                )}
+              </div>
+              <div style={{fontSize:12,color:"var(--muted)",marginTop:12}}>Full documentation: <a href={product.github+"/tree/main/docs"} target="_blank" rel="noopener noreferrer" style={{color:"var(--accent)"}}>SLO definitions, capacity plans, and runbooks on GitHub →</a></div>
+            </div>
+          </div>
+        )}
         <div className="section">
           <div className="section-title">Technology Stack</div>
           {product.architecture && <p className="architecture-desc">{product.architecture}</p>}
