@@ -1762,10 +1762,10 @@ function HomePage({onSelectProduct}) {
       <div className="hero">
         <div className="container">
           <h1 className="hero-name">Jacob George</h1>
-          <p className="hero-tagline">Principal PM who prototypes, evaluates, and ships AI products.</p>
+          <p className="hero-tagline">Principal PM who architects, prototypes, and ships AI products at scale.</p>
           <p>15 products built from zero to production across legal AI, fintech, healthcare, marketplaces, and enterprise SaaS. Every one has a pivot story, quantified outcomes, and working code.</p>
           <div className="stats-row">
-            <div className="stat"><div className="num">15</div><div className="label">Products Built</div></div>
+            <div className="stat"><div className="num">16</div><div className="label">Products Built</div></div>
             <div className="stat"><div className="num">10</div><div className="label">Industries</div></div>
             <div className="stat"><div className="num">$35M+</div><div className="label">Combined Value</div></div>
           </div>
@@ -1794,6 +1794,82 @@ function HomePage({onSelectProduct}) {
               <div className="step-num">04</div>
               <div className="step-title">Ship with proof</div>
               <div className="step-desc">Every product ships with quantified outcomes, interactive dashboards, and working code — not slide decks.</div>
+            </div>
+          </div>
+        </div>
+        <div style={{margin:"48px 0 40px"}}>
+          <div style={{textAlign:"center",marginBottom:32}}>
+            <div className="how-i-work-title">Cross-Cutting Architecture Patterns</div>
+            <p style={{fontSize:15,color:"var(--muted)",maxWidth:680,margin:"12px auto 0"}}>
+              These patterns appear across every product in this portfolio. They represent my framework for how AI products should be architected — not just built, but built economically, reliably, and with production-grade orchestration.
+            </p>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3, 1fr)",gap:20}}>
+            <div style={{background:"var(--card)",border:"1px solid var(--border)",borderRadius:12,padding:24}}>
+              <div style={{fontSize:13,fontWeight:700,color:"#8b5cf6",textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:8}}>Pattern 01</div>
+              <div style={{fontSize:17,fontWeight:700,color:"var(--text)",marginBottom:10}}>Intelligent Model Routing</div>
+              <p style={{fontSize:14,color:"var(--muted)",lineHeight:1.6,margin:0}}>
+                Route simple tasks to Haiku ($0.80/M), moderate work to Sonnet ($3/M), and complex reasoning to Opus ($15/M). Budget-aware routing auto-downgrades when agents approach spend limits.
+              </p>
+              <div style={{marginTop:16,display:"flex",flexWrap:"wrap",gap:6}}>
+                <span className="card-tag">AgentGate</span>
+                <span className="card-tag">Contract Intel</span>
+                <span className="card-tag">Agent Orchestration</span>
+              </div>
+              <div style={{marginTop:12,fontSize:13,fontWeight:600,color:"#22c55e"}}>60-80% cost reduction vs. single-model</div>
+            </div>
+            <div style={{background:"var(--card)",border:"1px solid var(--border)",borderRadius:12,padding:24}}>
+              <div style={{fontSize:13,fontWeight:700,color:"#3b82f6",textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:8}}>Pattern 02</div>
+              <div style={{fontSize:17,fontWeight:700,color:"var(--text)",marginBottom:10}}>Agent Orchestration & Delegation</div>
+              <p style={{fontSize:14,color:"var(--muted)",lineHeight:1.6,margin:0}}>
+                Supervisor agents classify intent and delegate to specialized subagents. Hook systems fire on execution events. Eval frameworks measure pass@k, cost efficiency, and routing accuracy.
+              </p>
+              <div style={{marginTop:16,display:"flex",flexWrap:"wrap",gap:6}}>
+                <span className="card-tag">Agent Orchestration</span>
+                <span className="card-tag">Clinical AI</span>
+                <span className="card-tag">GenAI Governance</span>
+              </div>
+              <div style={{marginTop:12,fontSize:13,fontWeight:600,color:"#22c55e"}}>5 domain agents + subagent spawning</div>
+            </div>
+            <div style={{background:"var(--card)",border:"1px solid var(--border)",borderRadius:12,padding:24}}>
+              <div style={{fontSize:13,fontWeight:700,color:"#f59e0b",textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:8}}>Pattern 03</div>
+              <div style={{fontSize:17,fontWeight:700,color:"var(--text)",marginBottom:10}}>Cost Architecture & Token Economics</div>
+              <p style={{fontSize:14,color:"var(--muted)",lineHeight:1.6,margin:0}}>
+                Every AI product has a cost model. Per-template token budgets, tiered guardrail execution (lite for FAQ, full for compliance), active learning ROI tracking, and cost-per-label analytics.
+              </p>
+              <div style={{marginTop:16,display:"flex",flexWrap:"wrap",gap:6}}>
+                <span className="card-tag">GenAI Governance</span>
+                <span className="card-tag">AI Data Ops</span>
+                <span className="card-tag">AgentGate</span>
+              </div>
+              <div style={{marginTop:12,fontSize:13,fontWeight:600,color:"#22c55e"}}>2.4x annotation efficiency, 92% guardrail cost savings</div>
+            </div>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(2, 1fr)",gap:20,marginTop:20}}>
+            <div style={{background:"var(--card)",border:"1px solid var(--border)",borderRadius:12,padding:24}}>
+              <div style={{fontSize:13,fontWeight:700,color:"#06b6d4",textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:8}}>Pattern 04</div>
+              <div style={{fontSize:17,fontWeight:700,color:"var(--text)",marginBottom:10}}>Deterministic Guardrails Over LLM-as-Judge</div>
+              <p style={{fontSize:14,color:"var(--muted)",lineHeight:1.6,margin:0}}>
+                In regulated environments, guardrails must be explainable and auditable. Regex-based PII detection, rule-based compliance checks, and deterministic content filtering — never an LLM judging another LLM. Examiners need to see exactly which pattern triggered a block.
+              </p>
+              <div style={{marginTop:16,display:"flex",flexWrap:"wrap",gap:6}}>
+                <span className="card-tag">GenAI Governance</span>
+                <span className="card-tag">Clinical AI</span>
+                <span className="card-tag">AgentGate</span>
+                <span className="card-tag">Agent Orchestration</span>
+              </div>
+            </div>
+            <div style={{background:"var(--card)",border:"1px solid var(--border)",borderRadius:12,padding:24}}>
+              <div style={{fontSize:13,fontWeight:700,color:"#ec4899",textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:8}}>Pattern 05</div>
+              <div style={{fontSize:17,fontWeight:700,color:"var(--text)",marginBottom:10}}>Memory Persistence & Session Continuity</div>
+              <p style={{fontSize:14,color:"var(--muted)",lineHeight:1.6,margin:0}}>
+                Three-tier memory: Redis for sub-millisecond session state, PostgreSQL for conversation history, and pgvector for semantic knowledge retrieval. Session consolidation summarizes long interactions into key facts. Cross-session search finds relevant precedents.
+              </p>
+              <div style={{marginTop:16,display:"flex",flexWrap:"wrap",gap:6}}>
+                <span className="card-tag">Agent Orchestration</span>
+                <span className="card-tag">Contract Intel</span>
+                <span className="card-tag">AI Data Ops</span>
+              </div>
             </div>
           </div>
         </div>
