@@ -621,6 +621,26 @@ function CaseStudyPage({ productId }) {
             <div className="architecture-desc">{product.architecture}</div>
           </div>
         )}
+
+        {/* Future Roadmap */}
+        {product.futureRoadmap && product.futureRoadmap.length > 0 && (
+          <div className="section">
+            <h2 className="section-title">Future Roadmap</h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              {product.futureRoadmap.map((item, i) => (
+                <div key={i} style={{
+                  padding: "16px 20px",
+                  background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
+                  borderLeft: "3px solid #0284c7",
+                  borderRadius: "0 8px 8px 0"
+                }}>
+                  <h3 style={{ fontSize: "14px", fontWeight: 600, color: "#0369a1", marginBottom: "6px" }}>{item.title}</h3>
+                  <div style={{ fontSize: "14px", color: "#374151", lineHeight: 1.7 }}>{item.description}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

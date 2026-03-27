@@ -11,7 +11,7 @@ export const PRODUCTS = [
     stage: "Production",
     timeline: "14 weeks",
     tagline: "AI Agent Authentication & Secrets Management",
-    description: "Zero-trust authentication layer for AI agents accessing enterprise APIs. Built a custom policy engine inspired by OPA/Rego (but with a lower learning curve) that reached 100% platform team adoption within 8 weeks of rollout, multi-provider secrets abstraction across Vault, AWS, and 1Password, and just-in-time secret leasing that reduced credential age from 90-day averages to 4-hour leases.",
+    description: "Zero-trust authentication layer for AI agents accessing enterprise APIs. Built a custom policy engine inspired by OPA/Rego (but with a lower learning curve) that reached 100% platform team adoption within 8 weeks of rollout, multi-provider secrets abstraction across Vault, AWS, and 1Password, and just-in-time secret leasing that reduced credential age from 90-day averages to 4-hour leases. Complexity-based model router classifies requests (simple/moderate/complex) and routes to cost-appropriate LLMs with budget-aware downgrading and fallback cascading, achieving 60-80% cost savings vs. single-model deployments. Per-agent cost tracking monitors actual vs. estimated spend with transparent routing decisions.",
     problem: "AI agents were sharing long-lived API keys stored in plaintext configs and environment variables. 23 credential exposures in 6 months, each requiring emergency rotation across dependent services. Agent onboarding took 1-2 days of manual provisioning, and a single token runaway incident cost $4,200 before it was caught.",
     solution: "OAuth 2.0 agent identity layer with ephemeral token issuance, per-agent budget controls with kill switches, and secrets brokering across multiple providers. Chose OAuth 2.0 Client Credentials Flow over API keys or mTLS to balance adoption ease with industry standard compliance. Prompt injection detection uses deterministic pattern matching rather than LLM-based classification for lower latency and predictable results.",
     role: "Concept to production in 14 weeks. Audited the client's agent ecosystem and cataloged all 23 credential exposure incidents from the prior 6 months to quantify the cost of inaction. Mapped the ideal token lifecycle with the security and DevOps teams, then prototyped ephemeral token issuance against a live sandbox API — that prototype became the proof point that got CISO sign-off. Made the call to scope the MVP to a single high-risk agent workflow rather than boiling the ocean. Drove the technical direction with the lead developer and two contract engineers, tracking credential exposure reduction as the primary success metric across biweekly releases.",
@@ -35,7 +35,12 @@ export const PRODUCTS = [
       slos: ["Auth Latency P95 < 200ms", "Token Issuance Success Rate 99.5%", "Audit Log Completeness 100%", "Secret Rotation SLA < 4hr"],
       capacityHighlight: "Current: 47 agents, 12K auth requests/day. Scales to 500 agents at $890/mo (Redis cluster + connection pooling).",
       runbooks: ["Vault Connectivity Failure", "Token Issuance Spike", "Secret Rotation Timeout"]
-    }
+    },
+    futureRoadmap: [
+      {title: "Zero Trust for AI Alignment", description: "Extend agent identity layer to align with Microsoft and Cisco's 2026 Zero Trust for AI frameworks — adding behavioral anomaly detection and scope-specific token validation per API endpoint, not just per agent."},
+      {title: "MCP Gateway Security Layer", description: "Position as the enterprise MCP security gateway by intercepting MCP Streamable HTTP transport through Kong, providing SSO-integrated auth, audit trails, and horizontal scaling for MCP tool invocations."},
+      {title: "A2A Protocol Identity Verification", description: "Extend OAuth 2.0 auth layer to validate Agent-to-Agent (A2A) protocol identities, enabling secure cross-organization agent communication as the protocol reaches 150+ supporting organizations."}
+    ]
   },
   {
     id: "verified-marketplace",
@@ -49,7 +54,7 @@ export const PRODUCTS = [
     problem: "Existing provider network of 45 suppliers was managed via spreadsheets with a 15% verification rate. Verification took 2-3 weeks manually. Customer CSAT sat at 3.2/5.0 with an 8.3% dispute rate. Service coordinator spent 40+ hours per week on manual matching and follow-up. Provider research showed verification friction was the #1 reason suppliers abandoned other marketplaces.",
     solution: "Automated verification pipeline (Checkr identity, 34-state license API, ACORD insurance form parsing) with daily credential expiration monitoring and progressive reminder schedules. Launched with a provisional tier compromise: providers could work immediately but had 30 days to complete full verification (92% completed, 8% who didn't likely wouldn't have met quality bar). Cold start strategy focused on converting existing 45 provider relationships across 3 metros rather than expanding everywhere with thin supply, achieving 80%+ request fulfillment in week one. Dispute resolution with 48-hour response windows and double-blind reviews prevents retaliation.",
     role: "Concept to two-sided launch in 6 months. Researched 12 competitor marketplaces and interviewed 30+ suppliers — verification friction was the #1 reason they abandoned other platforms, which shaped every design decision. Built the marketplace economics model (GMV projections, take rate, supplier acquisition costs) that justified the initial investment. Prototyped the full onboarding experience and tested it with 10 suppliers before committing to development. Made the call to launch supplier-side first with existing 45 provider relationships across 3 metros rather than expanding everywhere with thin supply — hit 80%+ request fulfillment in week one. Paired with three contract engineers on architecture decisions, measured ROI through verification completion rates and time-to-first-listing.",
-    architecture: "Next.js marketplace frontend with Node.js/Express backend. PostgreSQL for core data with Elasticsearch for service discovery and provider search. Kafka event streaming for booking lifecycle and verification events. Stripe Connect for escrow payments, Clerk for authentication, and PostGIS for geospatial radius queries.",
+    architecture: "Next.js marketplace frontend with Node.js/Express backend. PostgreSQL with asyncpg high-performance async connection pooling (min 5, max 20 connections) and SQLAlchemy async ORM for dual-mode database access (raw queries + ORM). Elasticsearch for service discovery and provider search. Kafka event streaming for booking lifecycle and verification events. Stripe Connect for escrow payments, Clerk for authentication, and PostGIS for geospatial radius queries. All list endpoints implement bounded pagination (max 1,000 records per request).",
     pipeline: [
       {label:"Ingest",detail:"Supplier applications + verification documents"},
       {label:"Process",detail:"Background check pipeline + credential validator"},
@@ -69,7 +74,12 @@ export const PRODUCTS = [
       slos: ["Search-to-Match P95 < 2s", "Provider Verification Completion 92%", "Dispute Resolution < 48hr", "Payment Settlement 99.5% within 5 days"],
       capacityHighlight: "Current: 45 providers, 3 metros. Scales to 500 providers / 15 metros at $1,200/mo (PostGIS indexing + Stripe Connect batching).",
       runbooks: ["Stripe Connect Payout Failure", "Verification Pipeline Backlog", "Provider Trust Score Anomaly"]
-    }
+    },
+    futureRoadmap: [
+      {title: "AI-Powered Matching Intelligence", description: "Replace rule-based composite scoring with an ML matching model trained on booking outcomes, incorporating provider response patterns, seasonal demand signals, and customer preference embeddings for 20-30% match quality improvement."},
+      {title: "Hybrid Search with Reciprocal Rank Fusion", description: "Upgrade Elasticsearch to hybrid BM25 + vector search with Reciprocal Rank Fusion for provider discovery — capturing semantic intent ('someone good with older homes') alongside exact qualification matching."},
+      {title: "Real-Time Trust Scoring via Event Streaming", description: "Migrate trust score computation from batch recalculation to Kafka-driven event streaming, enabling real-time provider score updates on review submission, credential expiration, and dispute resolution."}
+    ]
   },
   {
     id: "ai-data-ops",
@@ -79,7 +89,7 @@ export const PRODUCTS = [
     stage: "Multi-client",
     timeline: "5 months",
     tagline: "Training Data Quality at Scale",
-    description: "Schema-driven annotation platform that simultaneously serves radiology (bounding boxes), RLHF (preference pairs), NER (span extraction), and fraud classification through JSONB-configurable annotation types. Multi-metric agreement engine auto-selects the right statistical measure (Cohen's kappa, Krippendorff's alpha, IoU, Span F1, BLEU) based on task type.",
+    description: "Schema-driven annotation platform that simultaneously serves radiology (bounding boxes), RLHF (preference pairs), NER (span extraction), and fraud classification through JSONB-configurable annotation types. Multi-metric agreement engine auto-selects the right statistical measure (Cohen's kappa, Krippendorff's alpha, IoU, Span F1, BLEU) based on task type. Cost analytics module tracks per-annotator-tier economics, active learning efficiency gains, consensus optimization costs, and drift detection frequency impact — making annotation spend as visible as cloud spend.",
     problem: "Annotation teams were producing ~200 examples per team-day with a 12% error rate and cost of $0.45 per labeled example. No systematic quality measurement, no feedback loops to annotators, and the data-to-model update cycle took 4-6 weeks. Initial assumption was that throughput was the problem, but analysis revealed systematic mislabeling was poisoning model training.",
     solution: "Unified platform with real-time quality scoring, automated consensus workflows, and active learning that achieves the same model improvement with 40% fewer labels (2.4x efficiency). Graduated onboarding reduces new annotator time-to-productivity from 2-3 weeks to 2.4 days. Quality certificates attached to every export include agreement metrics, golden set accuracy, and provenance hash. Chose Temporal over Airflow for orchestration because annotation workflows need human-in-the-loop pauses mid-workflow.",
     role: "Concept to multi-client production in 5 months across three organizations. Benchmarked 8 annotation platforms (Labelbox, Scale AI, Prodigy, etc.) and identified the gap nobody was solving: quality measurement. Embedded with annotation team leads at each client to map their actual error patterns — not the described workflow, the real one. Built a working prototype of the quality scoring engine and validated it with annotators before committing to the full build. Scoped the MVP to one annotation type, proved that quality improvements cut model retraining from weekly to monthly, then used those results to justify expanding across annotation types and clients. Drove the technical direction with the lead developer on the Temporal orchestration architecture.",
@@ -103,7 +113,12 @@ export const PRODUCTS = [
       slos: ["Annotation Quality Score > 0.85 kappa", "Task Assignment Latency P95 < 500ms", "Export Data Integrity 100%", "Annotator Onboarding < 3 days"],
       capacityHighlight: "Current: 3 clients, 2,340 examples/team-day. Scales to 15 clients at $2,100/mo (Temporal worker fleet + partitioned task queues).",
       runbooks: ["Quality Score Degradation", "Temporal Worker Backlog", "Inter-Annotator Agreement Drop"]
-    }
+    },
+    futureRoadmap: [
+      {title: "OpenTelemetry GenAI Observability", description: "Instrument all ML pipeline stages with OpenTelemetry GenAI semantic conventions — standardized tracing for annotation quality scoring, model training runs, and active learning cycles pluggable into any enterprise observability stack."},
+      {title: "Agentic Data Quality Workflows", description: "Deploy autonomous AI agents that monitor annotation drift, trigger retraining when quality scores degrade below thresholds, and auto-generate corrective training batches using active learning — reducing human-in-the-loop overhead by 40%."},
+      {title: "Federated Annotation Across Client Boundaries", description: "Implement privacy-preserving federated annotation where quality models improve across all clients without sharing raw data — enabling cross-client benchmarking while maintaining data isolation."}
+    ]
   },
   {
     id: "contract-intelligence",
@@ -137,7 +152,12 @@ export const PRODUCTS = [
       slos: ["Extraction Accuracy > 94%", "Contract Processing P95 < 30s", "Audit Trail Completeness 100%", "Risk Flag Recall > 90%"],
       capacityHighlight: "Current: 50-80 contracts/hr. Scales to 500 contracts/hr at $1,800/mo (pgvector indexing + Claude batch API).",
       runbooks: ["LLM Extraction Accuracy Drop", "Document Processing Queue Backlog", "Risk Classification False Positive Spike"]
-    }
+    },
+    futureRoadmap: [
+      {title: "Agentic Graph RAG for Contract Relationships", description: "Layer a knowledge graph over the existing vector store to capture cross-contract relationships (parent-subsidiary obligations, cascading termination clauses) — enabling queries like 'what happens to subsidiary contracts if the master agreement terminates?'"},
+      {title: "Hybrid RAG with Reciprocal Rank Fusion", description: "Upgrade from current BM25 + semantic search to a full Reciprocal Rank Fusion pipeline with Cohere Rerank, targeting 95%+ retrieval accuracy on clause-level extraction — critical for legal terms requiring exact match precision."},
+      {title: "Multi-Jurisdiction Compliance Mapping", description: "Train jurisdiction-specific extraction models that map contract clauses to regulatory requirements across US, EU (GDPR/DMA), and UK frameworks — enabling automated compliance gap analysis during cross-border M&A due diligence."}
+    ]
   },
   {
     id: "engagement-engine",
@@ -171,7 +191,12 @@ export const PRODUCTS = [
       slos: ["Personalization Latency P95 < 200ms", "Experiment Assignment Consistency 99.9%", "Event Processing Lag < 5s", "Segment Refresh < 15min"],
       capacityHighlight: "Current: 50K events/day. Scales to 2M events/day at $1,500/mo (Snowflake auto-scale + Redis event buffer).",
       runbooks: ["Segment Drift Detection", "A/B Test Statistical Power Warning", "Event Pipeline Lag Spike"]
-    }
+    },
+    futureRoadmap: [
+      {title: "LLM-Powered Micro-Segmentation", description: "Deploy Claude-based behavioral clustering that generates natural-language segment descriptions from raw event data — replacing static rule-based segments with dynamic, context-aware cohorts that update in real-time."},
+      {title: "Causal Inference for Experiment Attribution", description: "Move beyond A/B test correlation to causal inference models (DoWhy framework) that isolate true treatment effects from confounding variables — enabling confident experiment decisions with 50% smaller sample sizes."},
+      {title: "Edge-Computed Personalization", description: "Push personalization scoring to CDN edge nodes via WebAssembly, reducing sub-50ms Redis-backed latency to sub-10ms globally — enabling real-time personalization for latency-sensitive mobile experiences."}
+    ]
   },
   {
     id: "field-sales",
@@ -198,14 +223,19 @@ export const PRODUCTS = [
       {value: "92%", label: "Rep Adoption", prev: "by week 6"},
       {value: "68", label: "Active Reps in Pilot", prev: "of 85 total"}
     ],
-    tech: ["React Native","Expo","Node.js/Express","PostGIS","Redux Toolkit","Salesforce","Google OR-Tools","Grafana"],
+    tech: ["React Native","Expo","Node.js/Express","PostGIS","Redux Toolkit","Salesforce","Google OR-Tools","Redis","Snowflake","Grafana"],
     pivot: "Designed for online-first with offline as a fallback. After riding along with field reps in rural territories, discovered 23% of visits had zero connectivity. Completely inverted the architecture to offline-first with Redux-persisted local state and background sync. This became the feature reps cited most in satisfaction surveys.",
     github: "https://github.com/riiiiiicoooo/field-sales-command",
     operationalDocs: {
       slos: ["Offline Sync Success Rate 99.5%", "Route Optimization P95 < 3s", "CRM Sync Lag < 5min", "Mobile App Crash Rate < 0.1%"],
       capacityHighlight: "Current: 85 reps, 340 visits/day. Scales to 500 reps at $980/mo (Snowflake warehouse + Redis queue).",
       runbooks: ["Salesforce Sync Failure", "Offline Data Conflict Resolution", "Route Optimization Timeout"]
-    }
+    },
+    futureRoadmap: [
+      {title: "AI Route Optimization with Real-Time Signals", description: "Upgrade Google OR-Tools static routing to an ML-optimized engine incorporating real-time traffic, customer purchase probability scoring, and rep performance patterns — projecting 15-20% increase in productive visit density."},
+      {title: "Conversational AI Sales Copilot", description: "Embed a Claude-powered sales assistant accessible offline via on-device inference, providing real-time competitive intelligence, objection handling scripts, and order recommendations based on customer purchase history."},
+      {title: "Predictive Inventory Visibility", description: "Integrate warehouse management system data to surface real-time stock availability and predicted restock dates directly in the mobile app, eliminating the 40% of support calls currently driven by inventory questions."}
+    ]
   },
   {
     id: "fintech-ops",
@@ -215,7 +245,7 @@ export const PRODUCTS = [
     stage: "Production",
     timeline: "6 months",
     tagline: "Double-Entry Ledger & Payment Settlement",
-    description: "Core financial infrastructure with double-entry ledger backed by PostgreSQL (SERIALIZABLE isolation), multi-PSP payment orchestration (Stripe primary, Adyen fallback, Tabapay for instant transfers), and automated reconciliation. All 7 engine modules persist state to PostgreSQL and Redis — zero in-memory state, zero data loss on restart. Health scoring routes payments across providers based on success rate (40%), p95 latency (30%), error rate (20%), and uptime (10%) with Redis-backed circuit breaker failover.",
+    description: "Core financial infrastructure with double-entry ledger backed by PostgreSQL (SERIALIZABLE isolation), multi-PSP payment orchestration (Stripe primary, Adyen fallback, Tabapay for instant transfers), and automated reconciliation. All 7 engine modules persist state to PostgreSQL and Redis via dependency-injected session factories — zero in-memory state, zero data loss on restart. Health scoring routes payments across providers based on success rate (40%), p95 latency (30%), error rate (20%), and uptime (10%) with Redis-backed circuit breakers using sorted sets and atomic pipelines. Connection pooling (QueuePool size=20, overflow=10) and idempotency cache (Redis, 24h TTL) ensure production resilience. Load-tested with Locust: 50 concurrent users, 9,100 requests in 10 minutes.",
     problem: "91.2% transaction success rate with manual reconciliation taking 3+ days and roughly $12K/month in undetected ledger imbalances. No real-time visibility into payment status. Progressive KYC wasn't available, causing 34% onboarding drop-off at the identity verification step. A single PSP outage revealed that without an internal source of truth, reconciliation across backup providers was nearly impossible.",
     solution: "Double-entry ledger as internal source of truth (not PSP as source of truth) with SERIALIZABLE isolation to prevent race conditions on concurrent balance reads. The decision to build a custom ledger added 3 weeks but proved critical during a Stripe outage when the internal ledger enabled zero-confusion reconciliation through the Adyen failover. Hybrid fraud detection uses synchronous rule-based scoring (<100ms, catches 85% of fraud) with async ML for borderline cases, avoiding the checkout latency spike that inline-ML caused. Progressive KYC tiers reduced onboarding drop-off from 34% to 7.8%.",
     role: "Concept to production in 6 months. Mapped the client's payment flow end-to-end, quantified that manual reconciliation was eating 20+ hours/week, and evaluated three off-the-shelf reconciliation tools before making the call to build custom — none handled the multi-currency requirements. That decision added 3 weeks but proved critical during a Stripe outage when the internal ledger enabled zero-confusion failover to Adyen. Prototyped the double-entry pipeline processing sample transactions to prove the architecture to the CFO and compliance team. Drove the technical direction with the lead developer on SERIALIZABLE isolation, connection pooling, and the multi-PSP routing layer. Rolled out starting with one payment channel, measured ROI through transaction success rates (91.2% → 97.8%) and reconciliation time (3+ days → <15 min).",
@@ -240,7 +270,12 @@ export const PRODUCTS = [
       capacityHighlight: "Current: 4,200 txn/day, $1,005/mo. Scales to 42K txn/day at $3,390/mo. 100x ceiling at $12,160/mo with async PSP migration.",
       runbooks: ["PSP Outage & Failover", "Database Connection Exhaustion", "Settlement Batch Failure", "Fraud Rule Excessive Declines", "Reconciliation Exception Spike"],
       loadTest: "Locust load test: 50 concurrent users, 9,100 requests in 10 min. Primary bottleneck: synchronous PSP calls (3-5x improvement projected with async migration)."
-    }
+    },
+    futureRoadmap: [
+      {title: "Async PSP Migration for 100x Throughput", description: "Migrate synchronous payment processor calls to async with event-driven confirmation, removing the primary bottleneck identified in Locust load testing — projecting 3-5x throughput improvement and enabling the 100x scaling ceiling at $12K/month infrastructure."},
+      {title: "Real-Time Fraud ML Pipeline", description: "Upgrade from hybrid sync-rules/async-ML fraud detection to a fully streaming ML pipeline using Kafka Streams, enabling sub-50ms fraud scoring on every transaction with continuous model retraining on emerging fraud patterns."},
+      {title: "Open Banking (FDX) Integration", description: "Add Financial Data Exchange protocol support for direct bank account connectivity, reducing PSP dependency for account-to-account transfers and enabling instant payment verification without intermediary fees."}
+    ]
   },
   {
     id: "genai-governance",
@@ -250,7 +285,7 @@ export const PRODUCTS = [
     stage: "Production",
     timeline: "5 months",
     tagline: "Regulated AI Deployment for Financial Services",
-    description: "Compliance-first governance layer for deploying generative AI in a regulated credit union. All five guardrail checks (PII detection, hallucination, bias screening, compliance filtering, confidence assessment) are deterministic stateless functions with no LLM calls, because examiners need to understand exactly why output was blocked. Versioned prompt registry with full approval workflow (DRAFT, PENDING_REVIEW, APPROVED, DEPLOYED, DEPRECATED) and SHA-256 content hashing.",
+    description: "Compliance-first governance layer for deploying generative AI in a regulated credit union. All five guardrail checks (PII detection, hallucination, bias screening, compliance filtering, confidence assessment) are deterministic stateless functions with no LLM calls, because examiners need to understand exactly why output was blocked. Versioned prompt registry with full approval workflow (DRAFT, PENDING_REVIEW, APPROVED, DEPLOYED, DEPRECATED) and SHA-256 content hashing. Risk-based token cost optimizer applies tiered guardrail evaluation (LITE for low-risk FAQ routing, STANDARD for moderate interactions, FULL for financial advice) with per-template token budgeting, model downgrade recommendations, and monthly cost projections showing exact ROI of optimization choices — never sacrificing compliance for cost.",
     problem: "Credit union wanted to deploy an AI chatbot for member services but faced NCUA regulatory requirements with zero precedent for GenAI compliance. Board and examiners needed assurance of safety and auditability. OCC SR 11-7 guidance requires financial institutions to document what models they use, how they're validated, and how they're monitored, and 'the classifier said so' is insufficient justification for blocking member-facing output.",
     solution: "Middleware governance layer that intercepts all AI interactions with deterministic guardrails (not LLM-as-judge) running in under 200ms. Prompt registry caught a production incident in week 2 when a developer updated a system prompt that caused hallucinated transaction details; the change triggered the evaluation suite before reaching members. Monthly bias testing runs identical prompts with demographic variations and detected the system was providing shorter responses to accounts under $5,000 vs. $50,000+. Model cards generated programmatically from evaluation results enabled the compliance officer to produce examiner-ready documentation in under an hour.",
     role: "Concept to successful NCUA examination in 5 months. Mapped every NCUA compliance requirement that applied to AI systems in credit unions — there was zero precedent, so I built the compliance framework from regulatory first principles. Benchmarked governance tools in the market and identified the gap: nobody was solving real-time content policy enforcement for generative AI in financial services. The first approach used an LLM to evaluate LLM outputs — the compliance team killed that immediately because examiners need explainable decisions. Made the call to pivot to deterministic guardrails (regex patterns, embedding similarity thresholds) that produce auditable results. Prototyped the content policy engine against sample member interactions to prove it to the board. Drove the middleware architecture with the lead developer and coordinated directly with NCUA examiners on audit format. Result: zero findings across 43K+ AI interactions.",
@@ -274,7 +309,12 @@ export const PRODUCTS = [
       slos: ["Guardrail Latency P95 < 200ms", "PII Detection Recall > 99%", "Audit Log Completeness 100%", "Bias Test Coverage 100% monthly"],
       capacityHighlight: "Current: 43K interactions/mo. Scales to 500K interactions/mo at $1,400/mo (stateless guardrails + Redis cache).",
       runbooks: ["Guardrail False Positive Spike", "LLM Provider Latency Degradation", "Bias Detection Alert"]
-    }
+    },
+    futureRoadmap: [
+      {title: "LLM Cascade Routing for Cost Optimization", description: "Implement confidence-gated cascade routing — start with the cheapest model, evaluate output confidence, and only escalate to expensive models when quality thresholds aren't met. Combined with per-template token budgeting, projecting additional 30-40% cost reduction."},
+      {title: "Multi-Regulatory Framework Support", description: "Extend the NCUA-focused compliance engine to support OCC SR 11-7, EU AI Act, and NIST AI RMF frameworks — enabling the platform to serve banks, insurance carriers, and EU-regulated financial institutions from a single governance layer."},
+      {title: "Automated Model Card Generation with Eval Pipelines", description: "Build continuous evaluation pipelines that auto-generate examiner-ready model cards after every prompt registry deployment — including accuracy benchmarks, bias test results, and drift metrics with zero manual compliance documentation effort."}
+    ]
   },
   {
     id: "infra-automation",
@@ -308,7 +348,12 @@ export const PRODUCTS = [
       slos: ["Provisioning Success Rate 99.5%", "Deployment Time P95 < 12min", "Policy Compliance 100%", "Anomaly Detection Latency < 30s"],
       capacityHighlight: "Current: 200 deployments/week. Scales to 2,000/week at $2,200/mo (Temporal worker fleet + TimescaleDB retention).",
       runbooks: ["Terraform Apply Failure", "OPA Policy Violation Cascade", "Anomaly Detection False Positive Storm"]
-    }
+    },
+    futureRoadmap: [
+      {title: "AI-Assisted Infrastructure Recommendations", description: "Deploy a Claude-powered advisory layer that analyzes Terraform state, cost data, and usage patterns to recommend right-sizing, reserved instance purchases, and architecture optimizations — projecting 20-30% cloud spend reduction."},
+      {title: "GitOps-Native Policy as Code", description: "Migrate OPA/Rego policies to a GitOps workflow with PR-based policy changes, automated policy testing against historical deployments, and rollback capabilities — making infrastructure governance as reviewable as application code."},
+      {title: "Ephemeral Environment Orchestration", description: "Extend the digital twin simulation into full ephemeral environment provisioning — spin up production-identical environments per pull request, run integration tests, and auto-teardown, replacing the need for shared staging entirely."}
+    ]
   },
   {
     id: "integration-health",
@@ -342,7 +387,12 @@ export const PRODUCTS = [
       slos: ["Webhook Processing P95 < 500ms", "Alert Precision > 85%", "Health Check Freshness < 60s", "Dashboard Load Time P95 < 2s"],
       capacityHighlight: "Current: 15 integrations, 8K events/day. Scales to 100 integrations at $750/mo (PostgreSQL partitioning + Grafana optimization).",
       runbooks: ["Provider Webhook Outage", "Alert Storm / False Positive Cascade", "Health Score Calculation Drift"]
-    }
+    },
+    futureRoadmap: [
+      {title: "Predictive Failure Detection", description: "Train a time-series forecasting model on historical provider health data to predict integration failures 15-30 minutes before they impact users — shifting from reactive anomaly detection to proactive incident prevention."},
+      {title: "OpenTelemetry-Native Provider Tracing", description: "Instrument all provider interactions with OpenTelemetry distributed traces, enabling end-to-end request correlation from user action through internal services to third-party API calls — making integration debugging a single-pane experience."},
+      {title: "Automated SLA Enforcement Engine", description: "Auto-generate provider SLA violation reports from health score data with financial impact calculations, giving procurement teams data-backed leverage for contract negotiations and vendor accountability."}
+    ]
   },
   {
     id: "portfolio-intelligence",
@@ -376,7 +426,12 @@ export const PRODUCTS = [
       slos: ["Query Accuracy > 91%", "Text-to-SQL Latency P95 < 5s", "Data Freshness < 24hr", "Semantic Layer Coverage 100%"],
       capacityHighlight: "Current: 200 queries/day. Scales to 5,000 queries/day at $1,100/mo (Snowflake auto-suspend + pgvector index optimization).",
       runbooks: ["SQL Generation Accuracy Drop", "Snowflake Query Timeout", "Semantic Layer Sync Failure"]
-    }
+    },
+    futureRoadmap: [
+      {title: "Agentic Graph RAG for Property Relationships", description: "Layer a property knowledge graph over the existing vector store to capture cross-property relationships (shared vendors, lease dependencies, portfolio-level risk exposure) — enabling complex queries the text-to-SQL pipeline can't handle alone."},
+      {title: "Multi-Modal Document Intelligence", description: "Extend the RAG pipeline to process floor plans, site photos, and inspection imagery alongside text documents using vision models — enabling queries like 'show me all properties with deferred maintenance visible in recent inspections.'"},
+      {title: "Predictive Portfolio Analytics", description: "Build forecasting models for occupancy trends, maintenance costs, and lease renewal probability using historical Snowflake data — moving from descriptive analytics ('what happened') to predictive insights ('what will happen next quarter')."}
+    ]
   },
   {
     id: "review-prep",
@@ -410,7 +465,12 @@ export const PRODUCTS = [
       slos: ["Prep Generation P95 < 45s", "Data Source Sync Success 99.5%", "Advisor Adoption > 80%", "CRM Integration Uptime 99.9%"],
       capacityHighlight: "Current: 120 preps/week. Scales to 2,000 preps/week at $900/mo (n8n workflow parallelism + Supabase connection pooling).",
       runbooks: ["CRM Data Pull Failure", "Prep Generation Timeout", "Stale Portfolio Data Alert"]
-    }
+    },
+    futureRoadmap: [
+      {title: "AI-Generated Talking Points with Context", description: "Deploy Claude to generate personalized advisor talking points based on portfolio performance, market conditions, and client communication history — moving from data assembly to intelligent narrative generation."},
+      {title: "Real-Time Meeting Intelligence", description: "Add meeting transcription with automatic action item extraction and sentiment analysis, feeding back into the engagement scoring model to detect at-risk relationships during the meeting rather than after quarterly reviews."},
+      {title: "Multi-Custodian Unified Data Layer", description: "Build a normalized data layer across Schwab, Fidelity, Interactive Brokers, and Pershing that handles custodian-specific data formats, reconciliation timing, and corporate action treatment — enabling firm-wide analytics regardless of custodial platform."}
+    ]
   },
   {
     id: "scope-tracker",
@@ -444,7 +504,12 @@ export const PRODUCTS = [
       slos: ["Drift Detection Latency < 5min", "Billing Accuracy 99.9%", "Dashboard Load P95 < 2s", "Alert Delivery < 60s"],
       capacityHighlight: "Current: 50 projects, 200 change events/day. Scales to 500 projects at $650/mo (PostgreSQL partitioning + Stripe webhook batching).",
       runbooks: ["Stripe Webhook Delivery Failure", "Drift Score Calculation Error", "Invoice Generation Timeout"]
-    }
+    },
+    futureRoadmap: [
+      {title: "NLP-Based Scope Extraction from Communications", description: "Apply Claude to analyze email threads and meeting transcripts for implicit scope changes that never make it into formal change requests — catching the 'oh, and can you also...' moments that account for an estimated 40% of undetected drift."},
+      {title: "Predictive Budget Forecasting", description: "Train a time-series model on historical engagement data to forecast final cost at any point in the engagement lifecycle — giving partners confidence intervals on profitability rather than single-point estimates."},
+      {title: "Cross-Engagement Portfolio Analytics", description: "Aggregate drift patterns across all firm engagements to identify systemic scope risks by practice area, client type, and engagement structure — enabling proactive pricing and staffing adjustments before engagements begin."}
+    ]
   },
   {
     id: "agent-orchestration",
@@ -454,11 +519,11 @@ export const PRODUCTS = [
     stage: "Production",
     timeline: "16 weeks",
     tagline: "Multi-Agent Coordination for Enterprise Workflows",
-    description: "Supervisor-pattern agent orchestration platform coordinating 5 specialized AI agents across claims processing, underwriting, customer service, document processing, and analytics. Uses LangGraph for stateful workflow execution with checkpointing and human-in-the-loop gates. Multi-model routing (Claude primary, GPT-4o secondary, Haiku for fast classification) reduced LLM spend 60% through shared knowledge base, prompt caching (37% hit rate), and intelligent model selection.",
+    description: "Supervisor-pattern agent orchestration platform coordinating 5 specialized AI agents across claims processing, underwriting, customer service, document processing, and analytics. Uses LangGraph for stateful workflow execution with checkpointing and human-in-the-loop gates. Hook-based lifecycle management system (8 hook types: pre/post-execute, tool call, error, escalation, session lifecycle) enables cross-cutting concerns like audit logging and cost tracking without polluting agent code. Built-in evaluation framework measures semantic similarity, hallucination detection, routing accuracy, and cost efficiency with A/B comparison and statistical significance testing. Memory consolidation engine compacts session history into key facts, pattern insights, and archival summaries. Multi-model routing (Claude primary, GPT-4o secondary, Haiku for fast classification) reduced LLM spend 60% through shared knowledge base, prompt caching (37% hit rate), and intelligent model selection.",
     problem: "Insurance TPA had deployed 7 separate AI tools over 18 months, each running independently. Combined LLM spend was $47K/month with 40% redundant token usage (each tool maintained its own context, re-processing the same documents). No unified monitoring, no shared memory, and no centralized guardrails. One agent hallucinated a coverage determination that reached a policyholder before anyone caught it. No cost attribution — nobody knew which agent was spending what.",
     solution: "Unified orchestration with a supervisor agent classifying intent via Haiku (<200ms), routing to specialized agents, and enforcing five-layer deterministic guardrails (PII detection, budget enforcement, schema validation, compliance rules, content filtering). Three-tier memory architecture (Redis session state → PostgreSQL conversation history → pgvector long-term knowledge) eliminates redundant document processing. Per-agent circuit breakers prevent cascading failures. The pivot from pipeline to supervisor pattern cut average cost per task from $0.51 to $0.08.",
     role: "Concept to production in 16 weeks. Benchmarked four orchestration frameworks (LangGraph, CrewAI, AutoGen, Swarm) and three architectural patterns (supervisor, pipeline, mesh) against the client's domain structure. The original design used a pipeline pattern where every request flowed through all 5 agents sequentially — but 70% of requests only needed 1-2 agents, and a $0.02 FAQ was costing $0.51 in full-pipeline processing. Killed the pipeline and pivoted to supervisor pattern with Haiku-based intent classification (<200ms) routing to only necessary agents. Average cost per task: $0.51 → $0.08. Designed the three-tier memory architecture and five-layer guardrail system after mapping regulatory requirements with compliance officers. Made the call to start rollout with customer service (highest volume, lowest risk) before adding claims and underwriting. Drove the LangGraph implementation with the lead developer.",
-    architecture: "Python/AsyncIO backend with LangGraph orchestration engine for stateful workflow execution. Pinecone vector database for shared knowledge retrieval across agents. PostgreSQL for conversation history, Redis Streams for inter-agent communication and session state. Celery for distributed task execution. Claude and GPT-4o via provider abstraction layer. LangSmith for agent tracing and evaluation.",
+    architecture: "Python/AsyncIO backend with LangGraph orchestration engine for stateful workflow execution and hook-based lifecycle management. Pinecone vector database for shared knowledge retrieval across agents. PostgreSQL for conversation history with memory consolidation engine for session compaction, Redis Streams for inter-agent communication and session state. Celery for distributed task execution. Claude and GPT-4o via provider abstraction layer with complexity-based routing. LangSmith for agent tracing, evaluation framework for quality measurement, and cost tracking.",
     pipeline: [
       {label:"Ingest",detail:"API requests + document uploads"},
       {label:"Process",detail:"LangGraph supervisor + specialized agents"},
@@ -478,7 +543,12 @@ export const PRODUCTS = [
       slos: ["Agent Response P95 < 2s", "Orchestration Success Rate 99.0%", "Rate Limit Accuracy 100%", "Session Recovery < 10s"],
       capacityHighlight: "Current: 12 agents, 5K tasks/day. Scales to 100 agents at $1,600/mo (Redis Streams + LangGraph checkpoint optimization).",
       runbooks: ["Agent Deadlock / Infinite Loop", "LLM Provider Rate Limit Exceeded", "Supervisor Escalation Backlog"]
-    }
+    },
+    futureRoadmap: [
+      {title: "A2A Protocol Interoperability", description: "Expose each orchestrated agent as an A2A-compatible Agent Card and implement the JSON-RPC task lifecycle — enabling agents to communicate with external ecosystems (Salesforce, ServiceNow) without custom integration as the protocol reaches 150+ supporting organizations."},
+      {title: "Trajectory-Level Evaluation Framework", description: "Extend the eval framework beyond outcome metrics to trace full agent reasoning paths — tracking tool selection accuracy per step, reasoning chain coherence, and step-level latency to answer 'why did the agent make that decision?' not just 'was the answer correct?'"},
+      {title: "Confidence-Gated LLM Cascading", description: "Upgrade multi-model routing from static complexity classification to dynamic cascade routing — start with the cheapest model, evaluate confidence, escalate only when quality thresholds aren't met, projecting additional 20-30% cost reduction beyond the current 60% savings."}
+    ]
   },
   {
     id: "clinical-ai",
@@ -512,7 +582,12 @@ export const PRODUCTS = [
       slos: ["Clinical Decision Latency P95 < 3s", "HIPAA Audit Completeness 100%", "PHI Encryption Coverage 100%", "Agent Accuracy > 95%"],
       capacityHighlight: "Current: 500 encounters/day. Scales to 5,000 encounters/day at $2,800/mo (FHIR batch API + Redis session clustering).",
       runbooks: ["Epic FHIR Integration Failure", "PHI Exposure Incident", "Clinical Agent Hallucination Detection"]
-    }
+    },
+    futureRoadmap: [
+      {title: "Ambient Clinical Documentation Integration", description: "Add post-encounter ambient documentation processing that feeds directly into the PA generation pipeline — closing the loop from patient visit to authorization request in a single automated workflow, targeting same-day PA submission for 80% of encounters."},
+      {title: "Multi-Payer Rules Engine with Auto-Updates", description: "Build a payer criteria management system that auto-ingests coverage policy updates from BCBS, Aetna, and UHC — eliminating the manual criteria maintenance that currently delays PA accuracy when payer policies change mid-quarter."},
+      {title: "Federated Learning Across Provider Networks", description: "Implement privacy-preserving federated model training across multiple provider groups so coding accuracy and denial prediction improve from shared patterns without exposing PHI — targeting 99%+ coding accuracy through cross-network intelligence."}
+    ]
   }
 ];
 
