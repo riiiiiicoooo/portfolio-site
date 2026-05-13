@@ -1091,14 +1091,12 @@ function OffersPage() {
           }}>
             Productized Consulting
           </div>
-          <h1 className="hero-name" style={{ fontSize: "44px" }}>Fixed-Fee Offers</h1>
+          <h1 className="hero-name" style={{ fontSize: "44px" }}>Engagements</h1>
           <p className="hero-tagline" style={{ marginBottom: "8px" }}>
-            Five offers. Each one packaged from a shipped product in the portfolio.
+            Five engagement types. Each one is anchored to a production product in the portfolio and has been delivered multiple times.
           </p>
           <p style={{ fontSize: "15px", color: "#374151", maxWidth: "720px", lineHeight: 1.7 }}>
-            Every offer below has a working production reference behind it — these aren't slideware.
-            Pricing is fixed-fee, delivery is in 30-90 days, and the technical proof points come from
-            customers already running the underlying products.
+            Pricing is fixed-fee. Proof points are outcomes from production customer deployments.
           </p>
         </div>
       </section>
@@ -1119,33 +1117,6 @@ function OffersPage() {
                   borderRadius: "16px",
                   boxShadow: "0 1px 2px rgba(0,0,0,0.04)"
                 }}>
-                  <div style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "8px",
-                    marginBottom: "12px",
-                    alignItems: "center"
-                  }}>
-                    <span style={{
-                      fontSize: "10px",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.1em",
-                      color: "#fff",
-                      background: "#dc2626",
-                      fontWeight: 700,
-                      padding: "4px 8px",
-                      borderRadius: "4px"
-                    }}>
-                      {offer.urgency}
-                    </span>
-                    <span style={{
-                      fontSize: "11px",
-                      color: "#6b7280",
-                      fontFamily: "monospace"
-                    }}>
-                      {offer.duration} · {offer.price}
-                    </span>
-                  </div>
                   <h2 style={{
                     fontSize: "26px",
                     fontWeight: 700,
@@ -1157,11 +1128,35 @@ function OffersPage() {
                   <p style={{
                     fontSize: "15px",
                     color: "#374151",
-                    marginBottom: "20px",
-                    fontStyle: "italic"
+                    marginBottom: "16px",
+                    lineHeight: 1.6
                   }}>
                     {offer.tagline}
                   </p>
+                  {offer.engagementsDelivered && (
+                    <div style={{
+                      padding: "14px 18px",
+                      background: "#f9fafb",
+                      border: "1px solid #e5e7eb",
+                      borderLeft: "3px solid #111",
+                      borderRadius: "0 8px 8px 0",
+                      marginBottom: "24px"
+                    }}>
+                      <h3 style={{
+                        fontSize: "11px",
+                        fontWeight: 700,
+                        color: "#111",
+                        marginBottom: "6px",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.08em"
+                      }}>
+                        Engagements delivered
+                      </h3>
+                      <p style={{ fontSize: "14px", color: "#1f2937", lineHeight: 1.6, margin: 0 }}>
+                        {offer.engagementsDelivered}
+                      </p>
+                    </div>
+                  )}
 
                   <div style={{
                     display: "grid",
@@ -1243,6 +1238,17 @@ function OffersPage() {
                     </ul>
                   </div>
 
+                  <div style={{
+                    fontSize: "12px",
+                    color: "#6b7280",
+                    fontFamily: "monospace",
+                    paddingTop: "16px",
+                    borderTop: "1px solid #f3f4f6",
+                    marginBottom: linkedProducts.length > 0 ? "20px" : 0
+                  }}>
+                    Engagement parameters: {offer.duration} · {offer.price}
+                  </div>
+
                   {linkedProducts.length > 0 && (
                     <div>
                       <h3 style={{
@@ -1295,8 +1301,7 @@ function OffersPage() {
               Scoping a project?
             </h2>
             <p style={{ fontSize: "14px", color: "#d1d5db", marginBottom: "20px", maxWidth: "560px", margin: "0 auto 20px", lineHeight: 1.7 }}>
-              Each offer has a working production reference. Happy to walk through the architecture,
-              the customer story, and what a 30/60/90-day delivery looks like for your context.
+              Each engagement is anchored to a product running in production. I can walk through the architecture, the customer story, and what a 30 to 90-day delivery looks like for your context.
             </p>
             <a
               href="mailto:jacob.georgenyc@gmail.com?subject=Productized%20Offer%20Inquiry"
@@ -1374,4 +1379,3 @@ export default function App() {
     </>
   );
 }
-
