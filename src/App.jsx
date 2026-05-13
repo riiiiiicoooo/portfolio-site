@@ -1374,57 +1374,6 @@ export default function App() {
     </>
   );
 }
-              marginBottom: "16px"
-            }}>
-              Stakeholder Range
-            </h2>
-            <p style={{ fontSize: "14px", color: "#374151", lineHeight: 1.7 }}>
-              CISOs · CFOs · NCUA Examiners · M&A Partners · Field Sales Teams
-            </p>
-          </div>
-
-          <div style={{
-            paddingTop: "32px",
-            borderTop: "1px solid #e5e7eb"
-          }}>
-            <h2 style={{
-              fontSize: "22px",
-              fontWeight: 700,
-              letterSpacing: "-0.01em",
-              marginBottom: "16px"
-            }}>
-              Get in Touch
-            </h2>
-            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-              <a
-                href="https://www.linkedin.com/in/jacob-g-17630a127/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="cta-button primary"
-              >
-                LinkedIn
-              </a>
-              <a
-                href="https://github.com/riiiiiicoooo"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="cta-button secondary"
-              >
-                GitHub
-              </a>
-              <a
-                href="mailto:jacob.georgenyc@gmail.com"
-                className="cta-button secondary"
-              >
-                Email
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ============================================================================
 // PRODUCTIZED OFFERS PAGE
