@@ -170,6 +170,57 @@ function HomePage() {
         </div>
       </section>
 
+      {/* Deep-Dive Case Studies (moved to top) */}
+      <section style={{ padding: "48px 0", borderTop: "1px solid #e5e7eb" }}>
+        <div className="container">
+          <h2 style={{ fontSize: "20px", fontWeight: 700, marginBottom: "24px" }}>Deep-Dive Case Studies</h2>
+          <div className="filter-bar">
+            {["All", ...CATEGORIES].map((cat) => (
+              <button
+                key={cat}
+                className={`filter-btn ${filter === cat ? "active" : ""}`}
+                onClick={() => setFilter(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+          <div className="product-grid">
+            {filteredProducts.map((product) => (
+              <div
+                key={product.id}
+                className="product-card"
+                onClick={() => {
+                  window.location.hash = product.id;
+                }}
+              >
+                <div className={`card-stage stage-${product.stage.toLowerCase().replace(/\s+/g, "-")}`}>
+                  {product.stage}
+                </div>
+                <div className="card-icon">
+                  {DOMAIN_ICONS[product.domain]}
+                </div>
+                <div className="card-domain">{product.domain}</div>
+                <h3 className="card-title">{product.name}</h3>
+                <p className="card-desc">{product.tagline}</p>
+                {product.metrics && product.metrics[0] && (
+                  <div className="card-metric">
+                    <span className="val">{product.metrics[0].value}</span>
+                    <span className="context">{product.metrics[0].label}</span>
+                  </div>
+                )}
+                <div className="card-tags">
+                  {product.tech.slice(0, 2).map((t, i) => (
+                    <span key={i} className="card-tag">{t}</span>
+                  ))}
+                </div>
+                <div className="card-arrow">→</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* AI Economics Banner */}
       <AIEconomicsBanner />
 
@@ -359,20 +410,6 @@ function HomePage() {
                   transition: "all 0.15s"
                 }}
               >
-                <div style={{
-                  fontSize: "10px",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  color: "#fff",
-                  background: "#dc2626",
-                  fontWeight: 700,
-                  padding: "3px 7px",
-                  borderRadius: "4px",
-                  display: "inline-block",
-                  marginBottom: "10px"
-                }}>
-                  {offer.urgency}
-                </div>
                 <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "6px", letterSpacing: "-0.01em" }}>
                   {offer.name}
                 </h3>
@@ -388,56 +425,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Product Grid */}
-      <section style={{ padding: "48px 0", borderTop: "1px solid #e5e7eb" }}>
-        <div className="container">
-          <h2 style={{ fontSize: "20px", fontWeight: 700, marginBottom: "24px" }}>Deep-Dive Case Studies</h2>
-          <div className="filter-bar">
-            {["All", ...CATEGORIES].map((cat) => (
-              <button
-                key={cat}
-                className={`filter-btn ${filter === cat ? "active" : ""}`}
-                onClick={() => setFilter(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-          <div className="product-grid">
-            {filteredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="product-card"
-                onClick={() => {
-                  window.location.hash = product.id;
-                }}
-              >
-                <div className={`card-stage stage-${product.stage.toLowerCase().replace(/\s+/g, "-")}`}>
-                  {product.stage}
-                </div>
-                <div className="card-icon">
-                  {DOMAIN_ICONS[product.domain]}
-                </div>
-                <div className="card-domain">{product.domain}</div>
-                <h3 className="card-title">{product.name}</h3>
-                <p className="card-desc">{product.tagline}</p>
-                {product.metrics && product.metrics[0] && (
-                  <div className="card-metric">
-                    <span className="val">{product.metrics[0].value}</span>
-                    <span className="context">{product.metrics[0].label}</span>
-                  </div>
-                )}
-                <div className="card-tags">
-                  {product.tech.slice(0, 2).map((t, i) => (
-                    <span key={i} className="card-tag">{t}</span>
-                  ))}
-                </div>
-                <div className="card-arrow">→</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
