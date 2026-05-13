@@ -146,32 +146,21 @@ function HomePage() {
       {/* Hero */}
       <section className="hero">
         <div className="container">
-          <h1 className="hero-name">Jacob George</h1>
-          <p className="hero-tagline">Principal PM building AI products from zero to production.</p>
-          <p>Metrics-first decision making. Deterministic guardrails. Model routing at scale.</p>
-          <div className="stats-row">
-            <div className="stat">
-              <div className="num">15</div>
-              <div className="label">Products</div>
-            </div>
-            <div className="stat">
-              <div className="num">8</div>
-              <div className="label">Industries</div>
-            </div>
-            <div className="stat">
-              <div className="num">$35M+</div>
-              <div className="label">Value Created</div>
-            </div>
-            <div className="stat">
-              <div className="num">7</div>
-              <div className="label">In Production</div>
-            </div>
+          <p className="hero-positioning">
+            I build production systems from zero, and the operational layer that runs them.
+          </p>
+          <div className="hero-cta-row">
+            <a href="#offers" className="hero-cta">Scope an engagement →</a>
+            <a href="#work" className="hero-cta">Review the work →</a>
+          </div>
+          <div className="hero-stats">
+            15 products shipped · 8 industries · $35M+ value created · 7 in production
           </div>
         </div>
       </section>
 
       {/* Deep-Dive Case Studies (moved to top) */}
-      <section style={{ padding: "48px 0", borderTop: "1px solid #e5e7eb" }}>
+      <section id="work" style={{ padding: "48px 0", borderTop: "1px solid #e5e7eb" }}>
         <div className="container">
           <h2 style={{ fontSize: "20px", fontWeight: 700, marginBottom: "24px" }}>Deep-Dive Case Studies</h2>
           <div className="filter-bar">
