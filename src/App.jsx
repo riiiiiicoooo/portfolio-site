@@ -5,6 +5,7 @@ import { AI_ECONOMICS, PORTFOLIO_ECONOMICS, MODEL_ROUTING_PATTERNS } from "./dat
 import DASHBOARDS from "./data/dashboards";
 import DASHBOARD_COMPONENTS, { DataPipeline } from "./components/Dashboards";
 import DOMAIN_ICONS from "./components/Icons";
+import { CONTACT_EMAIL } from "./data/contact";
 import HomeConnectDemo from "./HomeConnect";
 import FieldCommandDemo from "./FieldCommand";
 import ContractIntelDemo from "./ContractIntel";
@@ -68,7 +69,7 @@ function Footer() {
             <span>·</span>
             <a href="https://github.com/riiiiiicoooo" target="_blank" rel="noopener noreferrer">GitHub</a>
             <span>·</span>
-            <a href="mailto:jacob.georgenyc@gmail.com">Email</a>
+            <a href={`mailto:${CONTACT_EMAIL}`} style={{ fontFamily: "ui-monospace, SFMono-Regular, monospace" }}>{CONTACT_EMAIL}</a>
           </div>
         </div>
       </div>
@@ -273,12 +274,43 @@ function HomePage() {
 // CASE STUDY PAGE
 // ============================================================================
 function CaseStudyPage({ productId }) {
+  const [showStickyCta, setShowStickyCta] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShowStickyCta(window.scrollY > 600);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const product = PRODUCTS.find((p) => p.id === productId);
   if (!product) return <div className="container" style={{ padding: "40px 0" }}>Product not found</div>;
 
   const aiEcon = AI_ECONOMICS[productId];
   const dashboard = DASHBOARDS[productId];
   const DashboardComponent = DASHBOARD_COMPONENTS[productId];
+
+  const stickyHref =
+    "mailto:" + CONTACT_EMAIL +
+    "?subject=" + encodeURIComponent("Scope an engagement: " + product.name) +
+    "&body=" + encodeURIComponent(
+      "Hi Jacob,
+
+" +
+      "I read the " + product.name + " writeup and want to talk about a similar engagement.
+
+" +
+      "Industry:
+" +
+      "What we are trying to build:
+" +
+      "Timeframe:
+" +
+      "Anything else worth knowing:
+
+" +
+      "Thanks,
+"
+    );
 
   return (
     <div className="detail-page">
@@ -541,6 +573,12 @@ function CaseStudyPage({ productId }) {
           </div>
         )}
       </div>
+      <a
+        className={`sticky-engagement-cta ${showStickyCta ? "visible" : ""}`}
+        href={stickyHref}
+      >
+        Scope a similar engagement â†’
+      </a>
     </div>
   );
 }
