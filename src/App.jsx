@@ -167,18 +167,10 @@ function HomePage() {
     <div>
       {/* Hero */}
       <section className="hero">
-        <div className="container">
-          <p className="hero-positioning">
-            I build production systems from zero, and the operational layer that runs them.
-          </p>
-          <div className="hero-cta-row">
-            <a href="#offers" className="hero-cta">Scope an engagement →</a>
-            <a href="#work" className="hero-cta">Review the work →</a>
-          </div>
-          <div className="hero-stats">
-            15 products shipped · 8 industries · $35M+ value created · 7 in production
-          </div>
-        </div>
+        <h1 className="hero-role">Principal Product Manager</h1>
+        <p className="hero-stats">
+          15 products shipped · 8 industries · $35M+ value created · 7 in production
+        </p>
       </section>
 
       {/* Selected work */}
