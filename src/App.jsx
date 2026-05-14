@@ -199,8 +199,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* AI Economics Banner */}
-      <AIEconomicsBanner />
 
       {/* Productized Offers Teaser */}
       <section style={{ padding: "48px 0", borderTop: "1px solid #e5e7eb" }}>
@@ -258,6 +256,15 @@ function HomePage() {
         </div>
       </section>
 
+      {/* AI Economics Strip */}
+      <section className="economics-strip">
+        <div className="economics-strip-line-1">
+          Model rates: Sonnet 4.6 $3 in / $15 out per M tokens Â· Haiku 4.5 $1 in / $5 out per M tokens Â· Prompt caching reduces repeated input 90% Â· Batch API 50% off
+        </div>
+        <div className="economics-strip-line-2">
+          Per-task averages: Contract review $0.12 Â· Clinical prior auth $0.18 Â· Agent orchestration $0.08 Â· Policy evaluation $0.03 blended Â· Portfolio intel query $0.04
+        </div>
+      </section>
     </div>
   );
 }
