@@ -25,31 +25,24 @@ const getCurrentPage = () => {
 // NAVIGATION COMPONENT
 // ============================================================================
 function Nav() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const navigate = (page) => {
     window.location.hash = page;
-    setMobileMenuOpen(false);
   };
 
   return (
     <nav>
       <div className="container">
-        <a className="logo" href="#home" style={{ cursor: "pointer" }}>Jacob George</a>
-        <div className={`nav-links ${mobileMenuOpen ? "open" : ""}`}>
+        <div className="nav-primary">
+          <a className="logo" href="#home" style={{ cursor: "pointer" }}>Jacob George</a>
+          <a className="nav-mobile-cta" href="#offers">Scope a project</a>
+        </div>
+        <div className="nav-secondary">
           <a onClick={() => navigate("home")} style={{ cursor: "pointer" }}>Products</a>
           <a onClick={() => navigate("offers")} style={{ cursor: "pointer" }}>Offers</a>
           <a onClick={() => navigate("methodology")} style={{ cursor: "pointer" }}>Methodology</a>
           <a onClick={() => navigate("about")} style={{ cursor: "pointer" }}>About</a>
           <a href="https://github.com/riiiiiicoooo" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
-        <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-        </button>
       </div>
     </nav>
   );
@@ -131,6 +124,45 @@ function HomePage() {
     ? PRODUCTS
     : PRODUCTS.filter((p) => p.category === filter);
 
+  const renderProductCard = (product) => (
+    <div
+      key={product.id}
+      className="product-card"
+      onClick={() => { window.location.hash = product.id; }}
+    >
+      <div className={`card-stage stage-${product.stage.toLowerCase().replace(/\s+/g, "-")}`}>
+        {product.stage}
+      </div>
+      <div className="card-icon">
+        {DOMAIN_ICONS[product.domain]}
+      </div>
+      <div className="card-domain">{product.domain}</div>
+      <h3 className="card-title">{product.name}</h3>
+      <p className="card-desc">{product.tagline}</p>
+      {product.metrics && product.metrics[0] && (
+        <div className="card-metric">
+          <span className="val">{product.metrics[0].value}</span>
+          <span className="context">{product.metrics[0].label}</span>
+        </div>
+      )}
+      <div className="card-tags">
+        {product.tech.slice(0, 2).map((t, i) => (
+          <span key={i} className="card-tag">{t}</span>
+        ))}
+      </div>
+      <div className="card-arrow">â†’</div>
+    </div>
+  );
+
+  const railProduction = filteredProducts.filter(p => p.stage === "Production");
+  const railMultiActive = filteredProducts.filter(p => p.stage === "Multi-client" || p.stage === "Active");
+  const railPilotApproved = filteredProducts.filter(p => p.stage === "Pilot" || p.stage === "Approved");
+  const rails = [
+    { label: "Production", items: railProduction },
+    { label: "Multi-client and Active", items: railMultiActive },
+    { label: "Pilot and Approved", items: railPilotApproved },
+  ].filter(r => r.items.length > 0);
+
   return (
     <div>
       {/* Hero */}
@@ -194,6 +226,21 @@ function HomePage() {
                   ))}
                 </div>
                 <div className="card-arrow">→</div>
+              </div>
+            ))}
+          </div>
+          <div className="product-rails">
+            {rails.map(rail => (
+              <div key={rail.label} className="product-rail">
+                <div className="product-rail-header">
+                  <span className="product-rail-label">{rail.label}</span>
+                  <span className="product-rail-count">{rail.items.length}</span>
+                </div>
+                <div className="product-rail-wrapper">
+                  <div className="product-rail-track">
+                    {rail.items.map(renderProductCard)}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
