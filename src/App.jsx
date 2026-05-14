@@ -293,23 +293,7 @@ function CaseStudyPage({ productId }) {
     "mailto:" + CONTACT_EMAIL +
     "?subject=" + encodeURIComponent("Scope an engagement: " + product.name) +
     "&body=" + encodeURIComponent(
-      "Hi Jacob,
-
-" +
-      "I read the " + product.name + " writeup and want to talk about a similar engagement.
-
-" +
-      "Industry:
-" +
-      "What we are trying to build:
-" +
-      "Timeframe:
-" +
-      "Anything else worth knowing:
-
-" +
-      "Thanks,
-"
+      "Hi Jacob,\n\nI read the " + product.name + " writeup and want to talk about a similar engagement.\n\nIndustry:\nWhat we are trying to build:\nTimeframe:\nAnything else worth knowing:\n\nThanks,\n"
     );
 
   return (
