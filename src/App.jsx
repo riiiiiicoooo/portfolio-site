@@ -124,18 +124,7 @@ function AIEconomicsBanner() {
 // HOMEPAGE
 // ============================================================================
 function HomePage() {
-  const [currentFeaturedIdx, setCurrentFeaturedIdx] = useState(0);
   const [filter, setFilter] = useState("All");
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentFeaturedIdx((prev) => (prev + 1) % FEATURED_CASES.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const currentFeatured = FEATURED_CASES[currentFeaturedIdx];
-  const currentProduct = PRODUCTS.find((p) => p.id === currentFeatured.id);
 
   const filteredProducts = filter === "All"
     ? PRODUCTS
@@ -159,10 +148,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Deep-Dive Case Studies (moved to top) */}
+      {/* Selected work */}
       <section id="work" style={{ padding: "48px 0", borderTop: "1px solid #e5e7eb" }}>
         <div className="container">
-          <h2 style={{ fontSize: "20px", fontWeight: 700, marginBottom: "24px" }}>Deep-Dive Case Studies</h2>
+          <h2 style={{ fontSize: "20px", fontWeight: 700, marginBottom: "24px" }}>Selected work</h2>
           <div className="filter-bar">
             {["All", ...CATEGORIES].map((cat) => (
               <button
@@ -212,151 +201,6 @@ function HomePage() {
 
       {/* AI Economics Banner */}
       <AIEconomicsBanner />
-
-      {/* Architecture Patterns */}
-      <section style={{ padding: "48px 0" }}>
-        <div className="container">
-          <h2 style={{
-            fontSize: "24px",
-            fontWeight: 700,
-            marginBottom: "32px",
-            textAlign: "center",
-            letterSpacing: "-0.01em"
-          }}>
-            5 AI Architecture Patterns
-          </h2>
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "20px"
-          }}>
-            <div style={{
-              padding: "24px",
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: "12px"
-            }}>
-              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>Model Routing</h3>
-              <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6 }}>
-                Route requests to specialized models based on intent, cost, or quality thresholds. Contract Intelligence uses Claude (94% accuracy) as primary with GPT-4 fallback.
-              </p>
-            </div>
-            <div style={{
-              padding: "24px",
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: "12px"
-            }}>
-              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>Agent Orchestration</h3>
-              <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6 }}>
-                Multi-agent coordination with lightweight classifier supervisor. 60% cost reduction via Haiku intent routing before invoking primary agents.
-              </p>
-            </div>
-            <div style={{
-              padding: "24px",
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: "12px"
-            }}>
-              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>Cost Architecture</h3>
-              <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6 }}>
-                Deterministic guardrails reduce token costs 70% by filtering requests before LLM invocation. GenAI Governance: $0.03/interaction.
-              </p>
-            </div>
-            <div style={{
-              padding: "24px",
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: "12px"
-            }}>
-              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>Deterministic Guardrails</h3>
-              <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6 }}>
-                Five-layer compliance enforcement (BAA, prompt injection, output validation). Clinical AI achieves healthcare audit trail without LLM overhead.
-              </p>
-            </div>
-            <div style={{
-              padding: "24px",
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: "12px"
-            }}>
-              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>Memory Persistence</h3>
-              <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6 }}>
-                Semantic caching and conversation continuity. Agent Orchestration: 37% prompt cache hit rate reduces per-task cost from $0.51 to $0.08.
-              </p>
-            </div>
-            <div style={{
-              padding: "24px",
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: "12px"
-            }}>
-              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>Active Learning</h3>
-              <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6 }}>
-                Automated feedback loops from production to improve models. AI Data Operations: 40% fewer labels needed to hit same model quality targets.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Case Study Carousel */}
-      <section style={{ padding: "48px 0", borderTop: "1px solid #e5e7eb" }}>
-        <div className="container">
-          <h2 style={{ fontSize: "20px", fontWeight: 700, marginBottom: "24px" }}>Featured Case Study</h2>
-          {currentProduct && (
-            <div
-              className="featured-product"
-              onClick={() => {
-                window.location.hash = currentProduct.id;
-              }}
-            >
-              <div style={{
-                fontSize: "11px",
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                color: "#6366f1",
-                fontWeight: 700,
-                marginBottom: "16px"
-              }}>
-                {currentProduct.domain}
-              </div>
-              <div className="featured-content">
-                <div className="featured-icon">
-                  {DOMAIN_ICONS[currentProduct.domain]}
-                </div>
-                <div className="featured-info">
-                  <div className="featured-title">{currentProduct.name}</div>
-                  <div className="featured-desc">{currentProduct.tagline}</div>
-                </div>
-                {currentProduct.metrics && (
-                  <div className="featured-metrics">
-                    {currentProduct.metrics.slice(0, 2).map((m, i) => (
-                      <div key={i} className="featured-stat">
-                        <span className="featured-val">{m.value}</span>
-                        <div className="featured-stat-label">{m.label.split("/")[0]}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                <div className="featured-arrow">→</div>
-              </div>
-              <div className="featured-dots">
-                {FEATURED_CASES.map((_, i) => (
-                  <button
-                    key={i}
-                    className={`featured-dot ${i === currentFeaturedIdx ? "active" : ""}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setCurrentFeaturedIdx(i);
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
 
       {/* Productized Offers Teaser */}
       <section style={{ padding: "48px 0", borderTop: "1px solid #e5e7eb" }}>
@@ -876,6 +720,93 @@ function MethodologyPage() {
           </div>
         </div>
       </div>
+
+      {/* Architecture Patterns */}
+      <section style={{ padding: "48px 0" }}>
+        <div className="container">
+          <h2 style={{
+            fontSize: "24px",
+            fontWeight: 700,
+            marginBottom: "32px",
+            textAlign: "center",
+            letterSpacing: "-0.01em"
+          }}>
+            5 AI Architecture Patterns
+          </h2>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "20px"
+          }}>
+            <div style={{
+              padding: "24px",
+              background: "#fff",
+              border: "1px solid #e5e7eb",
+              borderRadius: "12px"
+            }}>
+              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>Model Routing</h3>
+              <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6 }}>
+                Route requests to specialized models based on intent, cost, or quality thresholds. Contract Intelligence uses Claude (94% accuracy) as primary with GPT-4 fallback.
+              </p>
+            </div>
+            <div style={{
+              padding: "24px",
+              background: "#fff",
+              border: "1px solid #e5e7eb",
+              borderRadius: "12px"
+            }}>
+              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>Agent Orchestration</h3>
+              <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6 }}>
+                Multi-agent coordination with lightweight classifier supervisor. 60% cost reduction via Haiku intent routing before invoking primary agents.
+              </p>
+            </div>
+            <div style={{
+              padding: "24px",
+              background: "#fff",
+              border: "1px solid #e5e7eb",
+              borderRadius: "12px"
+            }}>
+              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>Cost Architecture</h3>
+              <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6 }}>
+                Deterministic guardrails reduce token costs 70% by filtering requests before LLM invocation. GenAI Governance: $0.03/interaction.
+              </p>
+            </div>
+            <div style={{
+              padding: "24px",
+              background: "#fff",
+              border: "1px solid #e5e7eb",
+              borderRadius: "12px"
+            }}>
+              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>Deterministic Guardrails</h3>
+              <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6 }}>
+                Five-layer compliance enforcement (BAA, prompt injection, output validation). Clinical AI achieves healthcare audit trail without LLM overhead.
+              </p>
+            </div>
+            <div style={{
+              padding: "24px",
+              background: "#fff",
+              border: "1px solid #e5e7eb",
+              borderRadius: "12px"
+            }}>
+              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>Memory Persistence</h3>
+              <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6 }}>
+                Semantic caching and conversation continuity. Agent Orchestration: 37% prompt cache hit rate reduces per-task cost from $0.51 to $0.08.
+              </p>
+            </div>
+            <div style={{
+              padding: "24px",
+              background: "#fff",
+              border: "1px solid #e5e7eb",
+              borderRadius: "12px"
+            }}>
+              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>Active Learning</h3>
+              <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6 }}>
+                Automated feedback loops from production to improve models. AI Data Operations: 40% fewer labels needed to hit same model quality targets.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
