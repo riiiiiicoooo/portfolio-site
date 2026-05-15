@@ -446,3 +446,7 @@ footer{padding:40px 0;border-top:1px solid var(--border);text-align:center;color
   .product-rail-track::-webkit-scrollbar{display:none}
   .product-rail-track > .product-card{flex:0 0 78vw;scroll-snap-align:start}
 }
+/* Card accessibility (P0-3) */
+a.product-card{text-decoration:none;color:inherit;display:block}
+a.product-card:focus-visible{outline:2px solid #6366f1;outline-offset:2px}
+a.product-card:hover .card-arrow{color:#111}

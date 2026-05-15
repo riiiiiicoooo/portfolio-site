@@ -125,10 +125,10 @@ function HomePage() {
     : PRODUCTS.filter((p) => p.category === filter);
 
   const renderProductCard = (product) => (
-    <div
+    <a
       key={product.id}
       className="product-card"
-      onClick={() => { window.location.hash = product.id; }}
+      href={`#${product.id}`}
     >
       <div className={`card-stage stage-${product.stage.toLowerCase().replace(/\s+/g, "-")}`}>
         {product.stage}
@@ -151,7 +151,7 @@ function HomePage() {
         ))}
       </div>
       <div className="card-arrow">→</div>
-    </div>
+    </a>
   );
 
   const railProduction = filteredProducts.filter(p => p.stage === "Production");
@@ -190,12 +190,10 @@ function HomePage() {
           </div>
           <div className="product-grid">
             {filteredProducts.map((product) => (
-              <div
+              <a
                 key={product.id}
                 className="product-card"
-                onClick={() => {
-                  window.location.hash = product.id;
-                }}
+                href={`#${product.id}`}
               >
                 <div className={`card-stage stage-${product.stage.toLowerCase().replace(/\s+/g, "-")}`}>
                   {product.stage}
@@ -218,7 +216,7 @@ function HomePage() {
                   ))}
                 </div>
                 <div className="card-arrow">→</div>
-              </div>
+              </a>
             ))}
           </div>
           <div className="product-rails">
@@ -253,8 +251,8 @@ function HomePage() {
           }}>
             <h2 style={{ fontSize: "20px", fontWeight: 700, margin: 0 }}>Productized Offers</h2>
             <a
-              onClick={() => { window.location.hash = "offers"; }}
-              style={{ fontSize: "13px", color: "#6366f1", fontWeight: 600, cursor: "pointer", textDecoration: "none" }}
+              href="#offers"
+              style={{ fontSize: "13px", color: "#6366f1", fontWeight: 600, textDecoration: "none" }}
             >
               View all 5 offers →
             </a>
@@ -269,16 +267,18 @@ function HomePage() {
             gap: "16px"
           }}>
             {PRODUCTIZED_OFFERS.slice(0, 3).map((offer) => (
-              <div
+              <a
                 key={offer.id}
-                onClick={() => { window.location.hash = "offers"; }}
+                href="#offers"
                 style={{
                   padding: "20px",
                   background: "#fff",
                   border: "1px solid #e5e7eb",
                   borderRadius: "12px",
-                  cursor: "pointer",
-                  transition: "all 0.15s"
+                  transition: "all 0.15s",
+                  display: "block",
+                  color: "inherit",
+                  textDecoration: "none"
                 }}
               >
                 <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "6px", letterSpacing: "-0.01em" }}>
@@ -290,7 +290,7 @@ function HomePage() {
                 <div style={{ fontSize: "11px", color: "#6b7280", fontFamily: "monospace" }}>
                   {offer.duration} · {offer.price}
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </div>
